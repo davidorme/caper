@@ -1,0 +1,163 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+\documentclass[a4paper]{article}
+
+\usepackage[round]{natbib}
+% \VignetteIndexEntry{Comparative analysis of phylogenetics and evolution in R} 
+% \VignetteDepends{ape} 
+% \VignetteKeyword{stats} 
+% \VignetteKeyword{kwd2} 
+
+\title{The \textit{caper} package: comparative analysis of phylogenetics and evolution in R}
+\author{David Orme}
+
+\SweaveOpts{echo=TRUE}
+
+
+\begin{document}
+
+\maketitle
+
+This vignette documents the use of the \textit{caper} package for R \citep{R-Development-Core-Team.2008.a} in carrying out a range of comparative analysis methods for phylogenetic data. 
+
+\tableofcontents
+
+
+\section{Background}
+Comparing the traits of species (or of groups of species of higher taxonomic rank) can produce deep insights into evolutionary processes. However, all such analyses should take into account the degree to which species are related and hence do not provide independent data on a hypothesis. This can lead both to situations in which apparently strong relationships rest on relatively few truly independent events (Fig. \ref{whyCAIC}a) or where strong relationships within groups are masked by phylogenetic differences between groups (Fig. \ref{whyCAIC}b). One way around this problem, originally described by \citet{Felsenstein.1985.a}, is to recognize that the differences between taxa on either side of a bifurcating node represent independent evolutionary trajectories and that these differences (`independent contrasts') can be used to test hypotheses in a way that accounts for the phylogenetic autocorrelation between the taxa. \citet{Pagel.1992.a} extended this method to permit contrasts to be calculated at polytomies.
+
+\begin{figure}[htbp]
+  \begin{center}
+<<echo= false, fig=true, width=6, height=6>>=
+par(mfrow=c(2,2), mar=c(3,3,1,1), mgp=c(2,0.7,0))
+
+plot(c(0,13),c(0,10), typ="n", bty="n", xaxt="n",yaxt="n", xlab="", ylab="", xaxs="i",yaxs="i")
+lines(c(0,7), c(5,8.5))
+lines(c(0,7), c(5,1.5))
+lines(c(3.5,7), c(3.25,5))
+polygon(c(7,10,10), y=c(8.5,10,7))
+polygon(c(7,10,10), y=c(5,6.5,3.5))
+polygon(c(7,10,10), y=c(1.5,3,0))
+
+
+points( c(0.5,1.5) +0.5, c(5,5), cex=1, col=1:2)
+points(c(7.5,8.5)+0.5, c(8.5,8.5), cex=1, col=1:2)
+points(c(4,5)+0.5, c(3.25,3.25), cex=1.5, col=1:2)
+points(c(7.5,8.5)+0.5, c(5,5), cex=1.5, col=1:2)
+points(c(7.5,8.5)+0.5, c(1.5,1.5), cex=2, col=1:2)
+
+rect(11 - c(.3,.2,.1), c(0,3.5,7), 11 + c(.3,.2,.1) , c(3,6.5,10))
+rect(12 - c(.3,.2,.1), c(0,3.5,7), 12 + c(.3,.2,.1) , c(3,6.5,10), border="red")
+par(usr=c(0,1,0,1)); text(0.1,0.9, cex=2,"a")
+
+dat <- data.frame(x = rnorm(120, mean= rep(2:4, each=40), sd=0.5),
+ 				  y = rnorm(120, mean= rep(2:4, each=40), sd=0.5),
+				  tx = gl(3,40))
+
+plot(y~x, col=unclass(tx), data=dat, xaxt="n", xlab="", ylab="")
+axis(1, col.axis="red")
+abline(lm(y~x, data=dat))
+for(sub in split(dat, dat$tx)) abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1], lty=2) 
+
+
+plot(c(0,13),c(0,10), typ="n", bty="n", xaxt="n",yaxt="n", xlab="", ylab="", xaxs="i",yaxs="i")
+lines(c(0,7), c(5,8.5))
+lines(c(0,7), c(5,1.5))
+lines(c(3.5,7), c(3.25,5))
+polygon(c(7,10,10), y=c(8.5,10,7))
+polygon(c(7,10,10), y=c(5,6.5,3.5))
+polygon(c(7,10,10), y=c(1.5,3,0))
+
+points(c(0.5,1.5)+0.5, c(5,5), cex=1, col=1:2)
+points(c(7.5,8.5)+0.5, c(8.5,8.5), cex=1, col=1:2)
+points(c(4,5)+0.5, c(3.25,3.25), cex=c(1,1.5), col=1:2)
+points(c(7.5,8.5)+0.5, c(5,5), cex=c(1,1.5), col=1:2)
+points(c(7.5,8.5)+0.5, c(1.5,1.5), cex=c(1,2), col=1:2)
+
+polygon(11 + c(-0,-0.1,0.1,0), c(3,0,0,3))
+polygon(12 + c(-0.2,-0.3,0.3,0.2), c(3,0,0,3), border="red")
+polygon(11 + c(-0,-0.1,0.1,0), c(6.5,3.5,3.5,6.5))
+polygon(12 + c(-0.1,-0.2,0.2,0.1), c(6.5,3.5,3.5,6.5), border="red")
+polygon(11 + c(-0,-0.1,0.1,0), c(10,7.5,7.5,10))
+polygon(12 + c(-0.0,-0.1,0.1,0.), c(10,7.5,7.5,10), border="red")
+par(usr=c(0,1,0,1)); text(0.1,0.9, cex=2, "b")
+
+
+dat <- data.frame(x = rnorm(120, mean= rep(2:4, each=40), sd=0.5),
+				  tx = gl(3,40))
+dat$y <- dat$x - rnorm(120, mean= rep(0:2, each=40), sd=0.5)
+
+plot(y~x, col=unclass(tx), data=dat, xaxt="n", xlab="", ylab="")
+axis(1, col.axis="red")
+abline(lm(y~x, data=dat))
+for(sub in split(dat, dat$tx)) abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1], lty=2) 
+
+@ 
+    \caption{Phylogenetic autocorrelation in action. a) Simple regression (solid line) suggests a strong relationship between two variables; the phylogeny shows that within the three main groups, there is no consistent relationship (dashed lines) and the apparent relationship stems from only two linked shifts in the means of the traits early in the evolution of the clade. b) Simple regression (solid line) suggests a weak positive relationship between the two variables; the phylogeny shows that there are strong positive relationships between the traits within each of the three main groups but this is masked by early shifts in the mean value of the red trait.}
+    \label{whyCAIC}
+  \end{center}
+\end{figure}
+
+
+
+\section{Datasets}
+
+The example in this document will make use of the following artificially generated datasets. In addition to being used in these examples, these datasets were also analysed using the original programs and so  provide a benchmark test for the re-implemenation
+
+\begin{description}
+  \item[SmallTree] A dataset containing two phylogenies and two data frames. One phylogeny (diTree) is a 15 tip, fully bifurcating tree; three nodes in this phylogeny have been collapsed to give a second topology (polyTree) containing polytomies (Fig. \ref{smalltrees}). The data frames (SmallTreeDat and SmallTreeDatNA) contain data for each of the tips in the tree. They contain a column of tip names (tip), two continuous variables (weight and othervar), a column of the number of species in the tip group (nSpp) and two categorical variables (catX2 and catX3). SmallTreeDatNA differs only in having two tips for which no data is available.
+  \item[BigTree] A dataset containing a larger phylogeny of 200 tip (BigTree) and a dataframe (BigTreeDat) providing four continuous variables (yv, xc1, xc2, xc3) and one binary categorical variable (xf) for each of the tips in the tree.
+\end{description}
+
+
+<<print=FALSE>>=
+library(ape)
+data(SmallTree, package="CAIC")
+par(mfrow=c(2,1))
+plot(diTree)
+plot(polyTree)
+@
+\begin{figure}[htbp]
+  \begin{center}
+<<echo= false, fig=true, width=6, height=4>>=
+par(mfrow=c(1,2), mar=c(3,3,1,1))
+plot(diTree)
+par(usr=c(0,1,0,1)); text(0.1,0.1, cex=2, "a")
+plot(polyTree)
+par(usr=c(0,1,0,1)); text(0.1,0.1, cex=2, "b")
+
+@ 
+    \caption{Phylogenies available in the smallTree dataset: a) diTree and b) polyTree.}
+    \label{smalltrees}
+  \end{center}
+\end{figure}
+
+
+\section{Methods and functions provided by \textit{caper}.}
+
+\subsection{Phylogenetic independent contrasts}
+
+The \textit{caper} package reimplements the methods originally implemented in the Mac Classic programs CAIC \citep{Purvis.Rambaut.1995.a} and MacroCAIC \cite{Agapow.Isaac.2002.a} and this vignette draw heavily on the original manuals to those programs. The CAIC package, and the code in this vignette, requires the `ape' package \citep{Paradis.Claude.ea.2004.a}.
+
+
+The \textit{caper} package implements both CAIC and MacroCAIC analyses using a formula interface, as in the standard R \texttt{lm()} function. Both the \texttt{crunch()} and \texttt{macrocaic()} functions need the user to provide a phylogeny (\texttt{phy}) and a data frame (\texttt{data}) containing trait data on the tips of the phylogeny. One column from the data frame (\texttt{names.col}) is used to match data between the tips of the phylogeny and the data frame; the matching process is done automatically by both functions. The phylogeny must be provided in the \texttt{phylo} structure provided by the ape package, which provides functions to read trees from newick, nexus and ape format files. In both functions, a reference variable (\texttt{ref.var}) may also be provided. This is required in order to standardize the directions in which contrasts are calculated in multivariate models. If no reference variable is provided, the function defaults to using the first explanatory variable specified in the model formula. 
+
+\subsubsection{crunch}
+\subsubsection{brunch}
+\subsubsection{macrocaic}
+\subsubsection{piclm}
+\subsubsection{phylo.d}
+
+\subsection{Phylogenetic linear models}
+
+\subsubsection{pglm}
+
+
+
+
+
+
+\bibliographystyle{plainnat}
+\bibliography{CAIC_refs}
+
+
+\end{document}

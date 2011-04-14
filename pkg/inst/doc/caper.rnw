@@ -1,33 +1,52 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
 \documentclass[a4paper]{article}
 
-\usepackage[round]{natbib}
 % \VignetteIndexEntry{Comparative analysis of phylogenetics and evolution in R} 
 % \VignetteDepends{ape} 
 % \VignetteKeyword{stats} 
 % \VignetteKeyword{kwd2} 
 
-\title{The \textit{caper} package: comparative analysis of phylogenetics and evolution in R}
+\usepackage[round]{natbib}
+\usepackage{makeidx}
+\makeindex
+% \SweaveOpts{keep.source=TRUE, echo=TRUE}
+
+%%
+%% Problems with comments in R code - want to keep them
+%% but SweaveOpts keep.source=TRUE still ditches leading
+%% and trailing comments, so currently need to duplicate the
+%% code block inside verbatim if you want comments. 
+%% R 2.14 may solve this
+%%
+
+% common representation of package name
+\newcommand{\caper}{\textit{caper}}
+\newcommand{\fnidx}[1]{\texttt{#1}\index{Functions!#1}}
+
+
+\title{The \caper{} package: comparative analysis of phylogenetics and evolution in R}
 \author{David Orme}
 
-\SweaveOpts{echo=TRUE}
 
 
 \begin{document}
 
+<<setup, print=FALSE, echo=FALSE>>=
+	library(ape)
+@
+
 \maketitle
 
-This vignette documents the use of the \textit{caper} package for R \citep{R-Development-Core-Team.2008.a} in carrying out a range of comparative analysis methods for phylogenetic data. 
+This vignette documents the use of the \caper{} package for R \citep{R-Development-Core-Team.2008.a} in carrying out a range of comparative analysis methods for phylogenetic data. 
 
 \tableofcontents
 
-
 \section{Background}
-Comparing the traits of species (or of groups of species of higher taxonomic rank) can produce deep insights into evolutionary processes. However, all such analyses should take into account the degree to which species are related and hence do not provide independent data on a hypothesis. This can lead both to situations in which apparently strong relationships rest on relatively few truly independent events (Fig. \ref{whyCAIC}a) or where strong relationships within groups are masked by phylogenetic differences between groups (Fig. \ref{whyCAIC}b). One way around this problem, originally described by \citet{Felsenstein.1985.a}, is to recognize that the differences between taxa on either side of a bifurcating node represent independent evolutionary trajectories and that these differences (`independent contrasts') can be used to test hypotheses in a way that accounts for the phylogenetic autocorrelation between the taxa. \citet{Pagel.1992.a} extended this method to permit contrasts to be calculated at polytomies.
+Comparing the traits of species (or of groups of species of higher taxonomic rank) can produce deep insights into evolutionary processes. However, all such analyses should take into account the degree to which species are related and hence do not provide independent data on a hypothesis. This can lead both to situations in which apparently strong relationships rest on relatively few truly independent events (Fig. \ref{whycaper}a) or where strong relationships within groups are masked by phylogenetic differences between groups (Fig. \ref{whycaper}b). 
 
 \begin{figure}[htbp]
   \begin{center}
-<<echo= false, fig=true, width=6, height=6>>=
+<<whycaper, echo= false, fig=true, width=6, height=6>>=
 par(mfrow=c(2,2), mar=c(3,3,1,1), mgp=c(2,0.7,0))
 
 plot(c(0,13),c(0,10), typ="n", bty="n", xaxt="n",yaxt="n", xlab="", ylab="", xaxs="i",yaxs="i")
@@ -93,13 +112,26 @@ for(sub in split(dat, dat$tx)) abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1]
 
 @ 
     \caption{Phylogenetic autocorrelation in action. a) Simple regression (solid line) suggests a strong relationship between two variables; the phylogeny shows that within the three main groups, there is no consistent relationship (dashed lines) and the apparent relationship stems from only two linked shifts in the means of the traits early in the evolution of the clade. b) Simple regression (solid line) suggests a weak positive relationship between the two variables; the phylogeny shows that there are strong positive relationships between the traits within each of the three main groups but this is masked by early shifts in the mean value of the red trait.}
-    \label{whyCAIC}
+    \label{whycaper}
   \end{center}
 \end{figure}
 
+The \caper{} package implements two methods that account for this phylogenetic autocorrelation. The first, originally described by \citet{Felsenstein.1985.a}, is to recognize that the differences between taxa on either side of a bifurcating node represent independent evolutionary trajectories and that these differences (`independent contrasts') can be used to test hypotheses in a way that accounts for the phylogenetic autocorrelation between the taxa. \citet{Pagel.1992.a} extended this method to permit contrasts to be calculated at polytomies. The second, described by [refs], is to include the phylogenetic structure as a covariance matrix in a linear model. 
+
+\section{Comparative datasets}
+
+The majority of functions in \caper{} require both a phylogeny and data set of traits for the taxa at the tips of that phylogeny. Crucially, the rows of data need to be matched carefully to the tips to ensure that the phylogenetic structure in the variables is represented correctly: \caper{} provides the function \fnidx{comparative.data} to facilitate this. The following simple example shows the basic operation:
+
+<<comparative.data, keep.source=TRUE>>=
+phy <- read.tree(text='(((B:2,A:2):1,D:3):1,(C:1,E:1):3);')
+dat <- data.frame(taxa=c("A","B","C","D","E"), n.species=c(5,9,12,1,13), mass=c(4.1,4.5,5.9,3.0,6.0))
+cdat <- comparative.data(data=dat, phy=phy, names.col="taxa")
+
+print(cdat)
+@
 
 
-\section{Datasets}
+
 
 The example in this document will make use of the following artificially generated datasets. In addition to being used in these examples, these datasets were also analysed using the original programs and so  provide a benchmark test for the re-implemenation
 
@@ -132,14 +164,14 @@ par(usr=c(0,1,0,1)); text(0.1,0.1, cex=2, "b")
 \end{figure}
 
 
-\section{Methods and functions provided by \textit{caper}.}
+\section{Methods and functions provided by \caper{}.}
 
 \subsection{Phylogenetic independent contrasts}
 
-The \textit{caper} package reimplements the methods originally implemented in the Mac Classic programs CAIC \citep{Purvis.Rambaut.1995.a} and MacroCAIC \cite{Agapow.Isaac.2002.a} and this vignette draw heavily on the original manuals to those programs. The CAIC package, and the code in this vignette, requires the `ape' package \citep{Paradis.Claude.ea.2004.a}.
+The \caper{} package reimplements the methods originally implemented in the Mac Classic programs CAIC \citep{Purvis.Rambaut.1995.a} and MacroCAIC \cite{Agapow.Isaac.2002.a} and this vignette draw heavily on the original manuals to those programs. The CAIC package, and the code in this vignette, requires the `ape' package \citep{Paradis.Claude.ea.2004.a}.
 
 
-The \textit{caper} package implements both CAIC and MacroCAIC analyses using a formula interface, as in the standard R \texttt{lm()} function. Both the \texttt{crunch()} and \texttt{macrocaic()} functions need the user to provide a phylogeny (\texttt{phy}) and a data frame (\texttt{data}) containing trait data on the tips of the phylogeny. One column from the data frame (\texttt{names.col}) is used to match data between the tips of the phylogeny and the data frame; the matching process is done automatically by both functions. The phylogeny must be provided in the \texttt{phylo} structure provided by the ape package, which provides functions to read trees from newick, nexus and ape format files. In both functions, a reference variable (\texttt{ref.var}) may also be provided. This is required in order to standardize the directions in which contrasts are calculated in multivariate models. If no reference variable is provided, the function defaults to using the first explanatory variable specified in the model formula. 
+The  package implements both CAIC and MacroCAIC analyses using a formula interface, as in the standard R \texttt{lm()} function. Both the \texttt{crunch()} and \texttt{macrocaic()} functions need the user to provide a phylogeny (\texttt{phy}) and a data frame (\texttt{data}) containing trait data on the tips of the phylogeny. One column from the data frame (\texttt{names.col}) is used to match data between the tips of the phylogeny and the data frame; the matching process is done automatically by both functions. The phylogeny must be provided in the \texttt{phylo} structure provided by the ape package, which provides functions to read trees from newick, nexus and ape format files. In both functions, a reference variable (\texttt{ref.var}) may also be provided. This is required in order to standardize the directions in which contrasts are calculated in multivariate models. If no reference variable is provided, the function defaults to using the first explanatory variable specified in the model formula. 
 
 \subsubsection{crunch}
 \subsubsection{brunch}
@@ -151,13 +183,21 @@ The \textit{caper} package implements both CAIC and MacroCAIC analyses using a f
 
 \subsubsection{pglm}
 
+\subsection{Utility functions}
 
-
-
+\subsubsection{comparative.data}
+\subsubsection{clade.members}
+\subsubsection{clade.matrix}
+\subsubsection{vcv.array}
 
 
 \bibliographystyle{plainnat}
-\bibliography{CAIC_refs}
+\bibliography{caper_refs}
+
+\printindex
+
+\appendix
+\section{The CAIC `package'}
 
 
 \end{document}

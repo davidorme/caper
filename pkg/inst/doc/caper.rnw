@@ -183,6 +183,20 @@ The  package implements both CAIC and MacroCAIC analyses using a formula interfa
 
 \subsubsection{pglm}
 
+\subsection{Other comparative functions}
+
+\subsubsection{fusco.test}
+The $I$ statistic \cite{} is a measure of phylogenetic imbalance. It has the useful properties that it can be calculated for trees containing polytomies and that the tips of trees can be associated with species richness values. An imbalance score, in the interval $[0,1]$ is calculated for all nodes in the phylogeny and the distribution of the nodal values is used to assess overall balance. Nodes leading to  fewer than 4 species are uninformative about balance and $I$ cannot be calculated for polytomous nodes and hence both are omitted from balance calculations.
+
+The original $I$ statistic proposed by \citet{} has been shown to have a  bias at nodes with even numbers of species \citep{Purvis}. This function therefore also implements the modified $I'$ statistic: a Wilcoxon test is used to assess whether the median of the observed $I'$ values differs from the value of 0.5 expected under a Markov process and a randomisation process is used to provide confidence intervals. 
+
+The function can make use of species richness data but can also be set to treat the tips of the phylogeny as species. These two approaches contrast the balance of the distribution of species richness across a topology and the balance of the topology itself. 
+<<>>=
+data(syrphidae)
+syrphidae <- comparative.data(phy=syrphidaeTree, dat=syrphidaeRich, names.col=genus)
+summary(fusco.test(syrphidae, rich=nSpp))
+summary(fusco.test(syrphidae, tipsAsSpecies=TRUE))
+@
 \subsection{Utility functions}
 
 \subsubsection{comparative.data}
@@ -197,7 +211,10 @@ The  package implements both CAIC and MacroCAIC analyses using a formula interfa
 \printindex
 
 \appendix
+
 \section{The CAIC `package'}
 
+changes
+- lose the markov CI on fusco - test is biased so why use it.
 
 \end{document}

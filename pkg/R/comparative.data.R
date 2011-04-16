@@ -1,4 +1,5 @@
-comparative.data <- function(data, phy, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE){
+
+comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE){
 
     # TODO - is something odd happening with missing arguments?
     
@@ -68,13 +69,15 @@ comparative.data <- function(data, phy, names.col, vcv=FALSE, vcv.dim=2, na.omit
         # TODO: CLASH WITH PGLM!!!
         rownames(data) <- 1:dim(data)[1]
         
-        # Size of conjunction of tree and dataset
-        unionData <- dim(data)[1]
 
     # Compile comparative dataset
-    RET <- list(phy=matchedPhy, data=data, N=unionData, data.name=data.name, 
-                phy.name=phy.name, na.omit=na.omit, 
-                dropped=list(unmatched.rows=row.not.in.tree, tips=to.drop))
+	# COULD HAVE phy components as first level slots rather than nested within $phy
+	# and have comparative.data inherit methods from phylo, but that presupposes
+	# that none of the phylo functions you might use strip out contents
+	
+    RET <- list(phy=matchedPhy, data = data, 
+                data.name=data.name, phy.name=phy.name, 
+                dropped=list(tips=to.drop, unmatched.rows=row.not.in.tree))
     class(RET) <- 'comparative.data'
     
     # Add a VCV array if requested
@@ -92,22 +95,29 @@ comparative.data <- function(data, phy, names.col, vcv=FALSE, vcv.dim=2, na.omit
     return(RET)
 }
 
+# some useful generics
 print.comparative.data <- function(x, ...){
 
     # basic summary data
-    cat("Comparative dataset of ", x$N, " taxa:\n")
-    cat("Phylogeny: \n")
-    cat("   Source:", x$phy.name, "\n")
-    cat("   ", length(x$phy$tip.label), " tips, ", x$phy$Nnode, " internal nodes\n", sep='')
-    cat("   Tip names:\n  ") # this is a bit of a hack - can't get str for a vector to take an indent
-    str(shorebird.tree$tip.label)
+    cat("Comparative dataset of", nrow(x$data), "taxa:\n")
+    cat("Phylogeny:", x$phy.name, "\n")
+    cat("   ", length(x$phy$tip.label), " tips, ", x$phy$Nnode, " internal nodes\n  ", sep='')
+    # this is a bit of a hack - can't get str for a vector to take an indent
+    str(x$phy$tip.label)
     if(! is.null(x$vcv)){
 	    cat('VCV matrix present:\n  ')
 	    str(x$vcv, give.attr=FALSE)
 	}
-    cat("Data: \n")
+    cat("Data:" , x$data.name, "\n")
     str(as.list(x$data), no.list=TRUE, indent='   ')
 
+	# report on mismatch on merge
+	dropCount <- sapply(x$dropped, length)
+    if(any(dropCount)){
+	    cat('Dropped taxa:\n')
+	    cat('   ', x$phy.name , ' { ', dropCount[1], ' ( ',nrow(x$data), 
+	        ' } ', dropCount[2], ' ) ', x$data.name, sep='')
+    }
 }
 
 na.omit.comparative.data <- function(x, ...){
@@ -152,8 +162,6 @@ subset.comparative.data <- function(x, subset, select,  ...){
         vars <- eval(substitute(select), nl, parent.frame())
     }
     
-    ## TODO  - institute tip name subset.
-    
     ## now know which rows and columns to keep in the data frame 
     ## guard against ape 'feature' of dropping all tips for empty vectors
     if(any(! r)){
@@ -173,12 +181,126 @@ subset.comparative.data <- function(x, subset, select,  ...){
     return(x)
 }
 
+"[.comparative.data" <- function(x, i, j) {
+	
+	# how many args?
+	# 2 and missing(i) = x[] --> return x untouched
+	# 2 and ! missing(i) = x[i] --> column subset 
+	# otherwise 3 = x[i,j] or x[i,] or x[,j] or x[,] 
+	if( nargs() ==  2) {
+		if(missing(i)){
+			return(x)
+		} else {
+			j <- i
+			hasI <- FALSE
+		}
+	} else { hasI <- TRUE }
+	
+	# no drop argument permitted. can't lose dataframeness
+	if(! missing(j)){
+		if(is.null(j)) stop('Null indices not permitted on comparative data objects')
+		x$data <- x$data[,j, drop=FALSE]
+	}
 
-# would be good to have a [ function but may need S4 to do this now
-# setMethod("[", signature(x="comparative.data", i="ANY",j="ANY"),
-# 
-#   function(x, i, j, ..., drop=TRUE) {
-#       ## do whatever you want here; your class is not derivedfrom a list
-#       ## so we cannot use NextMethod
-#       print('argh')
-#   })
+	# no recycling, no out of index rows
+	# no simple reordering possible because the tree implies
+	# an order to the data frame
+	if(! missing(i) & hasI){
+		if(is.null(i)) stop('Null indices not permitted on comparative data objects')
+		rownames <- x$phy$tip.label
+		if(is.character(i)){
+			toKeep <- na.omit(match(i, rownames))
+			if(length(toKeep) != length(i)) warning('Some tip names were not found')
+			toKeep <- rownames[toKeep]
+		} else if (is.numeric(i)) {
+			# convert to integer (same as [.data.frame)
+			i <- as.integer(i)
+			if(all(i > 0)){
+				toKeep <- intersect(i, seq_along(rownames))
+			} else if(all(i < 0)) {
+				toKeep <- setdiff(seq_along(rownames), abs(i))
+			} else {
+				stop("only 0's may be mixed with negative subscripts")
+			}
+			toKeep <- rownames[toKeep]
+			if(! all(abs(i) %in% seq_along(rownames))) warning('Some row numbers were not found')
+		} else if (is.logical(i)) {
+			if(length(i) != length(rownames)) stop('Logical index does not match number of tips')
+			toKeep <- rownames[i]
+		}
+		
+		# Work out which to drop
+		rowToKeep <- match(toKeep, rownames)
+		if(length(rowToKeep) < 2) stop('Comparative dataset reduced to fewer than 2 taxa')
+		
+		toDrop    <- setdiff(rownames, toKeep)
+		# this assumes that drop.tip preserves the remaining order - testing suggests ok
+		x$phy <- drop.tip(x$phy, toDrop)
+        # lose VCV elements if needed
+        if(! is.null(x$vcv))  x$vcv <- x$vcv[rowToKeep, rowToKeep]
+        x$data <- x$data[rowToKeep,, drop=FALSE]
+	}
+	return(x)
+}
+
+reorder.comparative.data <- function(x, order = "cladewise", ...){
+	
+	# Uses ape reorder code
+	order <- match.arg(order, c("cladewise", "pruningwise"))
+
+	# test for existing order to avoid duplicate calls
+    if (!is.null(attr(x, "order"))) 
+        if (attr(x, "order") == order) 
+            return(x)
+	
+	# exclude 2 taxon trees
+    nb.node <- x$phy$Nnode
+    if (nb.node == 1) 
+        return(x)
+	
+	# otherwise
+    nb.tip <- length(x$phy$tip.label)
+    nb.edge <- dim(x$phy$edge)[1]
+    neworder <- if (order == "cladewise") 
+        .C("neworder_cladewise", as.integer(nb.tip), as.integer(x$phy$edge[, 
+            1]), as.integer(x$phy$edge[, 2]), as.integer(nb.edge), 
+            integer(nb.edge), PACKAGE = "ape")[[5]]
+    else .C("neworder_pruningwise", as.integer(nb.tip), as.integer(nb.node), 
+        as.integer(x$phy$edge[, 1]), as.integer(x$phy$edge[, 2]), as.integer(nb.edge), 
+        integer(nb.edge), PACKAGE = "ape")[[6]]
+	
+	# apply new order to elements
+    x$phy$edge <- x$phy$edge[neworder, ]
+
+    if (!is.null(x$phy$edge.length)) 
+        x$phy$edge.length <- x$phy$edge.length[neworder]
+
+	if(! is.null(x$vcv)) x$vcv <- x$vcv[neworder, neworder]
+	
+	x$dat <- x$dat[neworder,]
+    attr(x, "order") <- order
+    
+	return(x)
+}
+
+
+## x <- comparative.data(shorebird.tree, shorebird.data, 'Species')
+## x[]
+## x[,]
+## x[2:3]
+## x[, 2:3]
+## x[1:15, ]
+## x[1:15, 2:3]
+
+## ## Don't think this is possible with S3 - want $ to be able
+## ## to give back a column from data - without breaking the use
+## ## of $ for subsetting. Could use name matching to figure out which
+## ## but then duplicate names in data and in the class list are a huge
+## ## programming gotcha.
+
+## "$.comparative.data" <- function(x, name) {
+## 	
+## 	# careful to avoid using $ in here otherwise infinite recursion kicks off.
+## 	return(x[['data']][, name])
+## 
+## }

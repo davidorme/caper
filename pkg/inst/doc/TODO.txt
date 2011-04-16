@@ -1,0 +1,3 @@
+Fusco test: 
+ - plot method uses density?
+ - sort out returns: I, I prime, Iw median mean etc.

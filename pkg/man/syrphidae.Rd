@@ -4,7 +4,7 @@
 \alias{syrphidaeRich}
 
 
-\title{The syrphidae dataset of Purvis et al. 2002 }
+\title{The syrphidae dataset of Katzourakis et al. 2001 }
 \description{
 A genus level phylogeny of the Syrphidae (sawflies) along with data on the species richness of each genus.
 }
@@ -16,7 +16,7 @@ A 'phylo' object (\code{syrphidaeTree}) containing a phylogeny of 204 genera of 
 }
 
 \references{
-Purvis A.,  Katzourakis A. & Agapow, P-M (2002) Evaluating Phylogenetic Tree Shape: Two Modifications to Fusco & Cronk's Method. J. Theor. Biol. 214, 93-103.
+Katzourakis, A., Purvis, A., Azmeh, S., Rotheray, G., and Gilbert, F. (2001). Macroevolution of hoverflies (Diptera : Syrphidae): the effect of using higher-level taxa in studies of biodiversity, and correlates of species richness. Journal of Evolutionary Biology, 14:219–227.
 }
 
 \seealso{fusco.test}

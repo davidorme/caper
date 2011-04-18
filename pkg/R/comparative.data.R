@@ -271,6 +271,7 @@ reorder.comparative.data <- function(x, order = "cladewise", ...){
 	
 	# apply new order to elements
     x$phy$edge <- x$phy$edge[neworder, ]
+    attr(x$phy, "order") <- order
 
     if (!is.null(x$phy$edge.length)) 
         x$phy$edge.length <- x$phy$edge.length[neworder]
@@ -283,7 +284,6 @@ reorder.comparative.data <- function(x, order = "cladewise", ...){
 	return(x)
 }
 
-
 ## x <- comparative.data(shorebird.tree, shorebird.data, 'Species')
 ## x[]
 ## x[,]
@@ -292,7 +292,7 @@ reorder.comparative.data <- function(x, order = "cladewise", ...){
 ## x[1:15, ]
 ## x[1:15, 2:3]
 
-## ## Don't think this is possible with S3 - want $ to be able
+## ## $ method: Don't think this is possible with S3 - want $ to be able
 ## ## to give back a column from data - without breaking the use
 ## ## of $ for subsetting. Could use name matching to figure out which
 ## ## but then duplicate names in data and in the class list are a huge

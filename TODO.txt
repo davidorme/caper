@@ -1,0 +1,13 @@
+Fusco test: 
+ - plot method uses density?
+ - sort out returns: I, I prime, Iw median mean etc.
+
+crunch
+- plot methods that avoid name problems with log(var) etc.
+
+Namespace to hide some functions:
+
+caicStyleArgs
+caic.label
+caic.table
+contrCalc

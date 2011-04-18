@@ -23,12 +23,13 @@ comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit
         data <- data[,-namesInd, drop=FALSE]
         
     # PHYLOGENY:
-        # check the phylogeny is a rooted phylogeny and set branch lengths...
+        # check the phylogeny is a rooted phylogeny and test for stupid tip labels
         if(! inherits(phy, "phylo")) 
             stop("'", deparse(substitute(phy)), "' not of class 'phylo'")
         if(! is.rooted(phy))
             stop("'", deparse(substitute(phy)), "' is not rooted.")
-
+		if(any(duplicated(phy$tip.label))) stop('Duplicate tip labels present in phylogeny')
+		
     # MERGE
     
         # store original dataset size
@@ -37,13 +38,8 @@ comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit
         
         # find the intersection between tip.labels and names in data frame
         in.both <- intersect(rownames(data), phy$tip.label)
-        if(length(in.both) < 2) stop("Fewer than two tips are common to the dataset and phylogeny")
+        if(length(in.both) == 0 ) stop("No tips are common to the dataset and phylogeny")
         
-        # TODO: work out what is needed to get rid of the node.label backreferencing
-        #       or if it is still needed. Ugly.
-        # Label the internal nodes by their node number in the original tree to provide a backreference
-        phy$node.label <- with(phy, ((max(edge)-Nnode) +1):max(edge)) 
-
         # i >> ditch rows with no tip
         row.in.tree <- match(rownames(data), in.both)
         row.not.in.tree <- rownames(data)[is.na(row.in.tree)]
@@ -57,19 +53,27 @@ comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit
         if(length(to.drop) > 0) matchedPhy <- drop.tip(phy, to.drop) else matchedPhy <- phy
         
         # useful info...
-        root <- with(matchedPhy, (max(edge) - Nnode) + 1)
+        root <- length(matchedPhy$tip.label) + 1
 
         # get the data into the same order as the tips
         tip.order <- match(matchedPhy$tip.label, rownames(data))
         if(any(is.na(tip.order))) stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")
         data <- data[tip.order,, drop=FALSE]
         
-        # Label the data frame rows by tip number to allow the tree to be traversed
-        # TODO: check on this - requirement of crunch functions.
-        # TODO: CLASH WITH PGLM!!!
-        rownames(data) <- 1:dim(data)[1]
+        # Label the data frame rows by tip label
+        rownames(data) <- matchedPhy$tip.label
         
-
+		# add or supplement node labels - used as references in contrast calculation
+		IntNd <- root:max(matchedPhy$edge)
+		if(is.null(matchedPhy$node.label)){
+			matchedPhy$node.label <- IntNd
+		} else {
+			# set up missing node labels
+			if(any(duplicated(na.omit(matchedPhy$node.label)))) stop('Duplicate node labels present in phylogeny')
+			matchedPhy$node.label <- ifelse(matchedPhy$node.label == "" | is.na(matchedPhy$node.label),  IntNd, matchedPhy$node.label)
+		}
+		
+		
     # Compile comparative dataset
 	# COULD HAVE phy components as first level slots rather than nested within $phy
 	# and have comparative.data inherit methods from phylo, but that presupposes
@@ -125,6 +129,9 @@ na.omit.comparative.data <- function(x, ...){
     # strips data rows, tips and vcv row/columns for a comparative.data object
     to.drop <- which(! complete.cases(x$data))
     
+	# test for completely empty dataset
+	if(length(to.drop) == nrow(x$data)) warning('No complete rows present in data.')
+	
     # guard against ape 'feature' of dropping all tips for empty vectors
     if(length(to.drop) > 0){
         

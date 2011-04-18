@@ -1,5 +1,4 @@
-`contrCalc` <-
-function(vals, phy, ref.var, picMethod, crunch.brlen){
+contrCalc <- function(vals, phy, ref.var, picMethod, crunch.brlen){
 
     # Takes the tip values and analysis tree and calculates matrices 
     # of contrasts and nodal values.
@@ -11,17 +10,22 @@ function(vals, phy, ref.var, picMethod, crunch.brlen){
     # DESIGN THOUGHTS - simpler to maintain with a single function for each type of contrast
     #                 - create an initialize function to do these shared first steps?
     
-    Root <-  with(phy, (max(edge)-Nnode)+1)
-    IntNd <- Root:max(phy$edge) 
+	nTip   <- length(phy$tip.label)
+    Root   <- nTip + 1
+    IntNd  <- phy$node.label # put in place by comparative data 
     nIntNd <- phy$Nnode
 
-    contrMat <- matrix(NA, ncol=dim(vals)[2], nrow=nIntNd, dimnames=list(IntNd, dimnames(vals)[[2]]))
+	# get a contrast matrix and a table of nodal values for internal and external nodes
+    contrMat <- matrix(NA, ncol=ncol(vals), nrow=nIntNd, dimnames=list(IntNd, colnames(vals)))
     nodVal <- rbind(vals, contrMat)
-    
+
     # node depth vector
     nodeDepth <- rep(c(1,NA), times=c(length(phy$tip.label), nIntNd))
     names(nodeDepth) <- rownames(nodVal)
-    
+
+	# simple vector flagging which rows of nodVal are internal
+    internalFlag <- rep(c(FALSE,TRUE), times=c(nTip, nIntNd))
+
     # vector of number of children and variance used in calculation
     nChild <- numeric(nIntNd)
     names(nChild) <- IntNd
@@ -31,15 +35,24 @@ function(vals, phy, ref.var, picMethod, crunch.brlen){
 
     # for use in brunch analyses, a vector to note whether an
     # internal node has been used or not
-    brunchUsed <- logical(dim(nodVal)[1])
+    brunchUsed <- logical(nrow(nodVal))
     names(brunchUsed) <- rownames(nodVal)
 
-    # identify the groups contributing to each contrast - split() sorts into numeric order
-	contrGp <- split(phy$edge[, 2], as.numeric(phy$edge[, 1]))
+    # identify the groups contributing to each contrast
+    # - split() sorts into numeric order
+	# - these are using the ids from the edge matrix and 
+	#   these are indices onto the vector c(tip.labels, node.labels)
+	#   which is the order of the nodVal table so can be used directly
+	#   to look up the rows of nodVal
+	contrGp <- split(phy$edge[, 2], phy$edge[, 1])
+	
 	# put into a pruningwise order
 	phy <- reorder(phy, 'pruningwise')
 	contrGp <- contrGp[as.character(unique(phy$edge[,1]))]
     
+	# now need to set the names of the contrast groups to the node labels
+	names(contrGp) <- phy$node.label[as.numeric(names(contrGp)) - nTip]
+	
     # loop the nodes
     for(nd in seq_along(contrGp)){
         
@@ -323,6 +336,10 @@ function(vals, phy, ref.var, picMethod, crunch.brlen){
        }
     }
 
+	# tidy away tips on nodVal and nodeDepth
+	nodVal    <- nodVal[internalFlag,]
+	nodeDepth <- nodeDepth[internalFlag]
+	
     RET <- list(contrMat=contrMat, nodVal=nodVal, var.contr=contrVar, nChild=nChild, nodeDepth=nodeDepth) 
     attr(RET, "contr.type") <- picMethod
 

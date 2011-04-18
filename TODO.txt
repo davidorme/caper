@@ -7,7 +7,17 @@ crunch
 
 brunch
  - flesh out Rd
- - daignostic plots on brunch 
+ - daignostic plots on brunch
+
+piclm
+ - include at all!
+
+macrocaic
+ - synchornize factor handling code with crunch
+ - zero branch lengths in calculation - check Isaac et al!
+
+
+caic object class definition and name...
 
 Namespace to hide some functions:
 

@@ -36,22 +36,20 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
         }
         
 		# set branch lengths doesn't get evaluated if FALSE or zero
-        if(as.logical(equal.branch.length)) { 
+        if(as.logical(equal.branch.length)) {
             phy$edge.length <- rep(2, length(phy$edge.length))
+        } else {
+            if(is.null(phy$edge.length)) stop("The phylogeny does not contain branch lengths and crunch has not been set to use equal branch lengths.")
+            if(any(phy$edge.length <= 0)) stop("The phylogeny contains either negative or zero branch lengths and crunch has not been set to use equal branch lengths.")
         }
-                
+            
         # check for factor.action
         factor.action <- match.arg(factor.action, c("abort", "warn", "allow"))
 
-        # Label the internal nodes by their node number in the original tree to provide a backreference
-		## IS THIS NEEDED ANYMORE?
-        phy$node.label <- with(phy, ((max(edge)-Nnode) +1):max(edge)) 
-        
         # useful info...
         root <- length(phy$tip.label) + 1
         unionData <- nrow(data)
 
-        
 	# CALCULATE MODEL 
 	# GET THE MODEL MATRIX and Model Response
 
@@ -126,15 +124,14 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
       
     # FEED THE RETURNED DESIGN AND RESPONSE MATRICES INTO THE MODELLING FUNCTIONS
         # assemble the data into a finished contrast object
-
         ContrObj <- list()
         ContrObj$contr$response <- contr$contr[,1,drop=FALSE]
         ContrObj$contr$explanatory <- contr$contr[,-1,drop=FALSE]
-        ContrObj$nodalVals$response <- contr$nodVal[as.numeric(rownames(contr$nodVal)) >= root,1,drop=FALSE]
-        ContrObj$nodalVals$explanatory <- contr$nodVal[as.numeric(rownames(contr$nodVal)) >= root,-1,drop=FALSE]            
+        ContrObj$nodalVals$response <- contr$nodVal[,1,drop=FALSE]
+        ContrObj$nodalVals$explanatory <- contr$nodVal[,-1,drop=FALSE]            
         ContrObj$contrVar <- contr$var.contr
         ContrObj$nChild <- contr$nChild
-        ContrObj$nodeDepth <- contr$nodeDepth[as.numeric(names(contr$nodeDepth)) >= root]
+        ContrObj$nodeDepth <- contr$nodeDepth
         
         # gather the row ids of NA nodes to drop from the model
         validNodes <- with(ContrObj$contr, complete.cases(explanatory) & complete.cases(response))
@@ -163,7 +160,8 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
        class(RET) <- c("caic")
        
        # convert the ContrObj into a data frame...
-       contrData <- caic.table(RET, valid=TRUE)
+	   # - removed the OTT call to caic.table
+       contrData <- with(ContrObj$contr, as.data.frame(cbind(response,explanatory)))
        RET$mod$call <- substitute(lm(FORM, data=contrData, subset=validNodes), list(FORM=formula))
        RET$mod$terms <- attr(mf, "terms")
        

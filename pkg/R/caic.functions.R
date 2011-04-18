@@ -77,7 +77,6 @@ caic.table <- function(caicObj, validNodes=TRUE, nodalValues=FALSE, ultrametric.
         tab$studResid[match(as.numeric(names(stRes)), tab$nodeNumber)] <- stRes
         if(validNodes) tab <- subset(tab, validNodes, select=-validNodes)
        
-       
        if(CAIC.codes){
            Cphy <- caic.label(caicObj$data$phy)
            tab$CAIC.code <- Cphy$edge.caic.code[match(tab$nodeNumber, names(Cphy$edge.caic.code))]

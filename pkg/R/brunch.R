@@ -36,14 +36,13 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
 	    }
     
 		# set branch lengths doesn't get evaluated if FALSE or zero
-	    if(as.logical(equal.branch.length)) { 
-	        phy$edge.length <- rep(2, length(phy$edge.length))
-	    }
-          
-	    # Label the internal nodes by their node number in the original tree to provide a backreference
-		## TODO - IS THIS NEEDED ANYMORE?
-	    phy$node.label <- with(phy, ((max(edge)-Nnode) +1):max(edge)) 
-    
+        if(as.logical(equal.branch.length)) {
+            phy$edge.length <- rep(2, length(phy$edge.length))
+        } else {
+            if(is.null(phy$edge.length)) stop("The phylogeny does not contain branch lengths and brunch has not been set to use equal branch lengths.")
+            if(any(phy$edge.length <= 0)) stop("The phylogeny contains either negative or zero branch lengths and brunch has not been set to use equal branch lengths.")
+        }
+  
 	    # useful info...
 	    root <- length(phy$tip.label) + 1
 	    unionData <- nrow(data)

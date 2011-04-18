@@ -171,9 +171,10 @@ Far more functionality for creating and manipulating comparative datasets is pro
 The examples in this vignette make use of the following datasets:
 
 \begin{description}
-  \item[shorebird] This dataset includes a phylogeny of 71 species of shorebirds along with data on male and female body mass, egg mass, clutch size and mating system \citep{Lislevand.Thomas.2006.a}.
-  \item[syrphidae] This dataset includes a phylogeny of 204 genera of hoverfly along with data on the species richness of each of those genera \citep{Katzourakis.Purvis.ea.2001.a}.
-  \item[perrisodactyla] This dataset includes a phylogeny of 18 perrisodactyl species and a data frame of female and neonatal mass, gestation length and territoriality for 13 of those species. The data frame contains missing data and the dataset was provided as an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
+  \item[\dtidx{shorebird}] This dataset includes a phylogeny of 71 species of shorebirds along with data on male and female body mass, egg mass, clutch size and mating system \citep{Lislevand.Thomas.2006.a}.
+  \item[\dtidx{syrphidae}] This dataset includes a phylogeny of 204 genera of hoverfly along with data on the species richness of each of those genera \citep{Katzourakis.Purvis.ea.2001.a}.
+  \item[\dtidx{perrisodactyla}] This dataset includes a phylogeny of 18 perrisodactyl species and a data frame of female and neonatal mass, gestation length and territoriality for 13 of those species. The data frame contains missing data and the dataset was provided as an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
+  \item[\dtidx{IsaacEtAl}] The datafile contains four datasets of species level phylogenies and nine variables for four mammalian orders (Primates, Carnivora, Chiroptera and Marsupialia). The data were published in supplementary material for \citet{Isaac.Jones.ea.2005.a}. The variables are body mass, age at sexual maturity, gestation length, interbirth interval, litter size , population density, group size, mass dimorphism and length.dimorphism. All variables have been natural log transformed.
 \end{description}
 
 %%  <<print=FALSE>>=

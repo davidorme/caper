@@ -138,15 +138,33 @@ cdat <- comparative.data(data=dat, phy=phy, names.col="taxa")
 print(cdat)
 @
 
-The \fnidx{comparative.data} class has a number of generic methods that allow users to extract a subset of taxa and the relevant linked data from within a \fnidx{comparative.data} object:
+The \fnidx{comparative.data} class has a number of generic methods that allow users to extract a subset of taxa and the relevant linked data from within a \fnidx{comparative.data} object.
 
-\begin{description}
-\item[\texttt{na.omit}\index{Functions!comparative.data!na.omit}] This method returns a subset of the object containing only those taxa for which the data are complete (i.e no \texttt{NA} values).
-\item[\texttt{subset}\index{Functions!comparative.data!subset}] This method functions like the \texttt{subset} function for data frames: the \texttt{subset} argument is used to specify a logical subset of rows using one or more of the data columns; the \texttt{select} argument can be used to choose which variables to include in the subset.
-\item[\texttt{\char91}\index{Functions!comparative.data!\texttt{\char91}}] This method treats the dataset as the rows (taxa) and columns (variables) of a matrix. The first index allows taxa to be specified by name or by their position in the sequence of tip labels for the phylogeny. The second index selects variables in the same way as in the extract method (\texttt{\char91}.data.frame) for a data frame.
-\end{description}
+
+\subsubsection{\texttt{na.omit}\index{Functions!comparative.data!na.omit}}
+ This method returns a subset of the object containing only those taxa for which the data are complete (i.e no \texttt{NA} values). By default, the \fnidx{comparative.data} function drops incomplete rows, but this can be altered. The examples below show the function in use on the \dtidx{perrisodactyla} dataset.
+
+<<na.omit>>=
+data(perrisodactyla)
+(perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial))
+# but this can be turned off
+(perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial, na.omit=FALSE))
+na.omit(perriso)
+@
+
+\subsubsection{\texttt{subset}\index{Functions!comparative.data!subset}}
+ This method functions like the \texttt{subset} function for data frames: the \texttt{subset} argument is used to specify a logical subset of rows using one or more of the data columns; the \texttt{select} argument can be used to choose which variables to include in the subset.
+
+
+\subsubsection{\texttt{\char91}\index{Functions!comparative.data!\texttt{\char91}}}
+ This method treats the dataset as the rows (taxa) and columns (variables) of a matrix. The first index allows taxa to be specified by name or by their position in the sequence of tip labels for the phylogeny. The second index selects variables in the same way as in the extract method (\texttt{\char91}.data.frame) for a data frame.
+
 
 Far more functionality for creating and manipulating comparative datasets is provided by the \pkgidx{phylobase} package. It is intended to incorporate this functionality into \pkgidx{caper}.
+
+%%
+%% EXAMPLE DATASETS
+%%
 
 \subsection{Example datasets}
 
@@ -155,6 +173,7 @@ The examples in this vignette make use of the following datasets:
 \begin{description}
   \item[shorebird] This dataset includes a phylogeny of 71 species of shorebirds along with data on male and female body mass, egg mass, clutch size and mating system \citep{Lislevand.Thomas.2006.a}.
   \item[syrphidae] This dataset includes a phylogeny of 204 genera of hoverfly along with data on the species richness of each of those genera \citep{Katzourakis.Purvis.ea.2001.a}.
+  \item[perrisodactyla] This dataset includes a phylogeny of 18 perrisodactyl species and a data frame of female and neonatal mass, gestation length and territoriality for 13 of those species. The data frame contains missing data and the dataset was provided as an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
 \end{description}
 
 %%  <<print=FALSE>>=

@@ -3,7 +3,11 @@ Fusco test:
  - sort out returns: I, I prime, Iw median mean etc.
 
 crunch
-- plot methods that avoid name problems with log(var) etc.
+ - plot methods that avoid name problems with log(var) etc.
+
+brunch
+ - flesh out Rd
+ - daignostic plots on brunch 
 
 Namespace to hide some functions:
 

@@ -3,98 +3,51 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
 {
 
 
-        # OLD2NEW STATUS: Converted to use new ape phylo structure
-        # All geographic based contrast calculation code has been removed in order to hasten a first release of the package
-        # and the caic wrapper function to contrCalc has been split to explicit caic and macrocaic wrappers and thence caic to brunch and crunch
-        
-        # Program Flow:
-        #   1) setup - check arguments, 
-        #   2) get the union set of tips and data rows and reduce the phylogeny and data to this union
-        #   3) use model functions to get design and response matrices, including all NA data
-        #   4) feed the model matrices into a function to calculate nodal values and contrasts
-        #   5) feed the returned contrast versions of the design and response matrices into lm.fit
-        
-        # TODO - return node age/height
-        # TODO - allow caic to be used as a contrast calculator
-        # TODO - farm out common data setup in caic and macrocaic to a single function.
-        
-        # CHECKS AND SETUP
-
-        # record call and dataset names
-        cl <- match.call()
-        phyName <- deparse(substitute(phy))
-        dataName <- deparse(substitute(data))
-
-        # check inputs are what they should be TODO FILL THIS OUT
-        # if(! is.formula(formula)) stop("'formula' must be an object of class 'formula'.")
-        if(! is.data.frame(data)) stop("'data' must be an object of class 'data.frame'.")
-                
-        # check node.depth
-        if(! is.null(node.depth)){
-            if(node.depth%%1 != 0 || node.depth < 1) stop("node.depth must be a positive integer greater than 1.")
-        }
-                
-        # check the phylogeny is a rooted phylogeny and set branch lengths...
-        if(! inherits(phy, "phylo")) 
-            stop("'", deparse(substitute(phy)), "' not of class 'phylo'")
-        if(! is.rooted(phy))
-            stop("'", deparse(substitute(phy)), "' is not rooted.")
-        
-        if(as.logical(equal.branch.length)) {# doesn't get evaluated if FALSE or zero
-            phy$edge.length <- rep(2, length(phy$edge.length))
-        }
-        
-        # identify the name column and make sure it is of mode character
-        names.col <- deparse(substitute(names.col))
-        namesInd  <- match(names.col, names(data))
-        
-        if(is.na(namesInd)) {
-            stop("Names column '",  names.col, "' not found in data frame '", dataName, "'")
-        }
-        data[,namesInd] <- as.character(data[,namesInd])
-        
-
-    # DATA MATCHING AND REDUCTION
-        # store original dataset size
-        origTips <- with(phy, max(edge) - Nnode)
-        origData <- dim(data)[1]
-
-        # find the intersection between tip.labels and names in data frame
-        in.both <- intersect(data[,namesInd], phy$tip.label)
-        if(length(in.both) < 2) stop("Fewer than two tips are common to the dataset and phylogeny")
-
-        # Label the internal nodes by their node number in the original tree to provide a backreference
-        phy$node.label <- with(phy, ((max(edge)-Nnode) +1):max(edge)) 
-
-        # i >> ditch rows with no tip
-        row.in.tree <- match(data[,namesInd], in.both)
-        data <- subset(data, !is.na(row.in.tree))
-         
-        # ii >> ditch tips which have no rows.
-        tip.in.data <-  match(phy$tip.label, in.both)
-        to.drop <- phy$tip.label[is.na(tip.in.data)]
-        #  get subset of phylogeny to be used
-        if(length(to.drop) > 0) analysisPhy <- drop.tip(phy, to.drop) else analysisPhy <- phy
-        
-        # useful info...
-        root <- with(analysisPhy, (max(edge) - Nnode) + 1)
-        
-
-         # get the data into the same order as the tips
-        tip.order <- match(analysisPhy$tip.label, data[,namesInd])
-        if(any(is.na(tip.order))) stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")
-        data <- data[tip.order,]
-        # Label the data frame rows by tip number to allow the tree to be traversed
-        rownames(data) <- 1:dim(data)[1]
-        
-        # Size of conjunction of tree and dataset
-        unionData <- dim(data)[1] 
-        
-        # reduce to just the variables used in the formula so they can all be treated as numeric 
-        # but hang on to tip labels for subsetting the phylogeny down to complete tips
-        tipLabs <- subset(data, select=names.col, drop=TRUE)
-        data <- subset(data, select=all.vars(formula))
+    # Program Flow:
+    #   1) setup - check arguments, 
+    #   2) use model functions to get design and response matrices, including all NA data
+    #   3) feed the model matrices into a function to calculate nodal values and contrasts
+    #   4) feed the returned contrast versions of the design and response matrices into lm.fit
+    
+    # TODO - return node age/height
+    # TODO - allow caic to be used as a contrast calculator
+    # TODO - explicit check for polytomy.brlen problems
+    
+    # CHECKS AND SETUP
+    
+	    # - test to see if there is a comparative data object and if not then
+	    #   retrofit the remaining arguments into a comparative data object.
+		if(! missing(data)){
+			if(! inherits(data, 'comparative.data')){
+				if(missing(names.col)) stop('names column is missing')
+				names.col <- deparse(substitute(names.col))
+				data <- caicStyleArgs(data=data, phy=phy, names.col=names.col)
+			}
+		}
+	
+		# extract the data and phylogeny
+		cdata <- data # in case the original is needed later
+		phy <- data$phy
+		data <- data$data
+	
+	    # check node.depth is sensible
+	    if(! is.null(node.depth)){
+	        if(node.depth%%1 != 0 || node.depth < 1) stop("node.depth must be a positive integer greater than 1.")
+	    }
+    
+		# set branch lengths doesn't get evaluated if FALSE or zero
+	    if(as.logical(equal.branch.length)) { 
+	        phy$edge.length <- rep(2, length(phy$edge.length))
+	    }
           
+	    # Label the internal nodes by their node number in the original tree to provide a backreference
+		## TODO - IS THIS NEEDED ANYMORE?
+	    phy$node.label <- with(phy, ((max(edge)-Nnode) +1):max(edge)) 
+    
+	    # useful info...
+	    root <- length(phy$tip.label) + 1
+	    unionData <- nrow(data)
+       
     # CALCULATE MODEL 
     # GET THE MODEL MATRIX and Model Response
         
@@ -165,7 +118,7 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
 
     # NOW SETUP TO GET CONTRASTS AND NODAL VALUES
         # We know the tip values, the analysis tree         
-        contr <- contrCalc(md, analysisPhy, ref.var, "brunch", 0) # brunch used an internal branch length of 0
+        contr <- contrCalc(md, phy, ref.var, "brunch", 0) # brunch used an internal branch length of 0
 
     # GET RESPONSE MATRIX
         # first column of contrasts is response
@@ -192,22 +145,6 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
         ContrObj$nChild <- contr$nChild
         ContrObj$nodeDepth <- contr$nodeDepth[as.numeric(names(contr$nodeDepth)) >= root]
         
-        ## THE NEXT SECTION WAS FAR TOO SLOW AND FAR TOO MEMORY HUNGRY WITH BIG TREES
-        ##  - NODE DEPTH CALCULATIONS (FILTERING NODES WHERE NO CONTRASTS ARE CALCULATED)
-        ##    ARE NOW WRITTEN INTO THE TREE TRAVERSAL OF contrCalc SO SHOULD BE FAR MORE EFFICIENT!
-        
-        ##  # get the node depth using the tree for which we have complete data
-        ##  # and then match those nodes up against the analysis tree
-        ##  tipsWithNAdata <- tipLabs[! complete.cases(mf)]
-        ##  if(length(tipsWithNAdata) > 0){
-        ##  	compPhy <- drop.tip(analysisPhy, tipsWithNAdata) 
-    	##  }	else { compPhy <- analysisPhy }
-    	
-		## nd <- node2tip(compPhy) # slow because it uses clade matrix
-		## names(nd) <- with( compPhy, c(tip.label, node.label))
-        ## nd <- nd[match(analysisPhy$node.label, names(nd))]
-        ## ContrObj$nodeDepth <- nd
-        
         # gather the row ids of NA nodes to drop from the model
         validNodes <- with(ContrObj$contr, complete.cases(explanatory) & complete.cases(response))
        
@@ -231,7 +168,7 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
        
        # assemble the output
        # return fitted model and contrasts
-       RET <- list(contrast.data=ContrObj, phy=analysisPhy, mod=mod)
+       RET <- list(contrast.data=ContrObj, mod=mod,data=cdata)
        class(RET) <- c("caic")
        
         # convert the ContrObj into a data frame...
@@ -243,15 +180,10 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
        RET$mod$model <- contrData
        attr(RET$mod$model, "terms") <- attr(mf, "terms")
        
-       # add some attributes
-       attr(RET, "origTips") <- origTips
-       attr(RET, "origData") <- origData
-       attr(RET, "unionData") <- unionData
-       attr(RET, "phyName") <- phyName 
-       attr(RET, "dataName") <- dataName
+       ## add some attributes
        attr(RET, "contr.method") <- "brunch"
        attr(RET, "stand.contr") <- stand.contr
-       
+
        return(RET)
 
 }

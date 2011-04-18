@@ -11,10 +11,10 @@ brunch(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.dep
 
 
 \arguments{
-  \item{formula}{A model formula.}
-  \item{data}{A data frame containing the variables specified in the model formula. The data frame can contain missing data for explanatory variables.}
-  \item{phy}{An object of class 'phylo' giving the phylogenetic structure in the data.}
-  \item{names.col}{A name specifying the column in 'data' that matches rows to tips in 'phy'.}
+\item{formula}{A model formula.}
+\item{data}{An 'comparative.data' object. Alternatively, a data frame.}
+\item{phy}{An object of class 'phylo', required when data is not a 'comparative.data' object.}
+\item{names.col}{A name specifying the column in 'data' that matches rows to tips in 'phy', required when data is not a 'comparative.data' object.}
   \item{stand.contr}{A logical flag indicating whether or not to standardize contrasts}.
   \item{ref.var}{A reference variable present in the model that is used to specify the direction of calculation of contrasts. If null, this is assumed to be the first explanatory variable.}
   \item{node.depth}{A positive integer greater than 1 used to restrict the model to contrasts with a node depth less than or equal to the specified depth. Tips have a depth of 1.}
@@ -22,20 +22,20 @@ brunch(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.dep
 }
 
 \details{
-This function implements the 'brunch' algorithm for modelling the relationship between variables that are phylogenetically non-independent. [The method was first described by Felsenstein (1985) and subsequently extended to permit the use of phylogenies with polytomies by Pagel (1992) - correct this...]. This method was previously implemented in the Mac Classic computer programs CAIC, written by Purvis and Rambaut (1995) and updated by Nick Isaac and Paul-Michael Agapow.
+This function implements the 'brunch' algorithm for modelling the relationship between variables that are phylogenetically non-independent. This method was described and previously implemented in the Mac Classic computer programs CAIC, written by Purvis and Rambaut (1995) and updated by Nick Isaac and Paul-Michael Agapow. 
 
-The user provides a data frame and a phylogeny. These are matched using \code{names.col} to identify a column in the data frame that contains tip labels on the phylogeny. The formula specifies the model to be fitted and contrasts are calculated in those variables. The specified reference variable is used to ensure that contrasts for multivariate models are calculated in a consistent direction at each node. The function \code{caic} acts as a data preparation wrapper, finding the union between the phylogeny and data and reducing the dataset to the correct model and response matrices. The prepared data is then sent to the \code{contrCalc} engine, which is not intended to be called by users.
+The 'brunch' algorithm calculates contrasts for models that include binary categorical variables. Contrasts are identified and calculated for all variables in the model for a set of nodes where each side can be unequivocally attributed to one or other of the categories. Unlike 'crunch', nested contrasts are not calculated and each row of data at the tips is used only once. This follows Burt (1989): contrasts whose paths do not meet or cross at any point will be phylogenetically independent.
 
-The resulting table of contrasts is then used to fit the specified model - note that the intercept is automatically dropped from the model if present, following REF HERE. 
+Factors with more than two levels are supported but *must* be ordered to allow sensible contrasts to be drawn. In addition, there is no single best compromise set of contrasts with non-binary factors and implementations may differ in the set chosen.
 
-Missing data notes here...
+The user provides a comparative dataset. The formula specifies the model to be fitted and contrasts are calculated in those variables. The specified reference variable is used to ensure that contrasts for multivariate models are calculated in a consistent direction at each node. The function \code{brunch} acts as a data preparation wrapper for the function \code{contrCalc}, which is not intended to be directly called by users. Missing data can be present in the explanatory variables: the algorithm makes use of the complete data available at each node as was the case with CAIC.
 
 Polytomies - more detail here The Mac Classic program CAIC used 1 for both 'Brunch' and 'Crunch' analyses and this the default.
 
 
 }
 \value{
-  A list of class 'caic' containing the following:
+  A list of class 'brunch' containing the following:
 	\item{contrast.data}{ A list of the following:
 	\describe{
 		\item{contr}{A list containing matrices of the contrasts in the response variable (contr\$response) and explanatory variables (contr\$explanatory).}
@@ -49,26 +49,24 @@ Polytomies - more detail here The Mac Classic program CAIC used 1 for both 'Brun
   \item{lm}{An 'lm' object containing a regression model through the origin for the calculated contrasts}
 }
 \references{
-Felsenstein, J.  (1985).  Phylogenies and the comparative method.  Am. Nat.  125, 1-15
-
-Pagel, M. D. (1992). A method for the analysis of comparative data.  J. theor. Biol. 156, 431-442.
-
 Purvis, A. and Rambaut, A. (1995) Comparative analysis by independent contrasts (CAIC): an Apple Macintosh application for analysing comparative data.  Computer Appl. Biosciences 11, 247-251.
+
+Burt, A. (1989). Comparative methods using phylogenetically independent contrasts. Oxford Surveys in Evolutionary Biology, 6:33–53.
 }
 
 \author{David Orme}
 
 \seealso{\code{\link{caic.table}} for extracting a data table, \code{\link{summary.caic}} for a data and model summary and \code{\link{caic.diagnostics}} for model checking.}
+
 \examples{
-
-data(SmallTree)
-brunchMod <- brunch(othervar ~ catX2, phy=diTree, data=SmallTreeDat, names.col=tip)
-
+data(perrisodactyla)
+perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
+brunchMod <- brunch(log.female.wt ~ Territoriality, data=perriso)
 summary(brunchMod)
 
 # plot the contrasts
 brunchTab <- caic.table(brunchMod)
-plot(othervar ~ catX2, brunchTab)
+plot(log.female.wt ~ Territoriality, brunchTab)
 
 # for the actual model diagnostics
 par(mfrow=c(3,1))

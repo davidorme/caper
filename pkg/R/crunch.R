@@ -11,9 +11,6 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
         
         # TODO - return node age/height
         # TODO - allow caic to be used as a contrast calculator
-        # TODO - farm out common data setup in caic and macrocaic to a single function.
-        # TODO - more error checking on inputs
-       
         # TODO - explicit check for polytomy.brlen problems
         
         # CHECKS AND SETUP
@@ -46,9 +43,8 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
         # check for factor.action
         factor.action <- match.arg(factor.action, c("abort", "warn", "allow"))
 
-    # DATA MATCHING AND REDUCTION
-
         # Label the internal nodes by their node number in the original tree to provide a backreference
+		## IS THIS NEEDED ANYMORE?
         phy$node.label <- with(phy, ((max(edge)-Nnode) +1):max(edge)) 
         
         # useful info...

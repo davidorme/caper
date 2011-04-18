@@ -137,7 +137,10 @@ na.omit.comparative.data <- function(x, ...){
         if(! is.null(x$vcv)){
             x$vcv <- x$vcv[-to.drop, -to.drop]
         }
-    }
+    
+		# add to dropped list
+		x$dropped$tips <- c(x$dropped$tips, to.drop)
+	}
     
     return(x)
 }

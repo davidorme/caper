@@ -1,5 +1,5 @@
-`brunch` <-
-function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.depth=NULL, equal.branch.length=FALSE)
+brunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, 
+	               node.depth=NULL, equal.branch.length=FALSE)
 {
 
 
@@ -42,7 +42,7 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
             if(is.null(phy$edge.length)) stop("The phylogeny does not contain branch lengths and brunch has not been set to use equal branch lengths.")
             if(any(phy$edge.length <= 0)) stop("The phylogeny contains either negative or zero branch lengths and brunch has not been set to use equal branch lengths.")
         }
-  
+  		
 	    # useful info...
 	    root <- length(phy$tip.label) + 1
 	    unionData <- nrow(data)
@@ -70,6 +70,7 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
         # and also need a vector showing which terms are categorical and numeric
         # in order to allow correct standardization of contrasts
         # - do this step before turning the factors into numbers
+
         varClass <- attributes(attributes(mf)$terms)$dataClasses
         termFactors <- attributes(attributes(mf)$terms)$factors
        
@@ -136,13 +137,13 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
         # assemble the data into a finished contrast object
 
         ContrObj <- list()
-        ContrObj$contr$response <- mrC[,,drop=FALSE]
+        ContrObj$contr$response <- mrC
         ContrObj$contr$explanatory <- mdC
-        ContrObj$nodalVals$response <- contr$nodVal[as.numeric(rownames(contr$nodVal)) >= root,1,drop=FALSE]
-        ContrObj$nodalVals$explanatory <- contr$nodVal[as.numeric(rownames(contr$nodVal)) >= root,-1,drop=FALSE]            
+        ContrObj$nodalVals$response <- contr$nodVal[,1,drop=FALSE]
+        ContrObj$nodalVals$explanatory <- contr$nodVal[,-1,drop=FALSE]            
         ContrObj$contrVar <- contr$var.contr
         ContrObj$nChild <- contr$nChild
-        ContrObj$nodeDepth <- contr$nodeDepth[as.numeric(names(contr$nodeDepth)) >= root]
+        ContrObj$nodeDepth <- contr$nodeDepth
         
         # gather the row ids of NA nodes to drop from the model
         validNodes <- with(ContrObj$contr, complete.cases(explanatory) & complete.cases(response))
@@ -171,7 +172,7 @@ function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.d
        class(RET) <- c("caic")
        
         # convert the ContrObj into a data frame...
-       contrData <- caic.table(RET, valid=TRUE)
+       contrData <- with(ContrObj$contr, as.data.frame(cbind(response,explanatory)))
        RET$mod$call <- substitute(lm(FORM, data=contrData, subset=validNodes), list(FORM=formula))
        RET$mod$terms <- attr(mf, "terms")
        

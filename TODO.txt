@@ -18,6 +18,7 @@ macrocaic
 
 
 caic object class definition and name...
+ - AIC, anova, resid methods
 
 Namespace to hide some functions:
 
@@ -25,3 +26,5 @@ caicStyleArgs
 caic.label
 caic.table
 contrCalc
+
+contrCalc gets own .Rd

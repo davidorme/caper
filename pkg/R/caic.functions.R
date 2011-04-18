@@ -49,18 +49,18 @@ caic.label <- function(phy, charset=NULL, action="insert", style="CAIC"){
 }
 
 caic.table <- function(caicObj, validNodes=TRUE, nodalValues=FALSE, ultrametric.tol=0.0001, CAIC.codes=FALSE){
-    # simple code to create a table of the contrasts from the caic object
     
-        nodeNum <- matrix(as.numeric(names(caicObj$contrast.data$contrVar)),
-                          ncol=1, dimnames=list(NULL, "nodeNumber"))
+		# simple code to create a data frame of the contrasts from the caic object
+		rowID <- names(caicObj$contrast.data$contrVar)
+		
         contr <- with(caicObj$contrast.data$contr, cbind(response, explanatory))
-        # colnames(contr) <- paste("C_", colnames(contr), sep="")
+
         if(nodalValues){
             nv <- with(caicObj$contrast.data$nodalVals, cbind(response, explanatory))
             colnames(nv) <- paste("nodal.", colnames(nv), sep="")
-            tab <- as.data.frame(cbind(nodeNum, contr, nv))
+            tab <- as.data.frame(cbind(contr, nv), row.names=rowID)
         } else {
-            tab <- as.data.frame(cbind(nodeNum, contr))
+            tab <- as.data.frame(cbind(contr), row.names=rowID)
         }
         
         tab$contrVar <- caicObj$contrast.data$contrVar
@@ -72,14 +72,17 @@ caic.table <- function(caicObj, validNodes=TRUE, nodalValues=FALSE, ultrametric.
 		} else { 
 			tab$nodeAge <- NA
 		} 
+		
+		# not sure the match() calls here are necessary
         stRes <- rstudent(caicObj$mod)
         tab$studResid <- NA
-        tab$studResid[match(as.numeric(names(stRes)), tab$nodeNumber)] <- stRes
+        tab$studResid[match(names(stRes), rowID)] <- stRes
+
         if(validNodes) tab <- subset(tab, validNodes, select=-validNodes)
        
        if(CAIC.codes){
            Cphy <- caic.label(caicObj$data$phy)
-           tab$CAIC.code <- Cphy$edge.caic.code[match(tab$nodeNumber, names(Cphy$edge.caic.code))]
+           tab$CAIC.code <- Cphy$edge.caic.code[match(rowID, names(Cphy$edge.caic.code))]
        }
        
        return(tab)

@@ -1,5 +1,4 @@
-`crunch` <-
-function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.depth=NULL,
+crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.depth=NULL,
                   polytomy.brlen=0, equal.branch.length=FALSE, factor.action="abort")
 {
 

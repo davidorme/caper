@@ -42,7 +42,7 @@
 
 \maketitle
 
-This vignette documents the use of the \caper{} package for R \citep{R-Development-Core-Team.2008.a} in carrying out a range of comparative analysis methods for phylogenetic data. 
+This vignette documents the use of the \caper{} package for R \citep{R-Development-Core-Team.2010.a} in carrying out a range of comparative analysis methods for phylogenetic data. 
 
 \tableofcontents
 
@@ -253,9 +253,9 @@ cd <- caic.diagnostics(crunchMod)
 \subsection{Other comparative functions}
 
 \subsubsection{fusco.test}
-The $I$ statistic \cite{} is a measure of phylogenetic imbalance. It has the useful properties that it can be calculated for trees containing polytomies and that the tips of trees can be associated with species richness values. An imbalance score, in the interval $[0,1]$ is calculated for all nodes in the phylogeny and the distribution of the nodal values is used to assess overall balance. Nodes leading to  fewer than 4 species are uninformative about balance and $I$ cannot be calculated for polytomous nodes and hence both are omitted from balance calculations.
+The $I$ statistic \citep{Fusco.Cronk.1995.a} is a measure of phylogenetic imbalance. It has the useful properties that it can be calculated for trees containing polytomies and that the tips of trees can be associated with species richness values. An imbalance score, in the interval $[0,1]$ is calculated for all nodes in the phylogeny and the distribution of the nodal values is used to assess overall balance. Nodes leading to  fewer than 4 species are uninformative about balance and $I$ cannot be calculated for polytomous nodes and hence both are omitted from balance calculations.
 
-The original $I$ statistic proposed by \citet{} has been shown to have a  bias at nodes with even numbers of species \citep{Purvis}. This function therefore also implements the modified $I'$ statistic: a Wilcoxon test is used to assess whether the median of the observed $I'$ values differs from the value of 0.5 expected under a Markov process and a randomisation process is used to provide confidence intervals. 
+The original $I$ statistic proposed by \citet{Fusco.Cronk.1995.a} has been shown to have a  bias at nodes with even numbers of species \cite{Purvis.Katzourakis.ea.2002.a}. This function therefore also implements the modified $I'$ statistic: a Wilcoxon test is used to assess whether the median of the observed $I'$ values differs from the value of 0.5 expected under a Markov process and a randomisation process is used to provide confidence intervals. 
 
 The function can make use of species richness data but can also be set to treat the tips of the phylogeny as species. These two approaches contrast the balance of the distribution of species richness across a topology and the balance of the topology itself. 
 <<>>=

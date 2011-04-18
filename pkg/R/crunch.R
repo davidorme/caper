@@ -2,17 +2,17 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
                   polytomy.brlen=0, equal.branch.length=FALSE, factor.action="abort")
 {
 
-        # Program Flow:
-        #   1) setup - check arguments, 
-        #   2) use model functions to get design and response matrices, including all NA data
-        #   3) feed the model matrices into a function to calculate nodal values and contrasts
-        #   4) feed the returned contrast versions of the design and response matrices into lm.fit
-        
-        # TODO - return node age/height
-        # TODO - allow caic to be used as a contrast calculator
-        # TODO - explicit check for polytomy.brlen problems
-        
-        # CHECKS AND SETUP
+	# Program Flow:
+	#   1) setup - check arguments, 
+	#   2) use model functions to get design and response matrices, including all NA data
+	#   3) feed the model matrices into a function to calculate nodal values and contrasts
+	#   4) feed the returned contrast versions of the design and response matrices into lm.fit
+
+	# TODO - return node age/height
+	# TODO - allow caic to be used as a contrast calculator
+	# TODO - explicit check for polytomy.brlen problems
+
+	# CHECKS AND SETUP
         
         # - test to see if there is a comparative data object and if not then
         #   retrofit the remaining arguments into a comparative data object.

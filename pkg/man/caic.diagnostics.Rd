@@ -2,6 +2,7 @@
 \alias{caic.diagnostics}
 \alias{print.caic.diagnostics}
 %- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{Diagnostic plots of independent contrasts models}
 \description{
 Plots }

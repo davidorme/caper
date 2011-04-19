@@ -38,19 +38,9 @@ Contrasts at polytomies are calculated following Pagel (1992). The descendants f
 At a polytomy, subtracting the internal branch length from the real branch lengths can lead to negative branch lengths. CAIC used a hard-coded internal branch length of 1 for calculating crunch contrasts at polytomies. From version 2.6.9, CAIC issued a warning if this lead to negative branch lengths but allowed contrast calculation to continue. In contrast, the implementation in \code{crunch()} uses a default internal branch length (\code{polytomy.brlen}) of 0 and also treats a negative branch length in a polytomy calculation as an error. In either case, contrast calculation on negative branch lengths is not a desirable outcome. Duplication of CAIC results therefore requires \code{polytomy.brlen} to be set to 1 and an analyis \emph{cannot} be duplicated precisely if the phylogeny contains polytomies with descending branches shorter than 1. The method used by \code{pic.lm} to handle polytomies avoids such problems.
 }
 \value{
-  A list of class 'caic' containing the following:
-	\item{contrast.data}{ A list of the following:
-	\describe{
-		\item{contr}{A list containing matrices of the contrasts in the response variable (contr\$response) and explanatory variables (contr\$explanatory).}
-		\item{nodalVals}{A list containing matrices of the nodal values in the response variable (contr\$response) and explanatory variables (contr\$explanatory).}
-		\item{contrVar}{A numeric vector of the calculated variances for each contrast.}
-		\item{nChild}{A vector showing the number of nodes descending from each internal node}
-		\item{nodeDepth}{A vector showing the maximum number of nodes between each internal node and the tips of the phylogeny (including both the node in question and the tip and hence always >=2) }
-		\item{validNodes}{A logical vector showing which internal nodes on the tree have valid contrasts, given the available data and any user constraints.}
-	}}
-  \item{phy}{A 'phylo' object describing the phylogeny used to calculate contrasts. This is the phylogeny in the original call reduced to those tips that are also named in the provided data but possibly including tips with missing data.}
-  \item{lm}{An 'lm' object containing a regression model through the origin for the calculated contrasts}
+  A object of class 'caic'.
 }
+
 \references{
 Felsenstein, J.  (1985).  Phylogenies and the comparative method.  Am. Nat.  125, 1-15
 
@@ -61,7 +51,7 @@ Purvis, A. and Rambaut, A. (1995) Comparative analysis by independent contrasts 
 
 \author{David Orme}
 
-\seealso{\code{\link{caic.table}} for extracting a data table, \code{\link{summary.caic}} for a data and model summary and \code{\link{caic.diagnostics}} for model checking.}
+\seealso{\code{\link{caic-class}} for 'caic' object structure and methods.}
 \examples{
 
 data(shorebird)

@@ -35,18 +35,7 @@ Polytomies - more detail here The Mac Classic program CAIC used 1 for both 'Brun
 
 }
 \value{
-  A list of class 'brunch' containing the following:
-	\item{contrast.data}{ A list of the following:
-	\describe{
-		\item{contr}{A list containing matrices of the contrasts in the response variable (contr\$response) and explanatory variables (contr\$explanatory).}
-		\item{nodalVals}{A list containing matrices of the nodal values in the response variable (contr\$response) and explanatory variables (contr\$explanatory).}
-		\item{contrVar}{A numeric vector of the calculated variances for each contrast.}
-		\item{nChild}{A vector showing the number of nodes descending from each internal node}
-		\item{nodeDepth}{A vector showing the maximum number of nodes between each internal node and the tips of the phylogeny (including both the node in question and the tip and hence always >=2) }
-		\item{validNodes}{A logical vector showing which internal nodes on the tree have valid contrasts, given the available data and any user constraints.}
-	}}
-  \item{phy}{A 'phylo' object describing the phylogeny used to calculate contrasts. This is the phylogeny in the original call reduced to those tips that are also named in the provided data but possibly including tips with missing data.}
-  \item{lm}{An 'lm' object containing a regression model through the origin for the calculated contrasts}
+  A object of class 'caic'.
 }
 \references{
 Purvis, A. and Rambaut, A. (1995) Comparative analysis by independent contrasts (CAIC): an Apple Macintosh application for analysing comparative data.  Computer Appl. Biosciences 11, 247-251.
@@ -56,7 +45,7 @@ Burt, A. (1989). Comparative methods using phylogenetically independent contrast
 
 \author{David Orme}
 
-\seealso{\code{\link{caic.table}} for extracting a data table, \code{\link{summary.caic}} for a data and model summary and \code{\link{caic.diagnostics}} for model checking.}
+\seealso{\code{\link{caic-class}} for 'caic' object structure and methods.}
 
 \examples{
 data(perrisodactyla)

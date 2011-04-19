@@ -189,9 +189,9 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
        attr(RET$mod$model, "terms") <- attr(mf, "terms")
        
        # add some attributes
-       attr(RET, "contr.method") <- "macrocaic"
-       attr(RET, "contr.type") <- macroMethod
-       attr(RET, "stand.contr") <- stand.contr
+       attr(RET, "contr.method") <- "crunch"
+       attr(RET, "macro.method") <- macroMethod
+       attr(RET, "stand.contr")  <- stand.contr
        
        return(RET)
 }

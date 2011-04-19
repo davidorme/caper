@@ -6,9 +6,12 @@
 % \VignetteKeyword{stats} 
 % \VignetteKeyword{kwd2} 
 
+\usepackage{geometry}
 \usepackage[utf8]{inputenc} % for fancy quotes
 \usepackage[round]{natbib}
 \usepackage{makeidx} 
+
+\geometry{a4paper, textwidth=15cm, textheight=25cm}
 \makeindex
 
 % \SweaveOpts{keep.source=TRUE, echo=TRUE}
@@ -30,7 +33,6 @@
 
 \title{The \caper{} package: comparative analysis of phylogenetics and evolution in R}
 \author{David Orme}
-
 
 
 \begin{document}
@@ -123,6 +125,8 @@ for(sub in split(dat, dat$tx)) abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1]
 
 The \caper{} package implements two methods that account for this phylogenetic autocorrelation. The first, originally described by \citet{Felsenstein.1985.a}, is to recognize that the differences between taxa on either side of a bifurcating node represent independent evolutionary trajectories and that these differences (`independent contrasts') can be used to test hypotheses in a way that accounts for the phylogenetic autocorrelation between the taxa. \citet{Pagel.1992.a} extended this method to permit contrasts to be calculated at polytomies. The second, described by [refs], is to include the phylogenetic structure as a covariance matrix in a linear model. 
 
+The \caper{} package also provides a number of other phylogenetic comparative methods, along with a flexible method for simulating trait evolution on phylogenies.
+
 %% COMPARATIVE DATASETS
 
 \section{Comparative datasets}
@@ -174,35 +178,18 @@ The examples in this vignette make use of the following datasets:
   \item[\dtidx{shorebird}] This dataset includes a phylogeny of 71 species of shorebirds along with data on male and female body mass, egg mass, clutch size and mating system \citep{Lislevand.Thomas.2006.a}.
   \item[\dtidx{syrphidae}] This dataset includes a phylogeny of 204 genera of hoverfly along with data on the species richness of each of those genera \citep{Katzourakis.Purvis.ea.2001.a}.
   \item[\dtidx{perrisodactyla}] This dataset includes a phylogeny of 18 perrisodactyl species and a data frame of female and neonatal mass, gestation length and territoriality for 13 of those species. The data frame contains missing data and the dataset was provided as an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
-  \item[\dtidx{IsaacEtAl}] The datafile contains four datasets of species level phylogenies and nine variables for four mammalian orders (Primates, Carnivora, Chiroptera and Marsupialia). The data were published in supplementary material for \citet{Isaac.Jones.ea.2005.a}. The variables are body mass, age at sexual maturity, gestation length, interbirth interval, litter size , population density, group size, mass dimorphism and length.dimorphism. All variables have been natural log transformed.
+  \item[\dtidx{IsaacEtAl}] The datafile contains  species level phylogenies and data sets of nine variables for each of four mammalian orders (Primates, Carnivora, Chiroptera and Marsupialia). The data were published in supplementary material for \citet{Isaac.Jones.ea.2005.a}. The variables are body mass, age at sexual maturity, gestation length, interbirth interval, litter size , population density, group size, mass dimorphism and length.dimorphism. The data sets all contain missing data and all the variables have been natural log transformed.
 \end{description}
 
-%%  <<print=FALSE>>=
-%%  library(ape)
-%%  data(SmallTree, package="CAIC")
-%%  par(mfrow=c(2,1))
-%%  plot(diTree)
-%%  plot(polyTree)
-%%  @
-%%  \begin{figure}[htbp]
-%%    \begin{center}
-%%  <<echo= false, fig=true, width=6, height=4>>=
-%%  par(mfrow=c(1,2), mar=c(3,3,1,1))
-%%  plot(diTree)
-%%  par(usr=c(0,1,0,1)); text(0.1,0.1, cex=2, "a")
-%%  plot(polyTree)
-%%  par(usr=c(0,1,0,1)); text(0.1,0.1, cex=2, "b")
-%%  
-%% %%  @ 
-%%     \caption{Phylogenies available in the smallTree dataset: a) diTree and b) polyTree.}
-%%     \label{smalltrees}
-%%   \end{center}
-%% \end{figure}
-
+%%%%%%%%%%
+%% METHODS
+%%%%%%%%%%
 
 \section{Methods and functions provided by \caper{}.}
 
-%% CRUNCH BRUNCH MACROCAIC PICLM ETC
+%%%%%%%%%%
+%% CONTRAST METHODS
+%%%%%%%%%%
 
 \subsection{Phylogenetic independent contrasts}
 
@@ -210,9 +197,15 @@ The \caper{} package implements the methods originally provided in the  programs
 
 In all functions, a reference variable (\texttt{ref.var}) may also be provided. This is used to standardize the directions in which contrasts are calculated in multivariate models. If no reference variable is provided, the function defaults to using the first explanatory variable specified in the model formula. 
 
-\subsubsection{crunch}
+%%%%%%%%%%
+%% CRUNCH
+%%%%%%%%%%
 
-The \fnidx{crunch} function provides calculation of independent contrasts for continuous variables, as implemented in the `crunch' option of the CAIC package \citep{Purvis.Rambaut.1995.a}. The following example shows an example analysis using the \dtidx{shorebird} dataset.
+\subsubsection{\fnidx{crunch}}
+
+The \fnidx{crunch} function provides calculation of independent contrasts \citep{Felsenstein.1985.a} for continuous variables, as implemented in the `crunch' option of the CAIC package \citep{Purvis.Rambaut.1995.a}, using the method of \citet{Pagel.1992.a} to calculate contrasts at polytomies. The following example shows an example analysis using the \dtidx{shorebird} dataset.
+
+%% EXPAND? - contrast calculation example from CAIC manual
 
 <<>>=
 data(shorebird)
@@ -220,7 +213,6 @@ shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
 crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, data=shorebird)
 summary(crunchMod)
 @
-
 
 A set of diagnostic tests are also defined for use with phylogenetic independent contrast models, looking for relationships between the absolute contrast values of each explanatory variable and estimates of the nodal values, standard deviations or log node age. These can be tested using the function \fnidx{caic.diagnostics} function, which both plots and reports the significance of slopes from linear models of these relationships \ref{crunchDiagnostics}.
 
@@ -241,18 +233,72 @@ cd <- caic.diagnostics(crunchMod)
   \end{center}
 \end{figure}
 
-\subsubsection{brunch}
-\subsubsection{macrocaic}
-\subsubsection{piclm}
-\subsubsection{phylo.d}
+%%%%%%%%%%
+%% BRUNCH
+%%%%%%%%%%
+
+\subsubsection{\fnidx{brunch}}
+
+The inclusion of categorical variables in phylogenetic independent contrast models is problematic. Continuous variables are assumed to evolve under a Brownian process, which permits estimates of nodal values and hence allows nested contrasts to be drawn.  There is no sensible model for reconstructing the nodal values of a categorical variable, except where all daughters share the same categorical value. However, identifying nodes with daughter variables that differ in the value of the categorical variable permit independent contrasts to be identified \citep{Burt.1989.a}. While nodal estimates of continuous variables can be made below at nodes below a \fnidx{brunch} contrast, to do so would assume independent evolution of these variables at the nodes of any deeper contrasts \citep{Burt.1989.a}. As a result, the \fnidx{brunch} algorithm only uses the data from any single tip in the calculation of a single contrast. 
+
+The example below shows \fnidx{brunch} contrasts for the \dtidx{perrisodactyla} dataset calculated using territoriality. Figure \ref{brunchPlot} shows how these contrasts are extracted from the available data. In each case, a contrast is drawn between groups of species showing differing territorial behaviour and no species is used in more than one contrast.
+
+<<brunchExample>>=
+perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
+brunchMod <- brunch(log.female.wt ~ Territoriality, data=perriso)
+caic.table(brunchMod)
+@
+
+\begin{figure}[htbp]
+  \begin{center}
+<<brunchPlot, fig=TRUE, echo=FALSE>>=
+
+bwd <- rep(1,15)
+bwd[c(5,6,11,12,9,13,14,15)] <- 3
+plot(perriso$phy,  'cladogram', use.edge.length=FALSE, label.offset=0.4, show.node=TRUE, cex=0.7, show.tip=FALSE, x.lim=c(0,12), no.margin=TRUE, edge.width=bwd)
+
+points(rep(8.25,9), 1:9, pch=ifelse(perriso$data$Terr=='Yes', 1,19))
+text(rep(8.5,9), 1:9, perriso$phy$tip.label, font=3, adj=0)
+@
+    \caption{Location of \fnidx{brunch} contrasts for territoriality in the \dtidx{perrisodactyla} dataset. Branches in bold show the tips contributing to each contrast. See also the output of \fnidx{caic.table} in the main text.}
+    \label{brunchPlot}
+  \end{center}
+\end{figure}
+
+%%%%%%%%%%
+%% MACROCAIC
+%%%%%%%%%%
+
+\subsubsection{\fnidx{macrocaic}}
+
+One common approach in macroevolution is to investigate the links between the traits of taxa and their species richness. It is inappropriate to calculate \fnidx{crunch} contrasts in species richness, particularly for nested nodes, where \fnidx{crunch} contrasts would estimate nodal values as a weighted average of species richness for the daughter taxa, rather than tracking total species richness. For this reason, \citet{Agapow.Isaac.2002.a} developed the program MacroCAIC, which implemented the calculation of species richness contrasts.
+
+The MacroCAIC program, and the \fnidx{macrocaic} function, take a statistical model of species richness as a function of continuous explanatory variables and calculate \fnidx{crunch} contrasts in the explanatory variables and one of two recommended species richness contrasts as a response \citep{Isaac.Agapow.ea.2003.a}. These two contrasts are the relative rate difference (RRD: $ln(N_1/N_2)$) and the proportion dominance index (PDI: $(N_1/(N_1 + N_2)) - 0.5$), where $N_1$ and $N_2$ are the number of species in the daughter clades and $N_1$ is the richness of the clade with the higher value in the focal explanatory variable \citep{Agapow.Isaac.2002.a}.
+
+<<>>=
+data(IsaacEtAl)
+primates <- comparative.data(primates.tree, primates.data, binomial, na.omit=FALSE)
+primatesBodySize <- macrocaic(species.rich ~ body.mass, data=primates)
+summary(primatesBodySize)
+
+@
+
+%%%%%%%%%%
+%% PICLM
+%%%%%%%%%%
+
+\subsubsection{\fnidx{piclm}}
+
+
+\subsubsection{\fnidx{phylo.d}}
 
 \subsection{Phylogenetic linear models}
 
-\subsubsection{pglm}
+\subsubsection{\fnidx{pglm}}
 
 \subsection{Other comparative functions}
 
-\subsubsection{fusco.test}
+\subsubsection{\fnidx{fusco.test}}
 The $I$ statistic \citep{Fusco.Cronk.1995.a} is a measure of phylogenetic imbalance. It has the useful properties that it can be calculated for trees containing polytomies and that the tips of trees can be associated with species richness values. An imbalance score, in the interval $[0,1]$ is calculated for all nodes in the phylogeny and the distribution of the nodal values is used to assess overall balance. Nodes leading to  fewer than 4 species are uninformative about balance and $I$ cannot be calculated for polytomous nodes and hence both are omitted from balance calculations.
 
 The original $I$ statistic proposed by \citet{Fusco.Cronk.1995.a} has been shown to have a  bias at nodes with even numbers of species \cite{Purvis.Katzourakis.ea.2002.a}. This function therefore also implements the modified $I'$ statistic: a Wilcoxon test is used to assess whether the median of the observed $I'$ values differs from the value of 0.5 expected under a Markov process and a randomisation process is used to provide confidence intervals. 
@@ -264,12 +310,15 @@ syrphidae <- comparative.data(phy=syrphidaeTree, dat=syrphidaeRich, names.col=ge
 summary(fusco.test(syrphidae, rich=nSpp))
 summary(fusco.test(syrphidae, tipsAsSpecies=TRUE))
 @
+
+\subsection{\fnidx{growTree}}
+
 \subsection{Utility functions}
 
-\subsubsection{comparative.data}
-\subsubsection{clade.members}
-\subsubsection{clade.matrix}
-\subsubsection{vcv.array}
+\subsubsection{\fnidx{comparative.data}}
+\subsubsection{\fnidx{clade.members}}
+\subsubsection{\fnidx{clade.matrix}}
+\subsubsection{\fnidx{vcv.array}}
 
 
 \bibliographystyle{plainnat}
@@ -290,4 +339,4 @@ The \caper{} package, and the code in this vignette, requires the `ape' package 
 
 
 \end{document}
-                                                                                                                                                                                                                                                                                                                                                                         
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   

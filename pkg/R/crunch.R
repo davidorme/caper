@@ -175,3 +175,4 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
        return(RET)
 
 }
+

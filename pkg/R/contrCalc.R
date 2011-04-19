@@ -1,4 +1,4 @@
-contrCalc <- function(vals, phy, ref.var, picMethod, crunch.brlen, macro=NULL){
+contrCalc <- function(vals, phy, ref.var, picMethod, crunch.brlen, macro=NULL, trimTips=TRUE){
 
     # Takes the tip values and analysis tree and calculates matrices 
     # of contrasts and nodal values. ref.var is a reference to a column in vals.
@@ -57,6 +57,9 @@ contrCalc <- function(vals, phy, ref.var, picMethod, crunch.brlen, macro=NULL){
 	} else {
 		macro <- FALSE
 	}
+	
+	# guard against phylo.d on missing data
+	if(any(is.na(vals)) & picMethod == 'phylo.d') stop('Missing data in phylo.d call.')
 	
     # loop the nodes
     for(nd in seq_along(contrGp)){
@@ -138,6 +141,51 @@ contrCalc <- function(vals, phy, ref.var, picMethod, crunch.brlen, macro=NULL){
                         currBlAdj <- 0
                         currVar <- NA
                     }},
+        "phylo.d" = {
+                    # OK - this method is much simpler
+                    #  - just calculates the difference between the parent and child nodal values
+					#  - also there won't be any missing data so can considerably slimmed down
+                    
+                        if(sum(compChild) == 2){
+                            # dichotomous node - get the nodal values 
+                            currNV <- colSums(vals*(1/bl))/sum(1/bl)
+							# subtract the parent from the children and sum the absolute changes
+                            currContr <- colSums(abs(t(t(vals) - currNV)))
+
+                            currBlAdj <- prod(bl)/sum(bl)
+                            currVar <- sum(bl)
+                        }
+
+                        if(sum(compChild) > 2){
+                            # This is the pagel method for polytomies 
+                            ## think about this - check out Nick Isaac's comment about only stalling on negative variance at a node.                            
+                            bl <- bl - crunch.brlen # could hard code the zero in here
+                            if(any(bl < 0)) stop("Crunch contrast calculation at a polytomy gives negative branch lengths.")
+
+                            # is there any (meaningful) variance in the reference variable?
+                           if(var(rv) < .Machine$double.eps){ 
+                               # compare first to the rest (as in CAIC)
+                                group <- c(TRUE, rep(FALSE, length(rv) -1))
+                           } else {
+                                # find groupings a vector indicating whether each row 
+                                # is bigger or smaller than the mean of reference variable or is NA
+                                group <- (rv > mean(rv, na.rm=TRUE)) # TODO - think >= or >?                               
+                           }
+
+                            ProdValBl <- aggregate(vals * (1/bl), by=list(group), FUN=sum)[,-1]
+                            SumWght <- aggregate((1/bl), by=list(group), FUN=sum)[,-1]
+                            subNV <- as.matrix(ProdValBl/SumWght)
+                            subBL <- crunch.brlen + (1 / SumWght)
+							
+							# get the nodal values 
+                            currNV <- colSums(subNV*(1/subBL))/sum(1/subBL) # weighted means
+							# subtract the parent from the children and sum the absolute changes
+                            currContr <- colSums(abs(t(t(vals) - currNV)))
+
+                            currVar <- sum(subBL)
+                            currBlAdj <- 1/(sum(1/subBL))
+                        }
+                    },
         "brunch" = {
                     
                     # further exclude any nodes which have been used to calculate contrasts
@@ -322,9 +370,11 @@ contrCalc <- function(vals, phy, ref.var, picMethod, crunch.brlen, macro=NULL){
        }
     }
 
-	# tidy away tips on nodVal and nodeDepth
-	nodVal    <- nodVal[internalFlag,, drop=FALSE]
-	nodeDepth <- nodeDepth[internalFlag]
+	# tidy away tips on nodVal and nodeDepth if not required
+	if(trimTips){
+		nodVal    <- nodVal[internalFlag,, drop=FALSE]
+		nodeDepth <- nodeDepth[internalFlag]
+	}
 	
     RET <- list(contrMat=contrMat, nodVal=nodVal, var.contr=contrVar, nChild=nChild, nodeDepth=nodeDepth) 
     attr(RET, "contr.type") <- picMethod

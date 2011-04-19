@@ -283,12 +283,12 @@ summary(primatesBodySize)
 
 @
 
-%%%%%%%%%%
-%% PICLM
-%%%%%%%%%%
-
-\subsubsection{\fnidx{piclm}}
-
+%% %%%%%%%%%%
+%% %% PICLM
+%% %%%%%%%%%%
+%% %% STILL THINKING WHETHER OR NOT TO INCLUDE THIS
+%% \subsubsection{\fnidx{piclm}}
+%% 
 
 \subsubsection{\fnidx{phylo.d}}
 

@@ -18,7 +18,7 @@
 ## ## extra.clumpy  brown.clumpy        random overdispersed 
 ## ##          1.0           5.0           6.5           8.0
 
-phylo.d <- function(data, phy, names.col, binvar, permut=1000, verbose=TRUE) {
+phylo.d <- function(data, phy, names.col, binvar, permut=1000) {
 
     # - test to see if there is a comparative data object and if not then
     #   retrofit the remaining arguments into a comparative data object.
@@ -112,22 +112,22 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, verbose=TRUE) {
 	## get sums of change and distributions
 	
 		ransocc <- colSums(ds.ran.cc$contrMat)
-		simsocc <- colSums(ds.phy.cc$contrMat)
+		physocc <- colSums(ds.phy.cc$contrMat)
 		# double check the observed
-		if(ransocc[1] != simsocc[1]) stop('Problem with character change calculation in phylo.d')
+		if(ransocc[1] != physocc[1]) stop('Problem with character change calculation in phylo.d')
 		obssocc <- ransocc[1]
 		ransocc <- ransocc[-1]
-		simsocc <- simsocc[-1]
+		physocc <- physocc[-1]
 		
-		soccratio <- (obssocc - mean(simsocc)) / (mean(ransocc) - mean(simsocc))
+		soccratio <- (obssocc - mean(physocc)) / (mean(ransocc) - mean(physocc))
 		soccpval1 <- sum(ransocc < obssocc) / permut
-		soccpval0 <- sum(simsocc > obssocc) / permut
+		soccpval0 <- sum(physocc > obssocc) / permut
 		
 	
 	dvals <- list(DEstimate=soccratio, Pval1=soccpval1, Pval0=soccpval0,
 		        Parameters=list(Observed=obssocc, 
-		        MeanRandom=mean(ransocc), MeanBrownian=mean(simsocc)), 
-		        Permutations=list(random=ransocc, brownian=simsocc), 
+		        MeanRandom=mean(ransocc), MeanBrownian=mean(physocc)), 
+		        Permutations=list(random=ransocc, brownian=physocc), 
 		        NodalVals=list(observed = ds.ran.cc$nodVals[, 1,drop=FALSE], 
 			                   random   = ds.ran.cc$nodVals[,-1,drop=FALSE], 
 			                   brownian = ds.phy.cc$nodVals[,-1,drop=FALSE]),
@@ -137,7 +137,7 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, verbose=TRUE) {
 	return(dvals)
 	
 }
-
+z
 print.phylo.d <- function(x, ...){
     summary(x)
 }

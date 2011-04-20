@@ -89,48 +89,93 @@ caic.table <- function(caicObj, validNodes=TRUE, nodalValues=FALSE, ultrametric.
 
 }
 
-caicStyleArgs <- function(data, phy, names.col){
-	
-	# general function to handle old style non-'comparative.data' use of 
-	# crunch, brunch, macrocaic functions 
-	
-	if(missing(data)) stop('data object is missing')
-	if(missing(phy)) stop('phy object is missing')
-
-	# check the classes (and allow for them being in the wrong order)
-	args <- list(data, phy)
-	argClass <- sapply(args, class)
-	
-	# bail back to calling function if we don't have targets
-	# i.e. precisely a phylogeny and a data.frame
-	targets <- c('data.frame', 'phylo')
-	if(! identical( sort(intersect( argClass, targets)), targets)){
-		return(NULL)
-	}
-	
-	# try and build a comparative data object
-    if(argClass[1] == 'data.frame'){
-		data <- eval(substitute(comparative.data(phy = phy, data = data, names.col = XXX), list(XXX=names.col)))
-	} else {
-		data <- eval(substitute(comparative.data(phy = data, data = phy, names.col = XXX), list(XXX=names.col)))
-	}
-	return(data)
-	
-}
-
-## ## THIS NEEDS SOME WORK TO PASS ALL THESE
-## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, phy=shorebird.tree, data=shorebird.data, names.col=Species)
-## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, shorebird.tree, shorebird.data, names.col=Species)
-## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, shorebird.data, shorebird.tree, names.col=Species)
-## ## BREAKS WITH THE FOLLOWING MISSING ARGUMENTS BUT THESE WOULD HAVE BROKEN ANYWAY
-## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, phy=shorebird.tree, names.col=Species)
-## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, data=shorebird.data, names.col=Species) 
-## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, shorebird.tree, names.col=Species)
-## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, shorebird.data, names.col=Species)
-
 summary.caic <- function(object, ...){
 
     summary(object$mod, ...)
 
 }
 
+print.caic <- function(x, ...){
+
+    cat("Phylogenetic Independent Contrasts analysis using ",  attr(x, "contr.method"), ".\n\n", sep="")
+
+    cat("Phylogeny: ", attr(x, "phyName"), " (",  length(x$data$phy$tip.label)  ," tips)\n", sep="")
+    cat("Data: ",  attr(x, "dataName"), " (",  nrow(x$data$data)  ," rows)\n", sep="")
+    cat("Number of valid contrasts: ", sum(x$contrast.data$validNodes), "\n", sep="")
+
+    print(summary(x))
+
+}
+
+predict.caic <- function(object, ...){
+    
+    # need to force the model to get predictions using the contrast table rather than the original data table...
+    # don't completely hijack the newdata argument...
+    
+    dots <- list(...)
+    newdataProv <- pmatch(names(dots), "newdata")
+    if(all(is.na(newdataProv))) nD <- caic.table(object) else nD <- dots[[newdataProv]]
+    predict(object$mod, newdata=nD)
+    
+    
+}
+
+## AIC is completely agnostic about the model types fed into it.
+AIC.caic <- function(object, ..., k=2){
+	
+	# borrowing heavily from AIC.default
+    ll <- if ("stats4" %in% loadedNamespaces()) stats4:::logLik else logLik
+
+	# look inside CAIC objects
+    if (length(list(...))) {
+	        val <- lapply(list(object, ...), function(X) ll(X$mod))
+	        val <- as.data.frame(t(sapply(val, function(el) c(attr(el, 
+	            "df"), AIC(el, k = k)))))
+	        names(val) <- c("df", "AIC")
+	        Call <- match.call()
+	        Call$k <- NULL
+	        row.names(val) <- as.character(Call[-1L])
+	        val
+	  }
+	    else AIC(ll(object$mod), k = k)
+}
+
+## ANOVA cares about model types - need to check crunch
+anova.caic <- function(object, ...){
+
+	## borrowing from anova.lm
+	if(length(list(object, ...)) == 1L){
+		# no other objects, no other args (scale and test only make sense for multiple models)
+		anova(object$mod)
+	} else {
+		## pass on - having a second function allows the easy interception of test and scale
+		## arguments out of the list of objects
+		return(anova.caiclist(object, ...))	
+	}
+	
+	
+}
+
+anova.caiclist <- function(object, ..., scale=0, test='F'){
+
+	# need to check that the contrast methods are the same
+	objects <- list(object, ...)
+
+	objectsClass <- sapply(objects, class)
+	if(! all(objectsClass == 'caic')) stop("anova() on mix of 'caic' and non-'caic' objects.")
+
+	objectsContrMethod <- sapply(objects, attr, 'contr.method')
+	if(length(unique(objectsContrMethod)) > 1L) stop("anova() on mixed contrast methods")
+
+	objectsMacroMethod <- sapply(objects, attr, 'macro.method')
+	if(length(unique(objectsMacroMethod)) > 1L) stop("anova() on mixed macrocaic methods")
+
+	## OK - now pass the mod parts of those object into anova.lmlist()
+	mods <- lapply(objects, '[[', 'mod')
+	args <- c(mods, list(scale=scale, test=test))
+	anv  <- do.call('anova.lmlist', args)
+	# attr(anv, 'heading')[1] <- "Analysis of Variance Table from 'caic' objects\n"
+	return(anv)
+}
+	
+	

@@ -9,7 +9,7 @@
 Calculates the D value, a measure of phylogenetic signal in a binary trait, and tests the estimated D value for significant departure from both random association and the clumping expected under a Brownian evolution threshold model.
 }
 \usage{
-phylo.d(data, phy, names.col, binvar, permut = 1000, verbose = TRUE)
+phylo.d(data, phy, names.col, binvar, permut = 1000)
 \method{print}{phylo.d}(x, ...)
 \method{summary}{phylo.d}(object, ...)
 
@@ -21,7 +21,6 @@ phylo.d(data, phy, names.col, binvar, permut = 1000, verbose = TRUE)
   \item{names.col}{A name specifying the column in 'data' that matches rows to tips in 'phy', required when data is not a 'comparative.data' object.}
   \item{binvar}{The name of the variable in \code{data} holding the binary variable of interest.}
   \item{permut}{Number of permutations to be used in the randomisation test.}
-  \item{verbose}{If TRUE, the function reports progress and other output likely to be important to users}
   \item{x}{An object of class 'phylo.d'}
   \item{object}{An object of class 'phylo.d'}
   \item{\ldots}{Further arguments to print and summary methods}
@@ -53,31 +52,38 @@ Returns an object of class 'phylo.d', which is a list of the following:
 \references{Fritz, S. A. and Purvis, A. (2010). Selectivity in mammalian extinction risk and threat types: a new measure of phylogenetic signal strength in binary traits. Conservation Biology, 24(4):1042–1051.}
 \author{Susanne Fritz (SFritz@bio.ku.dk) and David Orme}
 \examples{
-data(shorebird)
-
-# add threatened status (threat data from IUCN Red List 2008)
-# and a phylogenetically clumped dummy example to the data frame
-shorebird.data$threat <- rep(c(0,1,0,1,0,1,0,1,0,1,0,1,0,1,0), times=c(22,2,2,2,1,1,4,1,8,1,3,1,1,2,20))
-shorebird.data$clustered <- rep(c(1,0,1,0,1,0,1,0,1,0,1,0), times=c(4,13,2,12,1,2,1,7,2,2,2,23))
-
-# comparative data object
-shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
-
-# threat: D is significantly different a brownian threshold model
-ex1 <- phylo.d(shorebird, binvar=threat, permut=100)
-# clustered: D is significantly different from a random model
-ex2 <- phylo.d(shorebird, binvar=clustered, permut=100)
-
-# plot the data
-par(mfrow=c(1,2))
-tipOrd <- match(shorebird.data$Species, shorebird.tree$tip.label)
-plot(shorebird.tree, show.tip.label=FALSE, main='Random', no.margin=TRUE) 
-tiplabels(tip=tipOrd, pch=21, bg=ifelse(shorebird.data$threat==0, 'white','black'))
-plot(shorebird.tree, show.tip.label=FALSE, main='Clustered', no.margin=TRUE) 
-tiplabels(tip=tipOrd, pch=21, bg=ifelse(shorebird.data$clustered==0, 'white','black'))
+data(BritishBirds)
+BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
+redPhyloD <- phylo.d(BritishBirds, binvar=Red_list)
+print(redPhyloD)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ utilities }
 \keyword{ htest }% __ONLY ONE__ keyword per line
+
+%% ## OLD example with plots - use real example
+%% data(shorebird)
+%% 
+%% # add threatened status (threat data from IUCN Red List 2008)
+%% # and a phylogenetically clumped dummy example to the data frame
+%% shorebird.data$threat <- rep(c(0,1,0,1,0,1,0,1,0,1,0,1,0,1,0), times=c(22,2,2,2,1,1,4,1,8,1,3,1,1,2,20))
+%% shorebird.data$clustered <- rep(c(1,0,1,0,1,0,1,0,1,0,1,0), times=c(4,13,2,12,1,2,1,7,2,2,2,23))
+%% 
+%% # comparative data object
+%% shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+%% 
+%% # threat: D is significantly different a brownian threshold model
+%% ex1 <- phylo.d(shorebird, binvar=threat, permut=100)
+%% # clustered: D is significantly different from a random model
+%% ex2 <- phylo.d(shorebird, binvar=clustered, permut=100)
+%% 
+%% # plot the data
+%% par(mfrow=c(1,2))
+%% tipOrd <- match(shorebird.data$Species, shorebird.tree$tip.label)
+%% plot(shorebird.tree, show.tip.label=FALSE, main='Random', no.margin=TRUE) 
+%% tiplabels(tip=tipOrd, pch=21, bg=ifelse(shorebird.data$threat==0, 'white','black'))
+%% plot(shorebird.tree, show.tip.label=FALSE, main='Clustered', no.margin=TRUE) 
+%% tiplabels(tip=tipOrd, pch=21, bg=ifelse(shorebird.data$clustered==0, 'white','black'))
+%% 

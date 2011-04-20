@@ -340,6 +340,7 @@ mtext(expression(italic(D)==phantom(x)), side=3, at=25, line=1.2)
 The example below uses the \dtidx{BritishBirds} dataset to calculate $D$ for the phylogenetic distribution of `Red' conservation status for 181 species of British birds \citep{Fritz.Purvis.2010.a,Thomas.2008.a}.
 
 <<phylodDemo>>=
+data(BritishBirds)
 BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
 redPhyloD <- phylo.d(BritishBirds, binvar=Red_list)
 print(redPhyloD)

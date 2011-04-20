@@ -8,17 +8,23 @@ crunch
 brunch
  - flesh out Rd
  - daignostic plots on brunch
+ - can't take only continuous variables and should do.
 
 piclm
- - include at all!
+ - include at all! Or NOT
 
 macrocaic
  - synchornize factor handling code with crunch
  - zero branch lengths in calculation - check Isaac et al!
 
+macrocaic,crunch,brunch
+ - revist merging code and having a little wrappers. So much code shared that modifications suck
 
 caic object class definition and name...
  - AIC, anova, resid methods
+
+BritishBirds
+ - fix up rd and vignette of variables
 
 Namespace to hide some functions:
 

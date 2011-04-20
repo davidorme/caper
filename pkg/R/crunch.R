@@ -20,7 +20,7 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
 			if(! inherits(data, 'comparative.data')){
 				if(missing(names.col)) stop('names column is missing')
 				names.col <- deparse(substitute(names.col))
-				data <- caicStyleArgs(data=data, phy=phy, names.col=names.col)
+				data <- caicStyleArgs(data=data, phy=phy, names.col=names.col, warn.dropped=TRUE)
 			}
 		}
 		
@@ -110,7 +110,8 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
         # now that we have the model response for CAIC style contrasts we can substitute the reference variable
         # for empty models (i.e. models specified as X~1)
         if(is.empty.model(formula)) ref.var <- colnames(mr)
-        # add to the design matrix
+        # add to the design matrix - this strips the assign and contrast attributes so save...
+		attrMD <- attributes(md)
         md <- cbind(mr, md)
 
     # NOW SETUP TO GET CONTRASTS AND NODAL VALUES
@@ -150,7 +151,17 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
         #   set in the column names - don't want lm to try and reinterpret
         #   them in parsing the formula.
         # - the problem then becomes how to get the model to refer to the dataset
-        mod <- with(ContrObj$contr, lm.fit(explanatory[validNodes,,drop=FALSE], response[validNodes,,drop=FALSE]))
+		
+
+		## need to pass the assign and contrasts attributes over from the model 
+		## matrix in order to get anova() methods to work
+		contrMD <-  ContrObj$contr$explanatory[validNodes,,drop=FALSE]
+		contrRS <-  ContrObj$contr$response[validNodes,,drop=FALSE]
+		
+		attr(contrMD, 'assign') <- attrMD$assign
+		if(! is.null(attrMD$contrasts)) attr(contrMD, 'contrasts') <- attrMD$contrasts
+		 
+       mod <- with(ContrObj$contr, lm.fit(contrMD, contrRS))
        class(mod) <-  "lm"
        
        # assemble the output
@@ -170,6 +181,7 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
 
        ## add some attributes
        attr(RET, "contr.method") <- "crunch"
+       attr(RET, "macro.method") <- ""
        attr(RET, "stand.contr") <- stand.contr
        
        return(RET)

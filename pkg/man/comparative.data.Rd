@@ -8,13 +8,13 @@ Comparative dataset creation
 A simple tool to combine phylogenies with datasets and ensure consistent structure and ordering for use in functions. 
 }
 \usage{
-comparative.data(phy, data, names.col, vcv.array = FALSE, na.action = "drop", quiet = FALSE)
+comparative.data(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE, force.root=FALSE)
 \method{print}{comparative.data}(x, ...)
 \method{na.omit}{comparative.data}(x, ...)
 \method{subset}{comparative.data}(x, subset, select, ...)
 \method{reorder}{comparative.data}(x, order, ...)
 \method{"["}{comparative.data}(x, i, j)
-
+caicStyleArgs(phy, data, names.col)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -36,6 +36,8 @@ Either 2 (a standard VCV matrix) or 3 (an array retaining the individual branche
   \item{na.omit}{
 A logical value indicating whether to reduce the comparative dataset to those tips for which all selected variables are complete. Note that some functions cannot handle missing data and will return an error.
 }
+  \item{force.root}{
+Many functions consider a basal polytomy to indicate an unrooted tree. Using force.root=TRUE will set an arbitrary root edge below this polytomy.}
   \item{x}{
 An object of class 'comparative.data'.}
 }
@@ -58,6 +60,8 @@ The function matches rows in a data frame to tips on a phylogeny and ensures cor
 The 'na.omit' and 'subset' methods provide simple ways to clean up and extract parts of the comparative dataset. In particular, 'subset' acts exclusively with the data component of the object and, like subset on a data frame, expects the subset argument to produce a logical vector of data rows to include. The 'reorder' method is use to restructure all the components with the 'comparative.data' object into either pruningwise or cladewise order. This uses code from the 'ape' library: see \code{\link{reorder.phylo}}.
 
 The '[' method allows subsets to be taken of the data. There are no replace methods ('[<-'). If only one index is specified (e.g. x[2]), then this is interpreted as extracting data columns from the object. Otherwise (e.g. x[2,], x[1,1]), the first index will specify tips to extract and the second index will specify columns. Indices for tips are permitted to be numeric, logical or character vectors or empty (missing) or NULL. Numeric values are coerced to integer as by as.integer (and hence truncated towards zero). Character vectors will be matched to the names of the object (or for matrices/arrays, the dimnames): see ‘Character indices’ below for further details.
+
+The function 'caicStyleArgs' handles turning 'phy', 'data' and 'names.col' arguments into a 'comparative.data' object when they are provided separately to a function. This argument structure was used in older versions of many functions.
 
 All of these functions are in part a substitute for the considerably more sophisticated handling of such data in the package 'phylobase', which will be integrated into later releases.
 }

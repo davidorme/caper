@@ -1,5 +1,5 @@
 
-comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE){
+comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE, force.root=FALSE, warn.dropped=FALSE){
 
     # TODO - is something odd happening with missing arguments?
     
@@ -26,10 +26,16 @@ comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit
         # check the phylogeny is a rooted phylogeny and test for stupid tip labels
         if(! inherits(phy, "phylo")) 
             stop("'", deparse(substitute(phy)), "' not of class 'phylo'")
-        if(! is.rooted(phy))
-            stop("'", deparse(substitute(phy)), "' is not rooted.")
-		if(any(duplicated(phy$tip.label))) stop('Duplicate tip labels present in phylogeny')
-		
+        if(! is.rooted(phy)){
+			if(force.root){
+				phy$root.edge <- 1
+			} else {
+				stop("'", deparse(substitute(phy)), "' is not rooted or has a basal polytomy.")
+			}
+		}
+            
+        if(any(duplicated(phy$tip.label))) stop('Duplicate tip labels present in phylogeny')
+
     # MERGE
     
         # store original dataset size
@@ -95,6 +101,9 @@ comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit
         RET <- na.omit(RET) 
     }
     
+	if(warn.dropped){
+		if(any(sapply(RET$dropped, length) > 0)) warning('Data dropped in compiling comparative data object')
+	}
 
     return(RET)
 }
@@ -293,6 +302,49 @@ reorder.comparative.data <- function(x, order = "cladewise", ...){
     
 	return(x)
 }
+
+caicStyleArgs <- function(phy, data, names.col, warn.dropped=FALSE){
+	
+	# general function to handle old style non-'comparative.data' use of 
+	# crunch, brunch, macrocaic, phylo.d functions 
+	
+	if(missing(data)) stop('data object is missing')
+	if(missing(phy)) stop('phy object is missing')
+
+	# check the classes (and allow for them being in the wrong order)
+	args <- list(data, phy)
+	argClass <- sapply(args, class)
+	
+	# bail back to calling function if we don't have targets
+	# i.e. precisely a phylogeny and a data.frame
+	targets <- c('data.frame', 'phylo')
+	if(! identical( sort(intersect( argClass, targets)), targets)){
+		return(NULL)
+	}
+	
+	# try and build a comparative data object
+	#  - allow for the order of the variables to be reversed: phylo.d, I'm looking at you
+	
+    if(argClass[1] == 'data.frame'){
+		data <- eval(substitute(comparative.data(phy = phy, data = data, names.col = XXX, warn.dropped=warn.dropped), list(XXX=names.col)))
+	} else {
+		data <- eval(substitute(comparative.data(phy = data, data = phy, names.col = XXX, warn.dropped=warn.dropped), list(XXX=names.col)))
+	}
+	return(data)
+	
+}
+
+## ## THIS NEEDS SOME WORK TO PASS ALL THESE
+## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, phy=shorebird.tree, data=shorebird.data, names.col=Species)
+## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, shorebird.tree, shorebird.data, names.col=Species)
+## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, shorebird.data, shorebird.tree, names.col=Species)
+## ## BREAKS WITH THE FOLLOWING MISSING ARGUMENTS BUT THESE WOULD HAVE BROKEN ANYWAY
+## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, phy=shorebird.tree, names.col=Species)
+## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, data=shorebird.data, names.col=Species) 
+## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, shorebird.tree, names.col=Species)
+## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, shorebird.data, names.col=Species)
+
+
 
 ## x <- comparative.data(shorebird.tree, shorebird.data, 'Species')
 ## x[]

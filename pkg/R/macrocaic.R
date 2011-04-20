@@ -22,7 +22,7 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
 			if(! inherits(data, 'comparative.data')){
 				if(missing(names.col)) stop('names column is missing')
 				names.col <- deparse(substitute(names.col))
-				data <- caicStyleArgs(data=data, phy=phy, names.col=names.col)
+				data <- caicStyleArgs(data=data, phy=phy, names.col=names.col, warn.dropped=TRUE)
 			}
 		}
 	
@@ -118,8 +118,10 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
         } else {
             ref.var <- colnames(md)[1]
         }
-		
-		md <- cbind(macroMf, md)
+
+        # add to the design matrix - this strips the assign and contrast attributes so save...
+		attrMD <- attributes(md)
+        md <- cbind(mr, md)
 		
     # NOW GET CONTRASTS AND NODAL VALUES
         
@@ -171,7 +173,17 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
         #   set in the column names - don't want lm to try and reinterpret
         #   them in parsing the formula.
         # - the problem then becomes how to get the model to refer to the dataset
-        mod <- with(ContrObj$contr, lm.fit(explanatory[validNodes,,drop=FALSE], response[validNodes,,drop=FALSE]))
+
+		## need to pass the assign and contrasts attributes over from the model 
+		## matrix in order to get anova() methods to work
+		contrMD <-  ContrObj$contr$explanatory[validNodes,,drop=FALSE]
+		contrRS <-  ContrObj$contr$response[validNodes,,drop=FALSE]
+
+		attr(contrMD, 'assign') <- attrMD$assign
+		if(! is.null(attrMD$contrasts)) attr(contrMD, 'contrasts') <- attrMD$contrasts
+
+       mod <- with(ContrObj$contr, lm.fit(contrMD, contrRS))
+       class(mod) <-  "lm"
        
        class(mod) <-  "lm"
        # assemble the output

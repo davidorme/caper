@@ -38,7 +38,10 @@
 \begin{document}
 
 <<setup, print=FALSE, echo=FALSE>>=
+	## THESE WILL EVENTUALLY BE REPLACED BY A SINGLE CALL TO library(caper) 
+	## AND HENCE ACTUALLY WORKS TO TRACK DEPENDENCIES A BIT!
 	library(ape)
+	library(mvtnorm) 
 	for(f in dir('../../R', full=TRUE)) (source(f))
 @
 
@@ -193,7 +196,7 @@ The examples in this vignette make use of the following datasets:
 
 \subsection{Phylogenetic independent contrasts}
 
-The \caper{} package implements the methods originally provided in the  programs CAIC \citep{Purvis.Rambaut.1995.a} and MacroCAIC \cite{Agapow.Isaac.2002.a}. Both programs calculate phylogenetically independent contrasts in a set of variables and then use linear models of those contrasts to test for evolutionary relationships. All of the functions in this section require a comparative dataset object and a description of a linear model as an R formula (see \texttt{formula()}).
+The \caper{} package implements the methods originally provided in the  programs CAIC \citep{Purvis.Rambaut.1995.a} and MacroCAIC \citep{Agapow.Isaac.2002.a}. Both programs calculate phylogenetically independent contrasts in a set of variables and then use linear models of those contrasts to test for evolutionary relationships. All of the functions in this section require a comparative dataset object and a description of a linear model as an R formula (see \texttt{formula()}).
 
 In all functions, a reference variable (\texttt{ref.var}) may also be provided. This is used to standardize the directions in which contrasts are calculated in multivariate models. If no reference variable is provided, the function defaults to using the first explanatory variable specified in the model formula. 
 
@@ -201,7 +204,7 @@ In all functions, a reference variable (\texttt{ref.var}) may also be provided. 
 %% CRUNCH
 %%%%%%%%%%
 
-\subsubsection{\fnidx{crunch}}
+\subsubsection{Continuous variables: \fnidx{crunch}}
 
 The \fnidx{crunch} function provides calculation of independent contrasts \citep{Felsenstein.1985.a} for continuous variables, as implemented in the `crunch' option of the CAIC package \citep{Purvis.Rambaut.1995.a}, using the method of \citet{Pagel.1992.a} to calculate contrasts at polytomies. The following example shows an example analysis using the \dtidx{shorebird} dataset.
 
@@ -237,7 +240,7 @@ cd <- caic.diagnostics(crunchMod)
 %% BRUNCH
 %%%%%%%%%%
 
-\subsubsection{\fnidx{brunch}}
+\subsubsection{Categorical variables: \fnidx{brunch}}
 
 The inclusion of categorical variables in phylogenetic independent contrast models is problematic. Continuous variables are assumed to evolve under a Brownian process, which permits estimates of nodal values and hence allows nested contrasts to be drawn.  There is no sensible model for reconstructing the nodal values of a categorical variable, except where all daughters share the same categorical value. However, identifying nodes with daughter variables that differ in the value of the categorical variable permit independent contrasts to be identified \citep{Burt.1989.a}. While nodal estimates of continuous variables can be made below at nodes below a \fnidx{brunch} contrast, to do so would assume independent evolution of these variables at the nodes of any deeper contrasts \citep{Burt.1989.a}. As a result, the \fnidx{brunch} algorithm only uses the data from any single tip in the calculation of a single contrast. 
 
@@ -269,7 +272,7 @@ text(rep(8.5,9), 1:9, perriso$phy$tip.label, font=3, adj=0)
 %% MACROCAIC
 %%%%%%%%%%
 
-\subsubsection{\fnidx{macrocaic}}
+\subsubsection{Species richness contrasts: \fnidx{macrocaic}}
 
 One common approach in macroevolution is to investigate the links between the traits of taxa and their species richness. It is inappropriate to calculate \fnidx{crunch} contrasts in species richness, particularly for nested nodes, where \fnidx{crunch} contrasts would estimate nodal values as a weighted average of species richness for the daughter taxa, rather than tracking total species richness. For this reason, \citet{Agapow.Isaac.2002.a} developed the program MacroCAIC, which implemented the calculation of species richness contrasts.
 
@@ -290,7 +293,58 @@ summary(primatesBodySize)
 %% \subsubsection{\fnidx{piclm}}
 %% 
 
-\subsubsection{\fnidx{phylo.d}}
+
+%% %%%%%%%%%%
+%% %% PHYLO D
+%% %%%%%%%%%%
+
+
+\subsubsection{Phylogenetic signal: \fnidx{phylo.d}}
+
+\citet{Fritz.Purvis.2010.a} proposed the statistic $D$ as a measure of phylogenetic signal in binary traits. The $D$ statistic makes use of the way in which estimated nodal values calculated lusing \fnidx{crunch} change along the edges of a phylogeny. If a trait is highly conserved, with only a basal division between two clades expressing either trait value, then the only change will be along the edges  between the two daughter clades at the root. This will give a summed value of 1: the two differences between the root nodal value of 0.5 and the ancestors of the 1 and 0 clades. In contrast, if the trait is labile, more differences will be observed and the sum will be higher.
+
+The sum of these changes across a phylogeny will be governed by the phylogenetic signal in the variable, but also by the size of the phylogeny and by the relative proportions of the two states (prevalence). In order to standardise the effects of phylogeny size and prevalence, \fnidx{phylo.d} uses two simulated null models:
+
+\begin{description}
+\item[Phylogenetic randomness]{Trait values are randomly shuffled relative to the tips of the phylogeny.}
+\item[Brownian threshold model]{A continuous trait is evolved along the phylogeny under a Brownian process and then converted to a binary trait using a threshold that reproduces the relative prevalence of the observed trait.}
+\end{description}
+
+The mean sum of changes under the Brownian ($\bar{s_b}$) and random ($\bar{s_r}$) models are used to calibrate the observed sum of changes ($s_o$) values: $D = (s_o - \bar{s_b})/(\bar{s_r}-\bar{s_b})$ (Fig \ref{phylodScale}). On this standardised scale, a variable with random association will have $D \approx 1$ since $s_o \approx \bar{s_r}$ and a variable following the Brownian model will have $D \approx 0$ since $s_o = \bar{s_b}$. Values of $D$ smaller than 0 are phylogenetically more conserved than under the Brownian model and values of $D$ greater than 1 are phylogenetically overdispersed. The simulated values can also be used to assess whether the observed $D$ differs significantly from the simulated models.
+
+\begin{figure}[htbp]
+  \begin{center}
+<<phylodScale, fig=TRUE, echo=FALSE>>=
+data(BritishBirds)
+BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
+redPD <- phylo.d(BritishBirds, binvar=Red_list)
+
+par(mar=c(3,3,2,1), mgp=c(1.8,0.8,0), tcl=-0.3)
+
+plot(density(redPD$Permutations$random, bw=0.5), main='', xlim=c(10,55), col='blue', xlab='Sum of character change')
+lines(density(redPD$Permutations$brownian,bw=0.5), col='red')
+abline(v=redPD$Parameters$Observed)
+abline(v=redPD$Parameters$Observed, col='grey')
+abline(v=redPD$Parameters$MeanRandom, col='blue')
+abline(v=redPD$Parameters$MeanBrownian, col='red')
+
+with(redPD$Parameters, axis(3, at=c(MeanBrownian, Observed, MeanRandom), labels=c(0, round(redPD$DEstimate,2),1), mgp=c(1.5,0.7,0.25)))
+mtext(expression(italic(D)==phantom(x)), side=3, at=25, line=1.2)
+
+@
+    \caption{Scaling of $D$ values for the observed sum of character change from the distributions of simulated sums of character change under models of random association (blue line) and a Brownian process (red line). The distributions of the simulations are used to test the significance of departures from either model.}
+    \label{phylodScale}
+  \end{center}
+\end{figure}
+
+The example below uses the \dtidx{BritishBirds} dataset to calculate $D$ for the phylogenetic distribution of `Red' conservation status for 181 species of British birds \citep{Fritz.Purvis.2010.a,Thomas.2008.a}.
+
+<<phylodDemo>>=
+BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
+redPhyloD <- phylo.d(BritishBirds, binvar=Red_list)
+print(redPhyloD)
+@
+
 
 \subsection{Phylogenetic linear models}
 
@@ -301,7 +355,7 @@ summary(primatesBodySize)
 \subsubsection{\fnidx{fusco.test}}
 The $I$ statistic \citep{Fusco.Cronk.1995.a} is a measure of phylogenetic imbalance. It has the useful properties that it can be calculated for trees containing polytomies and that the tips of trees can be associated with species richness values. An imbalance score, in the interval $[0,1]$ is calculated for all nodes in the phylogeny and the distribution of the nodal values is used to assess overall balance. Nodes leading to  fewer than 4 species are uninformative about balance and $I$ cannot be calculated for polytomous nodes and hence both are omitted from balance calculations.
 
-The original $I$ statistic proposed by \citet{Fusco.Cronk.1995.a} has been shown to have a  bias at nodes with even numbers of species \cite{Purvis.Katzourakis.ea.2002.a}. This function therefore also implements the modified $I'$ statistic: a Wilcoxon test is used to assess whether the median of the observed $I'$ values differs from the value of 0.5 expected under a Markov process and a randomisation process is used to provide confidence intervals. 
+The original $I$ statistic proposed by \citet{Fusco.Cronk.1995.a} has been shown to have a  bias at nodes with even numbers of species \citep{Purvis.Katzourakis.ea.2002.a}. This function therefore also implements the modified $I'$ statistic: a Wilcoxon test is used to assess whether the median of the observed $I'$ values differs from the value of 0.5 expected under a Markov process and a randomisation process is used to provide confidence intervals. 
 
 The function can make use of species richness data but can also be set to treat the tips of the phylogeny as species. These two approaches contrast the balance of the distribution of species richness across a topology and the balance of the topology itself. 
 <<>>=

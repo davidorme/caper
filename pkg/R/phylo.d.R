@@ -137,7 +137,7 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000) {
 	return(dvals)
 	
 }
-z
+
 print.phylo.d <- function(x, ...){
     summary(x)
 }

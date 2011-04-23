@@ -1,4 +1,4 @@
-crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.depth=NULL,
+crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, robust=Inf, ref.var=NULL, node.depth=NULL,
                   polytomy.brlen=0, equal.branch.length=FALSE, factor.action="abort")
 {
 
@@ -36,7 +36,7 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
         
 		# set branch lengths doesn't get evaluated if FALSE or zero
         if(as.logical(equal.branch.length)) {
-            phy$edge.length <- rep(2, length(phy$edge.length))
+            phy$edge.length <- rep(2, nrow(phy$edge))
         } else {
             if(is.null(phy$edge.length)) stop("The phylogeny does not contain branch lengths and crunch has not been set to use equal branch lengths.")
             if(any(phy$edge.length <= 0)) stop("The phylogeny contains either negative or zero branch lengths and crunch has not been set to use equal branch lengths.")
@@ -126,12 +126,20 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
         # assemble the data into a finished contrast object
         ContrObj <- list()
         ContrObj$contr$response <- contr$contr[,1,drop=FALSE]
-        ContrObj$contr$explanatory <- contr$contr[,-1,drop=FALSE]
+
+		ContrObj$contr$explanatory <- contr$contr[,-1,drop=FALSE]
+
         ContrObj$nodalVals$response <- contr$nodVal[,1,drop=FALSE]
         ContrObj$nodalVals$explanatory <- contr$nodVal[,-1,drop=FALSE]            
         ContrObj$contrVar <- contr$var.contr
         ContrObj$nChild <- contr$nChild
         ContrObj$nodeDepth <- contr$nodeDepth
+        
+		## need to keep the assign and contrasts attributes from the model 
+		## matrix with the contrast object in order to get anova() methods to work
+		## can't store assign permanently with explanatory contrasts because validNode subsetting strips attributes
+		attr(ContrObj, 'assign') <- attrMD$assign
+		if(! is.null(attrMD$contrasts)) attr(ContrObj, 'contrasts') <- attrMD$contrasts
         
         # gather the row ids of NA nodes to drop from the model
         validNodes <- with(ContrObj$contr, complete.cases(explanatory) & complete.cases(response))
@@ -151,17 +159,13 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
         #   set in the column names - don't want lm to try and reinterpret
         #   them in parsing the formula.
         # - the problem then becomes how to get the model to refer to the dataset
-		
 
-		## need to pass the assign and contrasts attributes over from the model 
-		## matrix in order to get anova() methods to work
 		contrMD <-  ContrObj$contr$explanatory[validNodes,,drop=FALSE]
 		contrRS <-  ContrObj$contr$response[validNodes,,drop=FALSE]
+		attr(contrMD, 'assign') <- attr(ContrObj, 'assign') ## replace attributes 
+		if(! is.null(attr(ContrObj, 'contrasts'))) attr(contrMD, 'contrasts') <- attr(ContrObj, 'contrasts')
 		
-		attr(contrMD, 'assign') <- attrMD$assign
-		if(! is.null(attrMD$contrasts)) attr(contrMD, 'contrasts') <- attrMD$contrasts
-		 
-       mod <- with(ContrObj$contr, lm.fit(contrMD, contrRS))
+       mod <- lm.fit(contrMD, contrRS)
        class(mod) <-  "lm"
        
        # assemble the output
@@ -169,21 +173,37 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
        RET <- list(contrast.data=ContrObj, mod=mod, data=cdata)
        class(RET) <- c("caic")
        
+	   ## THIS CAN BE DONE WITH MUCH MORE FINESSE!
        # convert the ContrObj into a data frame...
 	   # - removed the OTT call to caic.table
+	   # remove invalid Nodes to keep the residual and predict lengths the same
        contrData <- with(ContrObj$contr, as.data.frame(cbind(response,explanatory)))
-       RET$mod$call <- substitute(lm(FORM, data=contrData, subset=validNodes), list(FORM=formula))
+       contrData <- contrData[validNodes, ,drop=FALSE]
+       RET$mod$call <- substitute(lm(FORM, data=contrData), list(FORM=formula))
        RET$mod$terms <- attr(mf, "terms")
        
        # put the model.frame in to the lm object so that predict, etc. calls work
        RET$mod$model <- contrData
        attr(RET$mod$model, "terms") <- attr(mf, "terms")
-
+	   
+	   ## Add studentized residuals: need to use matching in case of invalid nodes
+       stRes <- rstudent(mod)
+       SRallNodes <- rep(NA, length(RET$contrast.data$validNodes))
+       names(SRallNodes) <- names(RET$contrast.data$contrVar)
+	   SRallNodes[match(names(stRes), names(SRallNodes))] <- stRes
+       RET$contrast.data$studentResid <- SRallNodes
+	   
        ## add some attributes
        attr(RET, "contr.method") <- "crunch"
        attr(RET, "macro.method") <- ""
        attr(RET, "stand.contr") <- stand.contr
+       attr(RET, "robust") <- robust
        
+	   # lastly, test for studentised outliers
+	   if(any(stRes > robust)){
+			RET <- caic.robust(RET, robust)
+	   }
+
        return(RET)
 
 }

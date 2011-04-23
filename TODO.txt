@@ -2,9 +2,6 @@ Fusco test:
  - plot method uses density?
  - sort out returns: I, I prime, Iw median mean etc.
 
-crunch
- - plot methods that avoid name problems with log(var) etc.
-
 brunch
  - flesh out Rd
  - daignostic plots on brunch
@@ -19,9 +16,60 @@ macrocaic
 
 macrocaic,crunch,brunch
  - revist merging code and having a little wrappers. So much code shared that modifications suck
+ - revisit the lm references to environments and data. Must be a calmer way of doing this
 
-caic object class definition and name...
- - AIC, anova, resid methods
+## IN ORDER TO ALLOW CAIC TO USE THE UPDATE ETC. METHODS, NEED TO PROTECT
+## THE CONTRAST VERSIONS OF THE DATA FROM REINTERPRETAION
+## - I think need to backtick all the variables in formula - at the model.frame stage? -  so that R doesn't attempt to reinterpret log(x) etc.
+
+## - NO, THIS IS ALL STUPID. JUST CALL THE METHOD AGAIN AND RECALCULATE CONTRASTS - BUT THEN THERE IS THE REF VAR QUESTION.
+
+## GETTING THIS TO WORK IS HARD!
+## take the data and the formula and handle transformations etc.
+mf <- model.frame(formula, data, na.action=na.pass)
+
+## now need to fix those names using backticks so they are preserved
+## or how about simply forcing them to be non functions using make.names()
+
+## - the key thing is that the variables attribute of the terms of the model frame
+##   gets matched to the column names of the model frame - BUT the deparsing of the 
+##   variables attribute (a language list of variables) strips backticks. 
+## - basically the dataframe names (unticked) match to the tick stripped variables
+##   but the ticked variable names are preserved in everything downstream
+
+## sapply(vars, function(x) paste(deparse(x, width.cutoff = 500), collapse = " "))[-1L]
+
+## So this should work
+aa <- parse(text=paste("list(", paste("`",names(mf),"`",sep='',collapse=","),")", sep=''))
+attr(attr(mf, 'terms'), 'variables') <- aa
+
+## expand the formula and avoid having to deal with "-1"
+dpFm <- deparse(update.formula( formula, . ~ . + 1))
+dpFm <- paste(dpFm, collapse='')
+## separate LHS and RHS
+dpFm <- strsplit(dpFm, "~")[[1]]
+## Handle LHS
+LHS <- gsub('^ +', '', dpFm[1])
+LHS <- gsub(' +$', '', LHS)
+LHS <- paste("`", LHS, "`", sep='')
+## Split RHS into terms
+RHS <- strsplit(dpFm[2], split='\\+')[[1]]
+## Split interactions ### NO! Not this - need to protect these from being recalculated so back tick the whole interaction
+RHS <- strsplit(RHS,  split='\\:')
+## clean up trailing and leading spaces
+RHS <- rapply(RHS, function(x) gsub('^ +', '', x) ,how="list")
+RHS <- rapply(RHS, function(x) gsub(' +$', '', x) ,how="list")
+## backtick all the components
+RHS <- rapply(RHS, function(x) paste("`", x, "`", sep='') ,how="list")
+## compress interactions back together
+RHS <- lapply(RHS, paste, collapse=":" ,sep='')
+## compress terms back together
+RHS <- paste(unlist(RHS), sep='', collapse=" + ")
+## make formula as string
+dpFM <- paste(LHS, "~", RHS, collapse=' ')
+## turn into formula
+formula <- as.formula(dpFM)
+
 
 BritishBirds
  - fix up rd and vignette of variables

@@ -1,4 +1,4 @@
-brunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, 
+brunch <- function(formula, data, phy, names.col, stand.contr = TRUE, robust=Inf, ref.var=NULL, 
 	               node.depth=NULL, equal.branch.length=FALSE)
 {
 
@@ -37,7 +37,7 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
     
 		# set branch lengths doesn't get evaluated if FALSE or zero
         if(as.logical(equal.branch.length)) {
-            phy$edge.length <- rep(2, length(phy$edge.length))
+            phy$edge.length <- rep(2, nrow(phy$edge))
         } else {
             if(is.null(phy$edge.length)) stop("The phylogeny does not contain branch lengths and brunch has not been set to use equal branch lengths.")
             if(any(phy$edge.length <= 0)) stop("The phylogeny contains either negative or zero branch lengths and brunch has not been set to use equal branch lengths.")
@@ -80,14 +80,14 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
         termClass <- apply(termFactors,2,function(X) unique(varClass[as.logical(X)]))
 
         # now modify the variables to be numeric for calculation 
-        varLevels <- sapply(data, function(x) length(levels(x)))
-        varIsOrdered <- sapply(data, is.ordered)
+        varLevels <- sapply(mf, function(x) length(levels(x)))
+        varIsOrdered <- sapply(mf, is.ordered)
         
         # check for unordered multi states...
         if(any( varLevels > 2 & ! varIsOrdered )) stop("Unordered non-binary factors included in model formula.")
         
         # refit the model frame with numericized data
-        data <- as.data.frame(lapply(data, as.numeric))
+        data <- as.data.frame(lapply(mf, as.numeric))
         mf <- model.frame(formula, data, na.action=na.pass)
 
         # get the design matrix
@@ -146,7 +146,13 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
         ContrObj$contrVar <- contr$var.contr
         ContrObj$nChild <- contr$nChild
         ContrObj$nodeDepth <- contr$nodeDepth
-        
+
+		## need to keep the assign and contrasts attributes from the model 
+		## matrix with the contrast object in order to get anova() methods to work
+		## can't store assign permanently with explanatory contrasts because validNode subsetting strips attributes
+		attr(ContrObj, 'assign') <- attrMD$assign
+		if(! is.null(attrMD$contrasts)) attr(ContrObj, 'contrasts') <- attrMD$contrasts
+		
         # gather the row ids of NA nodes to drop from the model
         validNodes <- with(ContrObj$contr, complete.cases(explanatory) & complete.cases(response))
        
@@ -171,8 +177,8 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
 		contrMD <-  ContrObj$contr$explanatory[validNodes,,drop=FALSE]
 		contrRS <-  ContrObj$contr$response[validNodes,,drop=FALSE]
 
-		attr(contrMD, 'assign') <- attrMD$assign
-		if(! is.null(attrMD$contrasts)) attr(contrMD, 'contrasts') <- attrMD$contrasts
+		attr(contrMD, 'assign') <- attr(ContrObj, 'assign') ## replace attributes
+		if(! is.null(attr(ContrObj, 'contrasts'))) attr(contrMD, 'contrasts') <- attr(ContrObj, 'contrasts')
 
        mod <- with(ContrObj$contr, lm.fit(contrMD, contrRS))
        class(mod) <-  "lm"
@@ -184,17 +190,31 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NU
        
         # convert the ContrObj into a data frame...
        contrData <- with(ContrObj$contr, as.data.frame(cbind(response,explanatory)))
-       RET$mod$call <- substitute(lm(FORM, data=contrData, subset=validNodes), list(FORM=formula))
+       contrData <- contrData[validNodes, ,drop=FALSE]
+       RET$mod$call <- substitute(lm(FORM, data=contrData), list(FORM=formula))
        RET$mod$terms <- attr(mf, "terms")
        
        # put the model.frame in to the lm object so that predict, etc. calls work
        RET$mod$model <- contrData
        attr(RET$mod$model, "terms") <- attr(mf, "terms")
-       
+ 
+	   ## Add studentized residuals: need to use matching in case of invalid nodes
+       stRes <- rstudent(mod)
+       SRallNodes <- rep(NA, length(RET$contrast.data$validNodes))
+       names(SRallNodes) <- names(RET$contrast.data$contrVar)
+	   SRallNodes[match(names(stRes), names(SRallNodes))] <- stRes
+       RET$contrast.data$studentResid <- SRallNodes
+
        ## add some attributes
        attr(RET, "contr.method") <- "brunch"
        attr(RET, "macro.method") <- ""
        attr(RET, "stand.contr") <- stand.contr
+       attr(RET, "robust") <- robust
+
+	   # lastly, test for studentised outliers
+	   if(any(stRes > robust)){
+			RET <- caic.robust(RET, robust)
+	   }
 
        return(RET)
 

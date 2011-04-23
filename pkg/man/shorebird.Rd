@@ -24,7 +24,7 @@ The datafile contains a phylogeny (\code{shorebird.tree}) of 71 shorebird specie
 
 \references{Lislevand, T and Thomas, G. H. (2006) Limited male incubation ability and the evolution of egg size in shorebirds. Biology Letters 2, 206 - 208}
 
-\seealso{ caic, pglm }
+\seealso{ crunch, pglm }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

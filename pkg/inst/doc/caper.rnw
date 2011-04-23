@@ -10,6 +10,7 @@
 \usepackage[utf8]{inputenc} % for fancy quotes
 \usepackage[round]{natbib}
 \usepackage{makeidx} 
+\usepackage[font=small,format=plain,labelfont=bf,up,textfont=rm,up]{caption}
 
 \geometry{a4paper, textwidth=15cm, textheight=25cm}
 \makeindex
@@ -51,6 +52,8 @@ This vignette documents the use of the \caper{} package for R \citep{R-Developme
 
 \tableofcontents
 
+%% add more space between paragraphs at this point
+\addtolength{\parskip}{\baselineskip}
 \section{Background}
 Comparing the traits of species (or of groups of species of higher taxonomic rank) can produce deep insights into evolutionary processes. However, all such analyses should take into account the degree to which species are related and hence do not provide independent data on a hypothesis. This can lead both to situations in which apparently strong relationships rest on relatively few truly independent events (Fig. \ref{whycaper}a) or where strong relationships within groups are masked by phylogenetic differences between groups (Fig. \ref{whycaper}b). 
 
@@ -145,8 +148,7 @@ cdat <- comparative.data(data=dat, phy=phy, names.col="taxa")
 print(cdat)
 @
 
-The \fnidx{comparative.data} class has a number of generic methods that allow users to extract a subset of taxa and the relevant linked data from within a \fnidx{comparative.data} object.
-
+In order to make it easier to use contrast methods, where values are estimated at internal nodes, the \fnidx{comparative.data} function and contrast methods use internal node labels to identify values. Creating a comparative data object will not replace existing labels but will insert simple numeric labels for unlabelled nodes. The \fnidx{comparative.data} class has a number of generic methods that allow users to extract a subset of taxa and the relevant linked data from within a \fnidx{comparative.data} object.
 
 \subsubsection{\texttt{na.omit}\index{Functions!comparative.data!na.omit}}
  This method returns a subset of the object containing only those taxa for which the data are complete (i.e no \texttt{NA} values). By default, the \fnidx{comparative.data} function drops incomplete rows, but this can be altered. The examples below show the function in use on the \dtidx{perrisodactyla} dataset.
@@ -182,6 +184,7 @@ The examples in this vignette make use of the following datasets:
   \item[\dtidx{syrphidae}] This dataset includes a phylogeny of 204 genera of hoverfly along with data on the species richness of each of those genera \citep{Katzourakis.Purvis.ea.2001.a}.
   \item[\dtidx{perrisodactyla}] This dataset includes a phylogeny of 18 perrisodactyl species and a data frame of female and neonatal mass, gestation length and territoriality for 13 of those species. The data frame contains missing data and the dataset was provided as an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
   \item[\dtidx{IsaacEtAl}] The datafile contains  species level phylogenies and data sets of nine variables for each of four mammalian orders (Primates, Carnivora, Chiroptera and Marsupialia). The data were published in supplementary material for \citet{Isaac.Jones.ea.2005.a}. The variables are body mass, age at sexual maturity, gestation length, interbirth interval, litter size , population density, group size, mass dimorphism and length.dimorphism. The data sets all contain missing data and all the variables have been natural log transformed.
+  \item[\dtidx{British Birds}] The datafile contains a species level phylogeny for 249 species of British birds (some represented by congeneric surrogates) and a data set on the conservation status of 181 of those species \citep{Thomas.2008.a}.
 \end{description}
 
 %%%%%%%%%%
@@ -198,7 +201,12 @@ The examples in this vignette make use of the following datasets:
 
 The \caper{} package implements the methods originally provided in the  programs CAIC \citep{Purvis.Rambaut.1995.a} and MacroCAIC \citep{Agapow.Isaac.2002.a}. Both programs calculate phylogenetically independent contrasts in a set of variables and then use linear models of those contrasts to test for evolutionary relationships. All of the functions in this section require a comparative dataset object and a description of a linear model as an R formula (see \texttt{formula()}).
 
-In all functions, a reference variable (\texttt{ref.var}) may also be provided. This is used to standardize the directions in which contrasts are calculated in multivariate models. If no reference variable is provided, the function defaults to using the first explanatory variable specified in the model formula. 
+In contrast model functions, a reference variable (\texttt{ref.var}) may also be provided. This is used to standardize the directions in which contrasts are calculated in multivariate models. If no reference variable is provided, the function defaults to using the first explanatory variable specified in the model formula. All contrast model functions enforce regression through the origin \citep{Garland.Harvey.ea.1992.a}.
+
+\subsubsection{Variable names in contrast functions}
+The three functions below (\fnidx{crunch}, \fnidx{brunch}, \fnidx{macrocaic}) all make use of existing methods within R to generate a model matrix. In normal linear models, the terms in the model formula allow transformations to be specified within models: a model can use \texttt{y ~ log(x)} and subsequent modifications of the model will expect to be able to use a data frame containing \texttt{x} that will be logged before use. These contrast  functions do support this in initial model fitting. However modifications cannot be made so simply to contrast models: the variable \texttt{log(x)} now represents \emph{contrasts} in \texttt{log(x)}, and reference back to the original variable \texttt{x} will not yield the correct results. Generating consistent behaviour using the R modelling framework in these cases is not easy.
+
+It is therefore strongly recommended that any transformation of data should be carried out in the original data frame and that these transformed variables are used in model specification.
 
 %%%%%%%%%%
 %% CRUNCH
@@ -210,38 +218,24 @@ The \fnidx{crunch} function provides calculation of independent contrasts \citep
 
 %% EXPAND? - contrast calculation example from CAIC manual
 
-<<>>=
+<<crunchExample>>=
 data(shorebird)
+
+shorebird.data$lgEgg.Mass <- log(shorebird.data$Egg.Mass)
+shorebird.data$lgM.Mass <- log(shorebird.data$M.Mass)
+shorebird.data$lgF.Mass <- log(shorebird.data$F.Mass)
+
 shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
-crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, data=shorebird)
+crunchMod <- crunch(lgEgg.Mass ~ lgF.Mass + lgM.Mass, data=shorebird)
 summary(crunchMod)
 @
-
-A set of diagnostic tests are also defined for use with phylogenetic independent contrast models, looking for relationships between the absolute contrast values of each explanatory variable and estimates of the nodal values, standard deviations or log node age. These can be tested using the function \fnidx{caic.diagnostics} function, which both plots and reports the significance of slopes from linear models of these relationships \ref{crunchDiagnostics}.
-
-<<crunchDemo>>=
-par(mfcol=c(3,2))
-crunchModDiag <- caic.diagnostics(crunchMod)
-print(crunchModDiag)
-@
-
-\begin{figure}[htbp]
-  \begin{center}
-<<crunchDiagnostics, echo=false, fig=true, width=6, height=4>>=
-par(mfrow=c(2,3), mar=c(3,3,1,1), mgp=c(1.8,0.5,0), tcl=-0.2 )
-cd <- caic.diagnostics(crunchMod)
-@ 
-    \caption{Diagnostic plots from an independent contrasts analysis using \fnidx{crunch}.}
-    \label{crunchDiagnostics}
-  \end{center}
-\end{figure}
 
 %%%%%%%%%%
 %% BRUNCH
 %%%%%%%%%%
 
 \subsubsection{Categorical variables: \fnidx{brunch}}
-
+\label{brunchSection}
 The inclusion of categorical variables in phylogenetic independent contrast models is problematic. Continuous variables are assumed to evolve under a Brownian process, which permits estimates of nodal values and hence allows nested contrasts to be drawn.  There is no sensible model for reconstructing the nodal values of a categorical variable, except where all daughters share the same categorical value. However, identifying nodes with daughter variables that differ in the value of the categorical variable permit independent contrasts to be identified \citep{Burt.1989.a}. While nodal estimates of continuous variables can be made below at nodes below a \fnidx{brunch} contrast, to do so would assume independent evolution of these variables at the nodes of any deeper contrasts \citep{Burt.1989.a}. As a result, the \fnidx{brunch} algorithm only uses the data from any single tip in the calculation of a single contrast. 
 
 The example below shows \fnidx{brunch} contrasts for the \dtidx{perrisodactyla} dataset calculated using territoriality. Figure \ref{brunchPlot} shows how these contrasts are extracted from the available data. In each case, a contrast is drawn between groups of species showing differing territorial behaviour and no species is used in more than one contrast.
@@ -254,12 +248,10 @@ caic.table(brunchMod)
 
 \begin{figure}[htbp]
   \begin{center}
-<<brunchPlot, fig=TRUE, echo=FALSE>>=
-
+<<brunchPlot, fig=TRUE, echo=FALSE, print=FALSE, height=3, width=6>>=
 bwd <- rep(1,15)
 bwd[c(5,6,11,12,9,13,14,15)] <- 3
 plot(perriso$phy,  'cladogram', use.edge.length=FALSE, label.offset=0.4, show.node=TRUE, cex=0.7, show.tip=FALSE, x.lim=c(0,12), no.margin=TRUE, edge.width=bwd)
-
 points(rep(8.25,9), 1:9, pch=ifelse(perriso$data$Terr=='Yes', 1,19))
 text(rep(8.5,9), 1:9, perriso$phy$tip.label, font=3, adj=0)
 @
@@ -278,7 +270,7 @@ One common approach in macroevolution is to investigate the links between the tr
 
 The MacroCAIC program, and the \fnidx{macrocaic} function, take a statistical model of species richness as a function of continuous explanatory variables and calculate \fnidx{crunch} contrasts in the explanatory variables and one of two recommended species richness contrasts as a response \citep{Isaac.Agapow.ea.2003.a}. These two contrasts are the relative rate difference (RRD: $ln(N_1/N_2)$) and the proportion dominance index (PDI: $(N_1/(N_1 + N_2)) - 0.5$), where $N_1$ and $N_2$ are the number of species in the daughter clades and $N_1$ is the richness of the clade with the higher value in the focal explanatory variable \citep{Agapow.Isaac.2002.a}.
 
-<<>>=
+<<macrocaicExample>>=
 data(IsaacEtAl)
 primates <- comparative.data(primates.tree, primates.data, binomial, na.omit=FALSE)
 primatesBodySize <- macrocaic(species.rich ~ body.mass, data=primates)
@@ -314,7 +306,7 @@ The mean sum of changes under the Brownian ($\bar{s_b}$) and random ($\bar{s_r}$
 
 \begin{figure}[htbp]
   \begin{center}
-<<phylodScale, fig=TRUE, echo=FALSE>>=
+<<phylodScale, fig=TRUE, echo=FALSE, print=FALSE, height=3, width=6>>=
 data(BritishBirds)
 BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
 redPD <- phylo.d(BritishBirds, binvar=Red_list)
@@ -344,6 +336,156 @@ data(BritishBirds)
 BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
 redPhyloD <- phylo.d(BritishBirds, binvar=Red_list)
 print(redPhyloD)
+@
+
+%% %%%%%%%%%%
+%% %% USING CONTRASTS
+%% %%%%%%%%%%
+
+
+\subsection{Checking and comparing contrast models.}
+
+The three contrast model functions (\fnidx{crunch}, \fnidx{brunch} and \fnidx{macrocaic}) all return an object of class \texttt{caic} for which a number of common functions and methods are provided. These are useful for assessing the robustness of contrast models. The simplest function is \fnidx{caic.table}, which returns a table of contrasts and nodal values that is very like the original contrast files provided by CAIC and MacroCAIC. This data frame (see the example in the \fnidx{brunch} section, page \pageref{brunch}) provides all the information needed to assess model suitability but some convenience functions are provided for standard checks. 
+
+\subsubsection{Testing evolutionary assumptions: \fnidx{caic.diagnostics}.}
+
+This function implements three diagnostic regression tests for the robustness of a contrast model \citep{Garland.Harvey.ea.1992.a,Purvis.Rambaut.1995.b}.  The function performs regression for each test and optionally displays scatterplots of the diagnostic test data. The tests examine the behaviour of the absolute standardised contrasts with the scale of the following nodal values: 
+
+\begin{description}
+	\item[Estimated nodal value]{This tests an evolutionary assumption of the contrast model: that there is no relationship between the magnitude of estimated contrasts and the estimated nodal value. Put another way, the proportional difference between daughter clades should be independent of magnitude of their trait values. }
+	\item[Estimated standard deviation at the node]{The evolutionary model underlying contrasts \citep{Felsenstein.1985.a} assumes that variance accumulates in continuous characters equally along all branches and that the amount of variation is proportional to branch length. The square root of the expected variance calculated at each node can therefore be used to standardize the absolute difference (`raw contrasts') between sister taxa. If this standardization is successful, there should be no relationship between absolute values of standardized contrasts and the estimated standard deviation.}
+	\item[Age of the node]{If the phylogeny is ultrametric, then the node age, as time from the present, provides a further test of the effectiveness of the standardization of the contrasts.}
+\end{description}
+
+If any of these diagnostic regressions are significant, then the assumption of evolution under a Brownian walk has been violated and  a transformation of the data or branch lengths may be required. As in the example use below on the \dtidx{shorebird} dataset, log transformation of continuous variables is often an effective solution for problems with contrast diagnostics (Fig \ref{caicDiagExamplePlot}).
+
+%% don't echo and fig - the code becomes part of the float
+<<caicDiagExample>>=
+par(mfrow=c(2,3))
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+crunchMod <- crunch(Egg.Mass ~  M.Mass, data=shorebird)
+caic.diagnostics(crunchMod)
+
+shorebird.data$lgEgg.Mass <- log(shorebird.data$Egg.Mass)
+shorebird.data$lgM.Mass <- log(shorebird.data$M.Mass)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+
+crunchMod2 <- crunch(lgEgg.Mass ~  lgM.Mass, data=shorebird)
+caic.diagnostics(crunchMod2)
+@
+
+
+\begin{figure}[htbp]
+  \begin{center}
+<<caicDiagExamplePlot, fig=TRUE, echo=FALSE, print=FALSE, height=4, width=6>>=
+par(mfrow=c(2,3), mar=c(3,3,1,1), mgp=c(2,0.7,0), tcl=-0.2)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+# need to store the output of caic diagnostics to stop it
+# showing up in the float
+crunchMod <- crunch(Egg.Mass ~  M.Mass, data=shorebird)
+x <- caic.diagnostics(crunchMod)
+crunchMod2 <- crunch(lgEgg.Mass ~  lgM.Mass, data=shorebird)
+x <- caic.diagnostics(crunchMod2)
+@
+    \caption{Diagnostic plots for contrasts in male shorebird mass for contrast models on unlogged (top row, poorly distributed with one serious outlier) and logged (bottom row) data.}
+    \label{caicDiagExamplePlot}
+  \end{center}
+\end{figure}
+
+\subsubsection{Robust contrasts: \fnidx{caic.robust}}
+
+In Figure \ref{caicDiagExamplePlot}, there is a systematic problem with the unlogged model and, although one contrast has a high studentized residual, this point does not drive the relationship. In other cases, individual contrasts may exert undue influence over an otherwise well behaved set of contrasts. This is more commonly the case for models where there are known to be problems with branch length estimates or where all branch lengths are treated as equal length. In such cases, these nodes should be removed from the set of contrasts used in the linear model. A threshold of absolute studentized residuals greater than 3 is commonly applied \citep{Jones.Purvis.1997.a,Garland.Harvey.ea.1992.a}. 
+
+
+The contrast model functions in \caper{} provide the \texttt{robust} argument to set the size of this threshold. By default, this is set to infinity: all contrasts are used to fit the linear model. This can be changed by altering the \texttt{robust} argument but can also be modified after initial inspection of contrast diagnostics using the \fnidx{caic.robust} function. This simple method alter the threshold for a \texttt{caic} object and returns a modified version with this threshold filter enforced. 
+
+Note that  none of the contrasts or residuals are recalculated using the \texttt{robust} options: the \texttt{caic} object retains all of the original contrast data and the studentized residuals are \emph{always} those obtained from the full set of contrasts. The threshold filter is only applied in two contexts:
+\begin{enumerate}
+  \item The statistical model of the contrasts held in the \texttt{caic} object and displayed by the model summary.
+  \item The points displayed by \fnidx{caic.diagnostics}. Note that the \texttt{outlier} argument to this function is independent of the value of \texttt{robust} for an object.
+\end{enumerate}
+
+Although clearly a bad model, the example below uses unlogged data from \dtidx{shorebird} to illustrate the use of the functions (Fig. \ref{caicRobustExamplePlot}).
+
+<<caicRobustExample>>=
+data(shorebird)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+
+crunchMod <- crunch(Egg.Mass ~ M.Mass, data=shorebird)
+caic.diagnostics(crunchMod)
+
+crunchModRobust <- caic.robust(crunchMod)
+caic.diagnostics(crunchModRobust, outlier=2)
+@
+
+\begin{figure}[htbp]
+  \begin{center}
+<<caicRobustExamplePlot, fig=TRUE, echo=FALSE, print=FALSE, height=4, width=6>>=
+par(mfrow=c(2,3), mar=c(3,3,1,1), mgp=c(2,0.7,0), tcl=-0.2)
+data(shorebird)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+# need to store the output of caic diagnostics to stop ip showing up in the float
+crunchMod <- crunch(Egg.Mass ~ M.Mass, data=shorebird)
+x <-caic.diagnostics(crunchMod)
+
+crunchModRobust <- caic.robust(crunchMod)
+x <-caic.diagnostics(crunchModRobust, outlier=2)
+@
+
+    \caption{Diagnostic plots and \fnidx{caic.robust}: the upper row shows diagnostic plots for the full model, highlighting a single point with an absolute studentized residual $> 3$. The lower row shows the same plots after applying \fnidx{caic.robust}: the highlighted point has been excluded and the argument \texttt{outlier} has been used to reveal points with absolute residuals $> 2$.}
+    \label{caicRobustExamplePlot}
+  \end{center}
+\end{figure}
+
+\subsubsection{Model criticism: \fnidx{plot}}
+
+The preceding tools are broadly useful for assessing whether the evolutionary assumptions of contrast modelling have been met and for excluding problematic nodes. However it is still wise to check whether the statistical assumptions of the linear model on the contrasts are met. The  \caper{} package provides a simple wrapper to allow the standard model criticism plots to be generated for a \texttt{caic} object (Fig \ref{modelCritPlot}). 
+
+<<modelCrit>>=
+
+data(shorebird)
+
+shorebird.data$lgEgg.Mass <- log(shorebird.data$Egg.Mass)
+shorebird.data$lgM.Mass <- log(shorebird.data$M.Mass)
+shorebird.data$lgF.Mass <- log(shorebird.data$F.Mass)
+
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+crunchMod <- crunch(lgEgg.Mass ~ lgF.Mass + lgM.Mass, data=shorebird)
+par(mfrow=c(2,2))
+plot(crunchMod)
+
+@
+
+\begin{figure}[htbp]
+  \begin{center}
+<<modelCritPlot, fig=TRUE, echo=FALSE, print=FALSE, height=4, width=4.6>>=
+par(mfrow=c(2,2), mar=c(3,3,2,1), mgp=c(2,0.7,0), tcl=-0.2)
+data(shorebird)
+crunchMod <- crunch(lgEgg.Mass ~ lgF.Mass + lgM.Mass, data=shorebird)
+plot(crunchMod)
+@
+
+    \caption{Testing the assumptions of a linear model for a contrast plot}
+    \label{modelCritPlot}
+  \end{center}
+\end{figure}
+
+\subsubsection{Model comparison: \fnidx{anova} \& \fnidx{AIC}}
+
+In a similar fashion, the \caper{} package provides simple wrappers to standard \texttt{anova} and \texttt{AIC} methods to allow contrast models to be compared.
+
+<<modelComparison>>=
+shorebird.data$lgEgg.Mass <- log(shorebird.data$Egg.Mass)
+shorebird.data$lgM.Mass <- log(shorebird.data$M.Mass)
+shorebird.data$lgF.Mass <- log(shorebird.data$F.Mass)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+
+cMod1 <- crunch(lgEgg.Mass ~ lgM.Mass * lgF.Mass, data=shorebird)
+cMod2 <- crunch(lgEgg.Mass ~ lgM.Mass + lgF.Mass, data=shorebird)
+cMod3 <- crunch(lgEgg.Mass ~ lgM.Mass , data=shorebird)
+
+anova(cMod1, cMod2, cMod3)
+AIC(cMod1, cMod2, cMod3)
 @
 
 

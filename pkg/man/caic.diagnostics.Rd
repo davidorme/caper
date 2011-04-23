@@ -1,51 +1,75 @@
 \name{caic.diagnostics}
+\alias{caic.label}
 \alias{caic.diagnostics}
+\alias{caic.robust}
+\alias{caic.table}
+
 \alias{print.caic.diagnostics}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 
-\title{Diagnostic plots of independent contrasts models}
+\title{Diagnostic tools for independent contrasts models}
 \description{
-Plots }
+These functions are a set of diagnostic tools to assess whether a particular contrast model is adequate.
+}
 \usage{
-caic.diagnostics(caicObj, which.terms=NULL, which.plots=c("NV","SD","AGE"), outlier.val=3, label=FALSE, ultrametric.tol=0.0001, ask, test.signif=TRUE, plot.signif=TRUE, alpha=0.05, ...)
+caic.table(caicObj, validNodes=TRUE, nodalValues=FALSE, ultrametric.tol=0.0001, CAIC.codes=FALSE, style="CAIC")
+caic.diagnostics(caicObj, which.terms=NULL, which.tests=c("NV","SD","AGE"), plot=TRUE, outlier=3, ultrametric.tol=0.0001, plot.signif=plot, alpha=0.05, cex.id=0.7,  ...)
 \method{print}{caic.diagnostics}(x, ...)
-
+caic.robust(caicObj, outlier=3)
+caic.label(phy, charset=NULL, action="insert", style="CAIC", tips=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{caicObj}{An object of class 'caic' produced by either \code{caic()} or \code{macrocaic()}}
-  \item{which.terms}{A character vector of the terms in the linear model for which diagnostic plots should be generated. The default is to plot all terms.}
-  \item{which.plots}{A character vector of the plots to be generated. The choices available plot the absolute contrast values against estimates of nodal values ("NV") and standard deviation ("SD") as well as, for ultrametric trees, the natural log of the age of the node ("AGE").}
-  \item{outlier.val}{Contrasts with studentized residuals greater than this value are shown as open circles.}
-  \item{label}{Logical value indicating whether the points should be labelled by node number.}
-  \item{ultrametric.tol}{The tolerance used to determine whether the phylogeny is ultrametric.}
-  \item{ask}{As in \code{par}, this is used to require user confirmation between successive plots.}
-  \item{test.signif}{By default, the function tests for the significance of the relationships shown in the plots, but this behaviour can be suppressed by setting this to FALSE.}
+  \item{caicObj}{An object of class 'caic'}
+  \item{validNodes}{A logical indicating whether to return only the nodes at which valid contrasts have been drawn or all nodes in the phylogeny.}
+  \item{nodalValues}{A logical indicating whether to include the estimated nodal values in the contrasts table.}
+  \item{ultrametric.tol}{A value in branch length units indicating how large a departure from ultrametric path lengths is permitted before calculating node ages is blocked.}
+  \item{CAIC.codes}{Should CAIC style node labels be added to the contrast table?}
+  \item{style}{Either 'CAIC', which is the default, or 'RLE' for run-length encoded codes.}
+  \item{which.terms}{A character vector of the terms in the linear model for which diagnostic checks should be made. The default is to use all terms.}
+  \item{which.tests}{A character vector of the tests to conduct. Any of 'NV', 'SD' and 'Age' may be selected and the default is to use all three.}
+  \item{plot}{A logical indicating whether or not to create plots of the diagnostic tests.}
+  \item{outlier}{A value indicating the size of absolute studentized residuals above which a contrast will be highlighted in diagnostic plots or removed from the contrast model.}
   \item{plot.signif}{By default, significant relationships are indicated on the plots by showing the model line.}
   \item{alpha}{This value sets the significance at which model predictions are added to the diagnostic plots.}
+  \item{cex.id}{Adjust the size of labels added to outlier points.}
   \item{x}{An object of class 'caic diagnostics' to be printed out}
-  \item{\dots}{Arguments to be passed to \code{plot}, currently these arguments are not used by \code{print.caic.diagnostics}. }
-
-
+  \item{\dots}{Generic arguments to \code{print.caic.diagnostics} or plot arguments for \code{print.caic.diagnostics}.}
+  \item{phy}{A 'phylo' object.}
+  \item{charset}{A vector of characters to be used to construct CAIC codes.}
+  \item{action}{One of 'replace', 'append' or 'insert'.}
+  \item{tips}{A logical indicating whether to modify the tip labels of the phylogeny in addition to the internal node labels.} 
 }
 \details{
-This function generates plots of absolute values of calculated contrast against estimates of the nodal values, standard deviations and log age of each node. The user can select which of these plots are to be generated and also which terms in the contrasts model will be plotted. By default, the function also fits a linear model for each combination. These models are returned by the function and have a simple print method displaying the slopes. Significant models (using the specified significance level) are shown on the plotted graphs. In addition, significant outliers from the overall model, as judged using studentized residuals, are plotted as open circles.
+The most general function (\code{caic.table}) extracts a data frame from a 'caic' object that contains the contrasts, expected variance ('contrVar'), node depth, number of descendant lineages and studentized residuals. It can also optionally include the nodal values estimated at internal nodes and CAIC style node labels. This data frame is very similar to the output files generated by CAIC and MacroCAIC. By default, only the valid nodes contributing contrasts to the model are shown but other internal nodes can also be included ('validNodes=FALSE').
+
+The \code{caic.diagnostics} function carries out a set of regression tests on the absolute values of contrasts in a model. These include regression against estimates of the nodal values ('NV), standard deviation at each node ('SD') and, where the underlying phylogeny is ultrametric, the log age at each node ('AGE'). Significant regressions indicate problems with the distribution of the contrast values. The user can select which of these plots are to be generated and also which terms in the contrasts model will be plotted. The function can also plot these relationships and show the slope of problematic tests (slope significance < alpha).  
+
+Plots from the \code{caic.diagnostics} function will plot outliers in red and label these points.  Outliers are identified as points with absolute studentized residuals greater than the cutoff specified in 'outlier'. The function \code{caic.robust} is a simple method to obtain a refitted 'caic' object model from which these outlying contrasts have been excluded.
+
+The \code{caic.label} function provides a method to label nodes (and optionally tips) with CAIC phylogeny codes. These are simple alphabetic sequences that indicate the branching structure of the tree from the root and are unique for each node.  With deeply nested trees, these codes can be very long and so the option 'RLE' is provided to reduce the length of codes for plotting onto trees: for example, the code AABAAAC would be converted to 2AB3AC. If \code{action} is 'replace', then the phylogeny tip and node labels are replaced with the CAIC codes. If \code{action} is 'append', then the codes are appended onto the end of existing labels, with the internal node numbers used if no node labels exist. Finally, if \code{action} is 'insert', then a named character vector called 'edge.caic.code' is inserted into the 'phylo' object list.
 }
 \value{
-If \code{test.signif} is TRUE, a list with class `caic.diagnostics' containing, for each of the model terms in \code{which.terms}, a list of \code{lm} objects testing the relationship between the values in each of the specified \code{which.plots}. Otherwise, the command only produces the plots and no value is returned.
+\describe{
+  \item{\code{caic.table}}{A data frame of contrasts and other nodal values.}
+  \item{\code{caic.diagnostics}}{An array of slope coefficients for each test (rows) and for each term (depth).} 
+  \item{\code{caic.robust}}{A 'caic' object with a model omitting outliers.}
+  \item{\code{caic.labels}}{A 'phylo' object with modified labels.}
+}
 }
 %\references{ ~put references to the literature/web site here ~ }
 \author{ David Orme }
 \seealso{\code{\link{crunch}}, \code{\link{brunch}}, \code{\link{macrocaic}}}
 \examples{
-
-par(mfrow=c(3,3))
-modDiag <- caic.diagnostics(mod)
-print(modDiag)
-
+data(shorebird)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+crunchMod <- crunch(log(Egg.Mass) ~  log(M.Mass) + log(F.Mass), data=shorebird)
+caic.diagnostics(crunchMod)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ hplot }
 \keyword{ models }% __ONLY ONE__ keyword per line
+\keyword{ utils }

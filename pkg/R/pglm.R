@@ -25,6 +25,7 @@ pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0
 	if(! inherits(data, 'comparative.data')) stop("data is not a 'comparative' data object.")
 	
 	dname <- deparse(substitute(data))
+	call <- match.call()
 	
 	## if the comparative data doesn't contain a VCV,
 	## then add one.
@@ -184,7 +185,7 @@ pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0
 	sterr <- sqrt(sterr)
 	
 	
-	RET <- list(model = fm, formula = formula, logLikY = logLikY, RMS = RMS, NMS = NMS,
+	RET <- list(model = fm, formula = formula, call=call, logLikY = logLikY, RMS = RMS, NMS = NMS,
 	            NSSQ = NSSQ[1], RSSQ = RSSQ[1], aic = aic, aicc = aicc, n = n, k = k,
 	            sterr = sterr, vcv = errMat, fitted = pred, residuals = res, phyres = pres,
 	            x = x, data = data,  varNames = varNames, y = y, param = fixedPar, mlVals=mlVals,
@@ -396,68 +397,104 @@ plot.pglm <- function(x, ...) {
 }
 
 summary.pglm <- function(object,...) {
-		
-	## coefficient matrix
 	
+	## call and return object
+	ans <- list(call=object$call)
+	class(ans) <- 'summary.pglm'
+	
+	## model size
+	p <- object$k
+	n <- object$n
+	rdf <- n - p
+	ans$df <- c(p, rdf)
+	
+	## residuals and residual standard error
+	r <- object$phyres
+	rss <- object$RSSQ
+	resvar <- rss/rdf
+	ans$sigma <- sqrt(resvar)
+	ans$residuals <- r
+	
+	## coefficient matrix
 	cf <- object$model$coef
 	se <- object$sterr
 	t  <- cf/se
-	p  <- 2 * ( 1 - pt( abs(t), object$n - object$k) )
-
-	coef <- cbind(cf,se,t,p)
+	
+	coef <- cbind(cf,se,t, 2 * ( 1 - pt(abs(t), rdf)))
 	colnames(coef) <- c('Estimate','Std. Error','t value','Pr(>|t|)')
+	ans$coefficients <- coef
 	
+	## parameter matrix
+	ans$param <- object$param
+	ans$mlVals <- object$mlVals
 	
-		testLambda <- function(pobj) {
-			
-			lrt0 <- 2 * (pobj$logLikY - pobj$L0)
-			lrt1 <- 2 * (pobj$logLikY - pobj$L1)
-			
-			p0 <- 1 - pchisq(lrt0, 1)
-			p1 <- 1 - pchisq(lrt1, 1)
-			
-			cat("     Test of Lambda = 0: chisq = ", lrt0, " P = ", p0, "\n")
-			cat("     Test of Lambda = 1: chisq = ", lrt1, " P = ", p1, "\n")
-			}
-			
+	if(! is.null(object$param.CI)) ans$param.CI <- object$param.CI
 	
-	cat("\n\n--------------------------------------------------------\n")
-	cat("Summary of Generalised Least Squares, correcting for \n")
-	cat("Phylogeny:\n\n")
-	cat("Number of parameters = ", object$k,"\n")
-	cat("Number of data points = ", object$n,"\n\n")
-	cat("Branch length transformations:\n")
-    cat(sprintf("%-6s : %0.4f [%s]", names(object$param), object$param, ifelse(object$mlVals, "ML", "Fixed")), sep="\n")
-	if(object$LamOptimised == TRUE) { testLambda(object)}
-	cat("Maximised log-likelihood = ", object$logLikY,"\n\n")
-	cat("Model AIC = ", object$aic, "\n")
-	cat("Model AICc = ", object$aicc, "\n\n")
-
-	cat("Null Mean Square = ", object$NSSQ,"\n")
-	cat("Residual Mean Square = ", object$RSSQ, "\n\n")
-	cat("Raw R^2 = ", (object$NSSQ - object$RSSQ) / object$NSSQ, "\n")
-	cat("Adjusted R^2 = ", (object$NMS - object$RMS) / object$NMS, "\n")
+	## model statistics: p includes the intercept - it is the number of columns of the design matrix
 	
-	Fstat <- ((object$NSSQ - object$RSSQ) / object$RMS) / (object$k - 1)
+	ans$fstatistic <- c(value= ((object$NSSQ - object$RSSQ) / object$RMS) / (object$k - 1),  numdf=p,dendf=rdf) 
+	ans$r.squared <- (object$NSSQ - object$RSSQ) / object$NSSQ
+    ans$adj.r.squared <- (object$NMS - object$RMS) / object$NMS
+   	
+	return(ans)
 	
-	cat("F statistic = ",  ((object$NSSQ - object$RSSQ) / object$RMS) / (object$k - 1), " ")
-	cat("P model = ", pf(Fstat, object$k - 1, object$n - object$k,  ncp=0, lower.tail = FALSE, log.p = FALSE), "\n\n")
-	cat("Summary of coefficients:\n\n")
-	coeffs <- coef(object)
-	errs <- object$sterr
-	cat("Term\t\tEstimate\t\tStd Err\t\tT-value\tP\n")
-	storet<-c()
-	for(i in 1:length(coeffs) ) {
-		est <- coeffs[1,i]
-		nm <- names(coeffs)[i]
-		se <- errs[i]
-		Tstat <- est / se
-		storet<-c(storet,Tstat)	
-		Pval <- 2 * ( 1 - pt( abs(Tstat), object$n - object$k) )
-		cat(nm,"\t")
-		cat(est, "\t", se, "\t", Tstat, "\t", Pval, "\n")
-		}
-	
-	cat("\n\n--------------------------------------------------------\n")
 }
 
+
+print.summary.pglm <- function(x, digits = max(3, getOption("digits") - 3), ...){
+	
+    cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")	
+
+	r <- zapsmall(quantile(x$resid), digits + 1)
+	names(r) <- c("Min", "1Q", "Median", "3Q", "Max")
+	cat('Residuals:\n')
+	print(r, digits=digits)
+
+
+	cat("\nBranch length transformations:\n\n")
+	for(p in names(x$param)){
+		cat(sprintf("%-6s [%s]  : %0.3f\n", p, ifelse(x$mlVals[p], " ML", "Fix"), x$param[p]))
+		if(! is.null(x$param.CI[[p]])){
+			blopt <- x$param.CI[[p]]
+			cat(sprintf("   lower bound : %0.3f, p = %-5s\n", blopt$bounds.val[1], format.pval(blopt$bounds.p[1])))
+			cat(sprintf("   upper bound : %0.3f, p = %-5s\n", blopt$bounds.val[2], format.pval(blopt$bounds.p[2])))
+			cat(sprintf("   %2.1f%% CI   : (%0.3f, %0.3f)\n", blopt$ci *100,blopt$ci.val[1], blopt$ci.val[2]))
+		}
+	}
+
+
+	cat('\nCoefficients:\n')
+	printCoefmat(x$coef)
+
+    cat("\nResidual standard error:", format(signif(x$sigma, 
+        digits)), "on", x$df[2L], "degrees of freedom\n")
+	cat("Multiple R-squared:", formatC(x$r.squared, digits = digits))
+    cat(",\tAdjusted R-squared:", formatC(x$adj.r.squared, 
+        digits = digits), "\nF-statistic:", formatC(x$fstatistic[1L], 
+        digits = digits), "on", x$fstatistic[2L], "and", 
+        x$fstatistic[3L], "DF,  p-value:", format.pval(pf(x$fstatistic[1L], 
+            x$fstatistic[2L], x$fstatistic[3L], lower.tail = FALSE), 
+            digits = digits), "\n")
+    
+
+}
+
+print.pglm <- function(x,  digits = max(3, getOption("digits") - 3), ...){
+	
+	cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+    
+    cat("Coefficients:\n")
+    print.default(format(coef(x), digits = digits), print.gap = 2, 
+        quote = FALSE)
+	cat("\n")
+}
+
+
+coef.pglm <- function(object, ...){
+	
+	cf <- object$model$coef
+	nm <- rownames(cf)
+	cf <- structure(as.vector(cf), names=nm)
+	return(cf)
+	
+}

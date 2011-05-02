@@ -649,3 +649,4 @@ anova.pglmlist <- function(object, ..., scale = 0, test = "F"){
     structure(table, heading = c(title, subtitle, topnote), class = c("anova", 
         "data.frame"))
 }
+

@@ -4,7 +4,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Summarize a caic or macrocaic analysis}
 \description{
-The summary method simply returns the linear model summary from the caic object. The print method prints some basic information about the analysis followed by the model summary.}
+The summary method simply returns the linear model summary from the 'caic' object. The print method prints some basic information about the analysis followed by the model summary.}
 \usage{
 \method{summary}{caic}(object, ...)
 \method{print}{caic}(x,...)
@@ -12,7 +12,7 @@ The summary method simply returns the linear model summary from the caic object.
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{}
+  \item{object}{An object of class 'caic'.}
   \item{x}{An object of class 'caic'.}
   \item{\dots}{Arguments to be passed to 'summary.lm'.}
 }

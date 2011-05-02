@@ -417,11 +417,12 @@ The package also provides \fnidx{anova} and \fnidx{logLik} methods that allow mo
 
 <<pglmCrit>>=
 mod1 <- pglm(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird) 
+anova(mod1)
+
 mod2 <- pglm(log(Egg.Mass) ~ log(M.Mass) + log(F.Mass), shorebird)  
 mod3 <- pglm(log(Egg.Mass) ~ log(M.Mass) , shorebird)
 mod4 <- pglm(log(Egg.Mass) ~ 1, shorebird)
-   
-anova(mod)
+
 anova(mod1, mod2, mod3, mod4)
 AIC(mod1, mod2, mod3, mod4)
 @

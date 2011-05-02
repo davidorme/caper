@@ -40,11 +40,10 @@ AIC.caic <- function(object, ..., k=2){
 	
 	## AIC is completely agnostic about the model types fed into it.
 	# borrowing heavily from AIC.default
-    ll <- if ("stats4" %in% loadedNamespaces()) stats4:::logLik else logLik
 
 	# look inside CAIC objects
     if (length(list(...))) {
-	        val <- lapply(list(object, ...), function(X) ll(X$mod))
+	        val <- lapply(list(object, ...), function(X) logLik(X$mod))
 	        val <- as.data.frame(t(sapply(val, function(el) c(attr(el, 
 	            "df"), AIC(el, k = k)))))
 	        names(val) <- c("df", "AIC")
@@ -53,7 +52,7 @@ AIC.caic <- function(object, ..., k=2){
 	        row.names(val) <- as.character(Call[-1L])
 	        val
 	  }
-	    else AIC(ll(object$mod), k = k)
+	    else AIC(logLik(object$mod), k = k)
 }
 
 anova.caic <- function(object, ...){

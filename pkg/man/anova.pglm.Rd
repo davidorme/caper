@@ -10,8 +10,8 @@ Anova and AIC tables for 'pglm' models.
 The 'anova' function creates ANOVA tables for a 'pglm' models using sequential sums of squares. 
 }
 \usage{
-anova.pglm(object, ...)
-anova.pglmlist(object, ..., scale = 0, test = "F")
+\method{anova}{pglm}(object, ...)
+\method{anova}{pglmlist}(object, ..., scale = 0, test = "F")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,7 +19,6 @@ anova.pglmlist(object, ..., scale = 0, test = "F")
   \item{\dots}{Additional 'pglm' models.}
   \item{scale}{A character string specifying the test statistic to be used. Can be one of "F", "Chisq" or "Cp", with partial matching allowed, or NULL for no test.}
   \item{test}{numeric. An estimate of the noise variance sigma^2. If zero this will be estimated from the largest model considered.}
-}
 }
 \details{
 The sequential sums of squares are calculated by refitting the model in the order of the terms of the formula and so can take a little time to calculate. Branch length transformations are held at the values of the initial object. The 'logLik.pglm' provides a simple accessor function that allows the use of AIC model comparisons. Note that the generic AIC methods do no checking to ensure that sensible models are being compared.
@@ -51,5 +50,5 @@ AIC(mod1, mod2, mod3, mod4)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ utils}
+\keyword{ stats }% __ONLY ONE__ keyword per line

@@ -26,7 +26,7 @@ When dim = 2, a variance covariance matrix of class 'vcv.array' of dimension nTi
 When dim = 3, a 3 dimensional array of class 'vcv.array' with dimensions of the number of taxa in the phylogeny for the rows and columns and either the maximum number of branches on the root to tip path or the number of internal nodes as the depth, depending on the setting of \code{compact}. The rows and columns are named using the tip labels from the phylogeny and the depth only named with node numbers if \code{compact} is TRUE. 
 }
 \author{David Orme}
-\seealso{ \code{\link[ape]{vcv.phylo}}, \code{\link{lik.kappa}},}
+\seealso{ \code{\link[ape]{vcv.phylo}},  \code{\link{pglm}}}
 \examples{
 tree <- rcoal(8)
 tree.VCV <- vcv.phylo(tree)

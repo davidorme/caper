@@ -1,9 +1,5 @@
 \name{fusco.test}
 \alias{fusco.test}
-\alias{fusco.calc}
-\alias{fusco.randomise}
-\alias{fusco.markovSimulate}
-\alias{fusco.markovNullTree}
 \alias{summary.fusco}
 \alias{print.fusco}
 \alias{plot.fusco}
@@ -16,7 +12,7 @@ Fusco and Cronk (1995) described a method for testing the imbalance of phylogene
 Purvis et al. (2002) demonstrated that I is not independent of the node size S, resulting in a bias to the expected median of 0.5. They proposed a modification (I') that corrects this to give a statistic with an expected median of 0.5 regardless of node size. The defaults in this function perform testing of imbalance using I', but it is also possible to use the original measure proposed by Fusco and Cronk (1995).
 }
 \usage{
-fusco.test(phy, data , names.col, rich, randomise.Iprime=TRUE,  markov.simulate=FALSE, reps=1000, conf.int=0.95)
+fusco.test(phy, data , names.col, rich, tipsAsSpecies=FALSE, randomise.Iprime=TRUE,  reps=1000, conf.int=0.95)
 \method{print}{fusco}(x, ...)
 \method{summary}{fusco}(object, ...)
 \method{plot}{fusco}(x, correction=TRUE, nBins=10, right=FALSE, I.prime=TRUE, plot=TRUE, ...)
@@ -27,6 +23,7 @@ fusco.test(phy, data , names.col, rich, randomise.Iprime=TRUE,  markov.simulate=
   \item{data}{A data frame containing species richness values. Not required if phy is a 'comparative.data' object.}
   \item{names.col}{A variable in \code{data} identifying tip labels. Not required if phy is a 'comparative.data' object.}
   \item{rich}{A variable  identifying species richness.}
+  \item{tipsAsSpecies}{A logical value. If TRUE, a species richness column need not be specified and the tips will be treated as species.}
   \item{randomise.Iprime}{Use a randomization test on calculated I' to generate confidence intervals.}
   \item{reps}{Number of replicates to use in simulation or randomization.}
   \item{conf.int}{Width of confidence intervals required.}

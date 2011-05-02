@@ -7,11 +7,12 @@ Diagnostic plots for 'pglm' models.
 The function generates four diagnostics plots for 'pglm' models.
 }
 \usage{
-plot.pglm(x, ...)
+\method{plot}{pglm}(x, ...)
 }
 
 \arguments{
   \item{x}{An object of class 'pglm'.}
+  \item{...}{Additional arguments to plot functions.}
 }
 \details{
 The first two plots show the fit of the phylogenetic residuals from the model to a normal distribution: a density plot of the residuals and a normal Q-Q plot. The second two plots scatterplots show pattern in the distribution of the fitted values against the observed and residual values.

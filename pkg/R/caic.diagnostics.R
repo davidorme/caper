@@ -33,7 +33,7 @@ caic.diagnostics <- function(caicObj, which.terms=NULL, which.tests=c("NV","SD",
 	# that to drop rows before the model fitting
 	robust <- attr(caicObj, 'robust')
 	nNonrobust <- sum(abs(tab$studentResid) > robust)
-	tab <- subset(tab, abs(studentResid) < robust)
+	tab <- tab[abs(tab$studentResid) < robust, ]
 	
 	## test giving pch for outliers
 	outlier <- abs(tab$studentResid) >= outlier
@@ -150,7 +150,7 @@ print.caic.diagnostics <- function(x, ...){
 		cat('\n')
     }
 
-	cat("---\nSignif. codes: 0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1\n")
+	cat("---\nSignif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
     invisible(x)
 }
 

@@ -133,36 +133,36 @@ print.comparative.data <- function(x, ...){
     }
 }
 
-na.omit.comparative.data <- function(x, ...){
+na.omit.comparative.data <- function(object, ...){
 
     # strips data rows, tips and vcv row/columns for a comparative.data object
-    to.drop <- which(! complete.cases(x$data))
+    to.drop <- which(! complete.cases(object$data))
     
 	# test for completely empty dataset
-	if(length(to.drop) == nrow(x$data)) warning('No complete rows present in data.')
+	if(length(to.drop) == nrow(object$data)) warning('No complete rows present in data.')
 	
     # guard against ape 'feature' of dropping all tips for empty vectors
     if(length(to.drop) > 0){
         
         # lose bits of tree
-        x$phy <- drop.tip(x$phy, to.drop) 
+        object$phy <- drop.tip(object$phy, to.drop) 
         # lose rows
-        x$data <- x$data[-to.drop,]
+        object$data <- object$data[-to.drop,]
         
         # lose VCV elements if needed
-        if(! is.null(x$vcv)){ 
-			if((x$vcv.dim == 2)){
-				x$vcv <- x$vcv[-to.drop, -to.drop] 
+        if(! is.null(object$vcv)){ 
+			if((object$vcv.dim == 2)){
+				object$vcv <- object$vcv[-to.drop, -to.drop] 
 			} else {
-				x$vcv <- x$vcv[-to.drop, -to.drop, ] 
+				object$vcv <- object$vcv[-to.drop, -to.drop, ] 
 			}
 		}
     
 		# add to dropped list
-		x$dropped$tips <- c(x$dropped$tips, to.drop)
+		object$dropped$tips <- c(object$dropped$tips, to.drop)
 	}
     
-    return(x)
+    return(object)
 }
 
 subset.comparative.data <- function(x, subset, select,  ...){

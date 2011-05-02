@@ -24,7 +24,7 @@ pglm.blenTransform(V, fixedPar)
 \item{control}{A list of control parameters for the optim function.}
 \item{bounds}{A list of length three giving upper and lower bounds for branch length parameters.}
 \item{optimPar}{A named vector of branch length parameters to be optimised to find the maximum likelihood value.}
-\item{fixedPar}A named vector of fixed values for branch length parameters.}
+\item{fixedPar}{A named vector of fixed values for branch length parameters.}
 \item{y}{A column matrix of the model response.}
 \item{x}{The design matrix of the model.}
 \item{V}{A phylogenetic covariance matrix.}
@@ -77,7 +77,7 @@ The 'pglm' function returns an object of class \code{pglm} containing the follow
 review of evidence. American Naturalist, 160:712-726, 2002.}
 \author{Rob Freckleton; David Orme}
 %\note{}
-\seealso{\code{\link{profile.lambda}} }
+\seealso{\code{\link{pglm.profile}}, \code{\link{anova.pglm}}, \code{\link{summary.pglm}}}
 \examples{
 data(shorebird)
 shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)

@@ -6,7 +6,7 @@
 Calculate a linear model using the brunch algorithm.
 }
 \usage{
-brunch(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.depth=NULL, equal.branch.length=FALSE)
+brunch(formula, data, phy, names.col, stand.contr = TRUE, robust = Inf, ref.var=NULL, node.depth=NULL, equal.branch.length=FALSE)
 }
 
 
@@ -16,6 +16,7 @@ brunch(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.dep
 \item{phy}{An object of class 'phylo', required when data is not a 'comparative.data' object.}
 \item{names.col}{A name specifying the column in 'data' that matches rows to tips in 'phy', required when data is not a 'comparative.data' object.}
   \item{stand.contr}{A logical flag indicating whether or not to standardize contrasts}.
+  \item{robust}{A threshold value of studentized residuals to exclude from the model.}
   \item{ref.var}{A reference variable present in the model that is used to specify the direction of calculation of contrasts. If null, this is assumed to be the first explanatory variable.}
   \item{node.depth}{A positive integer greater than 1 used to restrict the model to contrasts with a node depth less than or equal to the specified depth. Tips have a depth of 1.}
   \item{equal.branch.length}{If set to 'TRUE' then all branch lengths are set to 2.}
@@ -40,7 +41,7 @@ Polytomies - more detail here The Mac Classic program CAIC used 1 for both 'Brun
 \references{
 Purvis, A. and Rambaut, A. (1995) Comparative analysis by independent contrasts (CAIC): an Apple Macintosh application for analysing comparative data.  Computer Appl. Biosciences 11, 247-251.
 
-Burt, A. (1989). Comparative methods using phylogenetically independent contrasts. Oxford Surveys in Evolutionary Biology, 6:33–53.
+Burt, A. (1989). Comparative methods using phylogenetically independent contrasts. Oxford Surveys in Evolutionary Biology, 6:33-53.
 }
 
 \author{David Orme}

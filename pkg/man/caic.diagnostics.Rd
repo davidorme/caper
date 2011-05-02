@@ -16,7 +16,7 @@ These functions are a set of diagnostic tools to assess whether a particular con
 caic.table(caicObj, validNodes=TRUE, nodalValues=FALSE, ultrametric.tol=0.0001, CAIC.codes=FALSE, style="CAIC")
 caic.diagnostics(caicObj, which.terms=NULL, which.tests=c("NV","SD","AGE"), plot=TRUE, outlier=3, ultrametric.tol=0.0001, plot.signif=plot, alpha=0.05, cex.id=0.7,  ...)
 \method{print}{caic.diagnostics}(x, ...)
-caic.robust(caicObj, outlier=3)
+caic.robust(caicObj, robust=3)
 caic.label(phy, charset=NULL, action="insert", style="CAIC", tips=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -30,7 +30,8 @@ caic.label(phy, charset=NULL, action="insert", style="CAIC", tips=FALSE)
   \item{which.terms}{A character vector of the terms in the linear model for which diagnostic checks should be made. The default is to use all terms.}
   \item{which.tests}{A character vector of the tests to conduct. Any of 'NV', 'SD' and 'Age' may be selected and the default is to use all three.}
   \item{plot}{A logical indicating whether or not to create plots of the diagnostic tests.}
-  \item{outlier}{A value indicating the size of absolute studentized residuals above which a contrast will be highlighted in diagnostic plots or removed from the contrast model.}
+  \item{outlier}{A value indicating the size of absolute studentized residuals above which a contrast will be highlighted in diagnostic plots}
+  \item{robust}{A value indicating the size of absolute studentized residuals above which a contrast will be removed from the contrast model.}
   \item{plot.signif}{By default, significant relationships are indicated on the plots by showing the model line.}
   \item{alpha}{This value sets the significance at which model predictions are added to the diagnostic plots.}
   \item{cex.id}{Adjust the size of labels added to outlier points.}

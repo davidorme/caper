@@ -32,14 +32,16 @@ The variables (all saved as natural log values) are:
 \item{mass.dimorphism    }{Male mass /female mass}
 \item{length.dimorphism  }{Male length / female length}
 }
+}
 \examples{
+data(IsaacEtAl)
 chiroptera  <- comparative.data(chiroptera.tree, chiroptera.data, 'binomial', na.omit=FALSE)
 carnivora   <- comparative.data(carnivora.tree, carnivora.data, 'binomial', na.omit=FALSE)
 primates    <- comparative.data(primates.tree, primates.data, 'binomial', na.omit=FALSE)
 marsupialia <- comparative.data(marsupialia.tree, marsupialia.data, 'binomial', na.omit=FALSE)
 	
 }
-\references{Isaac, N., Jones, K., Gittleman, J., and Purvis, A. (2005). Correlates of species richness in mammals: Body size, life history, and ecology. American Naturalist, 165(5):600–607.}
+\references{Isaac, N., Jones, K., Gittleman, J., and Purvis, A. (2005). Correlates of species richness in mammals: Body size, life history, and ecology. American Naturalist, 165(5):600-607.}
 
 \seealso{ caic, pglm }
 

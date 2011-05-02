@@ -16,7 +16,7 @@ A 'phylo' object (\code{syrphidaeTree}) containing a phylogeny of 204 genera of 
 }
 
 \references{
-Katzourakis, A., Purvis, A., Azmeh, S., Rotheray, G., and Gilbert, F. (2001). Macroevolution of hoverflies (Diptera : Syrphidae): the effect of using higher-level taxa in studies of biodiversity, and correlates of species richness. Journal of Evolutionary Biology, 14:219–227.
+Katzourakis, A., Purvis, A., Azmeh, S., Rotheray, G., and Gilbert, F. (2001). Macroevolution of hoverflies (Diptera : Syrphidae): the effect of using higher-level taxa in studies of biodiversity, and correlates of species richness. Journal of Evolutionary Biology, 14:219-227.
 }
 
 \seealso{fusco.test}

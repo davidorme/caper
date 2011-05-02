@@ -595,10 +595,10 @@ anova.pglm <- function(object, ...){
 		ss <- c(abs(diff(rss)), object$RSSQ)
 		df <- c(abs(diff(resdf)), n -k)
 		ms <- ss/df
-		f <- ms / ms[NR]
-	    P <-  pf(F, df, df[NR], lower.tail=FALSE)
+		fval <- ms / ms[NR]
+	    P <-  pf(fval, df, df[NR], lower.tail=FALSE)
 
-	    table <- data.frame(df, ss, ms, f, P)
+	    table <- data.frame(df, ss, ms, f=fval, P)
 	    table[length(P), 4:5] <- NA
 	    dimnames(table) <- list(c(tlabels, "Residuals"), c("Df", 
 	        "Sum Sq", "Mean Sq", "F value", "Pr(>F)"))

@@ -3,9 +3,9 @@
 \alias{residuals.pglm}
 \alias{fitted.pglm}
 \alias{predict.pglm}
-\alias{summary.pglm}
 \alias{print.pglm}
-\alias{plot.pglm}
+\alias{summary.pglm}
+\alias{print.summary.pglm}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -20,8 +20,8 @@ These are simple summary methods, accessor functions and summary and print metho
 \method{fitted}{pglm}(object, ...)
 \method{predict}{pglm}(object, pred.x, ...)
 \method{summary}{pglm}(object, ...)
-\method{print}{pglm}(x, ...)
-\method{print}{pglm.summary}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{pglm}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{summary.pglm}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

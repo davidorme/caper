@@ -7,7 +7,7 @@
 Calculate a linear model using the crunch algorithm.
 }
 \usage{
-crunch(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.depth=NULL, polytomy.brlen=0, equal.branch.length=FALSE, factor.action="abort")
+crunch(formula, data, phy, names.col, stand.contr = TRUE, robust=Inf, ref.var=NULL, node.depth=NULL, polytomy.brlen=0, equal.branch.length=FALSE, factor.action="abort")
 }
 
 
@@ -17,6 +17,7 @@ crunch(formula, data, phy, names.col, stand.contr = TRUE, ref.var=NULL, node.dep
   \item{phy}{An object of class 'phylo', required when data is not a 'comparative.data' object.}
   \item{names.col}{A name specifying the column in 'data' that matches rows to tips in 'phy', required when data is not a 'comparative.data' object.}
   \item{stand.contr}{A logical flag indicating whether or not to standardize contrasts}.
+  \item{robust}{A threshold value of studentized residuals to exclude from the model.}
   \item{ref.var}{A reference variable present in the model that is used to specify the direction of calculation of contrasts. If null, this is assumed to be the first explanatory variable.}
   \item{node.depth}{A positive integer greater than 1 used to restrict the model to contrasts with a node depth less than or equal to the specified depth. Tips have a depth of 1.}
   \item{polytomy.brlen}{The internal branch length used for calculating contrasts at a polytomy, following Pagel's (1992) method. }

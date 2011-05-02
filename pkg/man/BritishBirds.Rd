@@ -50,7 +50,7 @@ range_size
 
 }
 \references{
-Thomas, G. H. (2008). Phylogenetic distributions of british birds of conservation concern. Proceedings of the Royal Society B-Biological Sciences, 275(1647):2077–2083.
+Thomas, G. H. (2008). Phylogenetic distributions of british birds of conservation concern. Proceedings of the Royal Society B-Biological Sciences, 275(1647):2077-2083.
 }
 \examples{
 data(BritishBirds)

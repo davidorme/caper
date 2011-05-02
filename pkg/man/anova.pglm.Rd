@@ -27,7 +27,7 @@ The sequential sums of squares are calculated by refitting the model in the orde
 \value{
 A table of class 'anova' and 'data.frame' that employs the generic plot methods for 'anova' tables.}
 \author{
-David Orme
+Rob Freckleton, David Orme
 }
 \note{
 The functions build heavily on the generic methods 'anova.lm' and 'anova.lmlist'.

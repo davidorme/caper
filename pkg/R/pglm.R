@@ -1,6 +1,6 @@
 ## RESTRUCTURE AND EXPANSION/MERGING OF PGLM CODE
 
-pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0, 
+pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0, 
 	             param.CI = 0.95, control = list(fnscale=-1), 
                  bounds = list(lambda=c(1e-6,1), kappa=c(1e-6,3), delta=c(1e-6,3))) {
 
@@ -19,14 +19,26 @@ pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0
 		return( t(D) )
 	}
 
-	## END OF INTERNAL FUNCTIONS, START OF FUNCTION CODE
-
 	## think about this - allow old data + V use?
 	if(! inherits(data, 'comparative.data')) stop("data is not a 'comparative' data object.")
-	
 	dname <- deparse(substitute(data))
 	call <- match.call()
 	
+	## check for missing data in the formula
+	miss <- model.frame(formula, data$data, na.action=na.pass)
+	miss.na <- apply(miss, 1, function(X) (any(is.na(X))))
+	if(any(miss.na)) {
+		miss.names <- data$phy$tip.label[miss.na]
+		data <- data[-which(miss.na),]
+	}
+	
+	# Get the design matrix, number of parameters and response variable	
+	m <- model.frame(formula, data$data)
+	y <- m[,1]
+	x <- model.matrix(formula, m)
+	k <- ncol(x)
+	namey <- names(m)[1]
+
 	## if the comparative data doesn't contain a VCV,
 	## then add one.
 	if(is.null(data$vcv)){
@@ -39,13 +51,6 @@ pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0
 	nm <- names(data$data)
 	n <- nrow(data$data)
 	
-	# Get the design matrix, number of parameters and response variable
-	m <- model.frame(formula, data$data)
-	y <- m[,1]
-	x <- model.matrix(formula, m)
-	k <- ncol(x)
-	namey <- names(m)[1]
-
 	# if a ci is specified, check (early) that it is sensible for use at the end!
 	# ha! first planned use of sequential 'or'  operator
 	if(! is.null(param.CI)){
@@ -93,7 +98,7 @@ pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0
 	## which are being optimised
 	mlVals <- sapply(parVals,  "==", "ML")
 
-	## if any are being optimised then run pglm.logLik as a simple optimising function,
+	## if any are being optimised then run pglm.likelihood as a simple optimising function,
 	## returning the logLik for a particular set of transformations
 	##  - start the search for ML estimates from the midpoint of the specified bounds
 	
@@ -115,7 +120,7 @@ pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0
     	
 		## TODO - could isolate single optimisations here to use optimise() rather than optim()
 		## likelihood function swapped out for externally visible one
-    	optim.param.vals <- optim(optimPar, fn = pglm.loglik, # function and start vals
+    	optim.param.vals <- optim(optimPar, fn = pglm.likelihood, # function and start vals
     	    method="L-BFGS-B", control=control, upper=upper.b, lower=lower.b, # optim control
     	    V = V, y=y, x=x, fixedPar = fixedPar, optim.output=TRUE) # arguments to function
 	    
@@ -133,7 +138,7 @@ pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0
     
 	## run the likelihood function again with the fixed parameter values
 	## ll <- log.likelihood(optimPar=NULL, fixedPar=fixedPar, y, x, V, optim=FALSE)
-	ll <- pglm.loglik(optimPar=NULL, fixedPar=fixedPar, y, x, V, optim=FALSE)
+	ll <- pglm.likelihood(optimPar=NULL, fixedPar=fixedPar, y, x, V, optim=FALSE)
 	
 	## store the log likelihood of the optimized solution for use in ci.searchs
 	log.lik <- ll$ll
@@ -174,7 +179,7 @@ pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0
 	
 	## null model
 	xdummy <- matrix(rep(1, length(y)))
-	nullMod <- pglm.loglik(optimPar=NULL, fixedPar=fixedPar, y, xdummy, V, optim.output=FALSE)
+	nullMod <- pglm.likelihood(optimPar=NULL, fixedPar=fixedPar, y, xdummy, V, optim.output=FALSE)
 	NMS <- nullMod$s2
 	NSSQ <- nullMod$s2 * (n -1) 
 	
@@ -187,12 +192,17 @@ pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0
 	
 	RET <- list(model = fm, formula = formula, call=call, logLikY = logLikY, RMS = RMS, NMS = NMS,
 	            NSSQ = NSSQ[1], RSSQ = RSSQ[1], aic = aic, aicc = aicc, n = n, k = k,
-	            sterr = sterr, vcv = errMat, fitted = pred, residuals = res, phyres = pres,
+	            sterr = sterr, fitted = pred, residuals = res, phyres = pres,
 	            x = x, data = data,  varNames = varNames, y = y, param = fixedPar, mlVals=mlVals,
 	            namey = namey, bounds=bounds, Vt=Vt, dname=dname)
 	
 	class(RET) <- "pglm"
 	
+	## missing data
+	if(any(miss.na)){
+		RET$na.action <- structure(which(miss.na), class='omit', .Names=miss.names)
+		
+	}
 	## if requested, get the confidence intervals on the optimized parameters
 	## if any are actually optimised
 	if(! is.null(param.CI) && any(mlVals)){
@@ -227,7 +237,7 @@ pglm.profile <- function(pglm, which=c('lambda','kappa','delta'), N=50, param.CI
 	pars[,which] <- x
 	
 	## now get the sequence of likelihoods for the parameter in question
-	logLik <- sapply(seq_along(x), function(X){ pglm.loglik(optimPar=NULL, fixedPar=pars[X,], y=pglm$y, x=pglm$x, V=pglm$data$vcv, optim.output=TRUE)})
+	logLik <- sapply(seq_along(x), function(X){ pglm.likelihood(optimPar=NULL, fixedPar=pars[X,], y=pglm$y, x=pglm$x, V=pglm$data$vcv, optim.output=TRUE)})
 	
 	RET <- list(x=x,logLik=logLik, which=which, pars=pglm$param, dname=pglm$dname, formula=pglm$formula)
 	class(RET) <- 'pglm.profile'
@@ -303,8 +313,8 @@ pglm.confint <- function(pglm, which=c('lambda','kappa','delta'), param.CI=0.95)
 	## - as long as the bound is outside the CI, can then use uniroot 
 	##   to find the actual confidence interval.
 
-	lowerBound.ll <- pglm.loglik(structure(bounds[1], names=which), fix, y, x, V, optim.output=TRUE)
-	upperBound.ll <- pglm.loglik(structure(bounds[2], names=which), fix, y, x, V, optim.output=TRUE)
+	lowerBound.ll <- pglm.likelihood(structure(bounds[1], names=which), fix, y, x, V, optim.output=TRUE)
+	upperBound.ll <- pglm.likelihood(structure(bounds[2], names=which), fix, y, x, V, optim.output=TRUE)
 	
 	lrt0 <- 2 * (ML - lowerBound.ll)
 	lrt1 <- 2 * (ML - upperBound.ll)
@@ -312,9 +322,9 @@ pglm.confint <- function(pglm, which=c('lambda','kappa','delta'), param.CI=0.95)
 	upperBound.p <- 1 - pchisq(lrt1, 1)
 	
 	## - a problem with uniroot is that the identity of the variables gets stripped
-	##   which is why pglm.logLik now has an optim.names option used here.
+	##   which is why pglm.likelihood now has an optim.names option used here.
 	ll.fun <- function(opt){
-        pg <- pglm.loglik(opt, fix, y, x, V, optim.output=TRUE, names.optim=which)
+        pg <- pglm.likelihood(opt, fix, y, x, V, optim.output=TRUE, names.optim=which)
         ll <- pg + offset
         return(ll)
     }
@@ -371,22 +381,22 @@ pglm.likelihood <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, name
 	if(optim.output) return(ll)  else return( list(ll = ll, mu = mu, s2 = s2) )
 }
 
-pglm.blenTransform <- function(V, par){
+pglm.blenTransform <- function(V, fixedPar){
 	## applies the three branch length transformations to a VCV matrix
 	
     # apply transformations
-	if(! is.null(par["kappa"]) && par["kappa"] != 1){
+	if(! is.null(fixedPar["kappa"]) && fixedPar["kappa"] != 1){
 		if(length(dim(V)) < 3){
 			stop('Kappa transformation requires a 3 dimensional VCV array.')
 		}
 	}
 	
-    if(par["kappa"] == 0) V <- (V > 0) else V <-  V ^ par["kappa"] # kappa catching NA^0=1
+    if(fixedPar["kappa"] == 0) V <- (V > 0) else V <-  V ^ fixedPar["kappa"] # kappa catching NA^0=1
     V <- apply(V, c(1,2), sum, na.rm=TRUE) # collapse 3D array
-    V <- ifelse(upper.tri(V)+lower.tri(V), V * par["lambda"], V) # lambda
-    if(par["delta"] == 0) V <- (V > 0) else V <-  V ^ par["delta"] # delta catching NA^0=1
+    V <- ifelse(upper.tri(V)+lower.tri(V), V * fixedPar["lambda"], V) # lambda
+    if(fixedPar["delta"] == 0) V <- (V > 0) else V <-  V ^ fixedPar["delta"] # delta catching NA^0=1
 
-	attr(V, 'blenTransform') <- par
+	attr(V, 'blenTransform') <- fixedPar
 	return(V)
 }
 
@@ -437,6 +447,7 @@ summary.pglm <- function(object,...) {
 	
 	if(! is.null(object$param.CI)) ans$param.CI <- object$param.CI
 	
+	if(! is.null(object$na.action)) ans$na.action <- object$na.action
 	## model statistics: p includes the intercept - it is the number of columns of the design matrix
 	
 	ans$fstatistic <- c(value= ((object$NSSQ - object$RSSQ) / object$RMS) / (object$k - 1),  numdf=p,dendf=rdf) 
@@ -474,6 +485,8 @@ print.summary.pglm <- function(x, digits = max(3, getOption("digits") - 3), ...)
 
     cat("\nResidual standard error:", format(signif(x$sigma, 
         digits)), "on", x$df[2L], "degrees of freedom\n")
+    if (nzchar(mess <- naprint(x$na.action))) 
+        cat("  (", mess, ")\n", sep = "")
 	cat("Multiple R-squared:", formatC(x$r.squared, digits = digits))
     cat(",\tAdjusted R-squared:", formatC(x$adj.r.squared, 
         digits = digits), "\nF-statistic:", formatC(x$fstatistic[1L], 

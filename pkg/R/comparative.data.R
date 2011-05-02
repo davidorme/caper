@@ -150,9 +150,13 @@ na.omit.comparative.data <- function(x, ...){
         x$data <- x$data[-to.drop,]
         
         # lose VCV elements if needed
-        if(! is.null(x$vcv)){
-            x$vcv <- x$vcv[-to.drop, -to.drop]
-        }
+        if(! is.null(x$vcv)){ 
+			if((x$vcv.dim == 2)){
+				x$vcv <- x$vcv[-to.drop, -to.drop] 
+			} else {
+				x$vcv <- x$vcv[-to.drop, -to.drop, ] 
+			}
+		}
     
 		# add to dropped list
 		x$dropped$tips <- c(x$dropped$tips, to.drop)
@@ -190,11 +194,15 @@ subset.comparative.data <- function(x, subset, select,  ...){
         x$phy <- drop.tip(x$phy, to.drop) 
         # lose rows
         x$data <- x$data[r, vars, drop = FALSE] # CANNOT lose data.frame-ness
-        
+
         # lose VCV elements if needed
-        if(! is.null(x$vcv)){
-            x$vcv <- x$vcv[r, r]
-        }
+        if(! is.null(x$vcv)){ 
+			if((x$vcv.dim == 2)){
+				x$vcv <- x$vcv[r, r] 
+			} else {
+				x$vcv <- x$vcv[r, r, ] 
+			}
+		}
     }
     
     return(x)
@@ -256,7 +264,13 @@ subset.comparative.data <- function(x, subset, select,  ...){
 		# this assumes that drop.tip preserves the remaining order - testing suggests ok
 		x$phy <- drop.tip(x$phy, toDrop)
         # lose VCV elements if needed
-        if(! is.null(x$vcv))  x$vcv <- x$vcv[rowToKeep, rowToKeep]
+        if(! is.null(x$vcv)){ 
+			if((x$vcv.dim == 2)){
+				x$vcv <- x$vcv[rowToKeep, rowToKeep] 
+			} else {
+				x$vcv <- x$vcv[rowToKeep, rowToKeep, ] 
+			}
+		}
         x$data <- x$data[rowToKeep,, drop=FALSE]
 	}
 	return(x)
@@ -295,7 +309,14 @@ reorder.comparative.data <- function(x, order = "cladewise", ...){
     if (!is.null(x$phy$edge.length)) 
         x$phy$edge.length <- x$phy$edge.length[neworder]
 
-	if(! is.null(x$vcv)) x$vcv <- x$vcv[neworder, neworder]
+    # lose VCV elements if needed
+    if(! is.null(x$vcv)){ 
+		if((x$vcv.dim == 2)){
+			x$vcv <- x$vcv[neworder, neworder] 
+		} else {
+			x$vcv <- x$vcv[neworder, neworder, ] 
+		}
+	}
 	
 	x$dat <- x$dat[neworder,]
     attr(x, "order") <- order

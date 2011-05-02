@@ -65,7 +65,7 @@ anova.caic <- function(object, ...){
 	} else {
 		## pass on - having a second function allows the easy interception of test and scale
 		## arguments out of the list of objects
-		return(anova.caiclist(object, ...))	
+		return(anova.caiclist(object, ...))
 	}
 	
 	

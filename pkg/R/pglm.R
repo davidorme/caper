@@ -1,7 +1,7 @@
 ## RESTRUCTURE AND EXPANSION/MERGING OF PGLM CODE
 
 pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0, 
-	             param.CI = NULL, control = list(fnscale=-1), 
+	             param.CI = 0.95, control = list(fnscale=-1), 
                  bounds = list(lambda=c(1e-6,1), kappa=c(1e-6,3), delta=c(1e-6,3))) {
 
 	## bounds go singular: bounds = list(delta = c(1e-04, 3), lambda = c(1e-04,  0.99999), kappa = c(1e-04, 3))
@@ -140,7 +140,7 @@ pglm <- function(formula, data, V = NULL, lambda = 1.0, kappa = 1.0,  delta= 1.0
 	
 	## get the transformed vcv matrix for the fitted model for use
 	## in calculating the remaining outputs.
-	Vt <- blenTransform(V, fixedPar)
+	Vt <- pglm.blenTransform(V, fixedPar)
 	
 	## start collating outputs:
 	
@@ -326,7 +326,7 @@ pglm.confint <- function(pglm, which=c('lambda','kappa','delta'), param.CI=0.95)
 
 }
 
-pglm.loglik <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, names.optim=NULL) {
+pglm.likelihood <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, names.optim=NULL) {
     
 	# Full ML estimation for given x and V: modified to also act as an engine for optim
 	# - this is why the branch length  parameters are passed as two chunks, so that
@@ -354,24 +354,11 @@ pglm.loglik <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, names.op
 		return( s2 / (n- k) )
 	}
 
-	## applies the three branch length transformations to a VCV matrix
-    blenTransform <- function(V, par){
-		
-        # apply transformations
-        if(par["kappa"] == 0) V <- (V > 0) else V <-  V ^ par["kappa"] # kappa catching NA^0=1
-        V <- apply(V, c(1,2), sum, na.rm=TRUE) # collapse 3D array
-        V <- ifelse(upper.tri(V)+lower.tri(V), V * par["lambda"], V) # lambda
-        if(par["delta"] == 0) V <- (V > 0) else V <-  V ^ par["delta"] # delta catching NA^0=1
-
-		attr(V, 'blenTransform') <- par
-    	return(V)
-	}
-	
 	if(! is.null(names.optim)) names(optimPar) <- names.optim
     allPar <- c(optimPar, fixedPar)
     
 	# get the transformed VCV matrix and its inverse
-    V <- blenTransform(V, allPar)
+    V <- pglm.blenTransform(V, allPar)
 	iV <- solve(V, tol = .Machine$double.eps)
 	
 	mu <- get.coeffs(y, iV, x)
@@ -384,14 +371,34 @@ pglm.loglik <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, names.op
 	if(optim.output) return(ll)  else return( list(ll = ll, mu = mu, s2 = s2) )
 }
 
+pglm.blenTransform <- function(V, par){
+	## applies the three branch length transformations to a VCV matrix
+	
+    # apply transformations
+	if(! is.null(par["kappa"]) && par["kappa"] != 1){
+		if(length(dim(V)) < 3){
+			stop('Kappa transformation requires a 3 dimensional VCV array.')
+		}
+	}
+	
+    if(par["kappa"] == 0) V <- (V > 0) else V <-  V ^ par["kappa"] # kappa catching NA^0=1
+    V <- apply(V, c(1,2), sum, na.rm=TRUE) # collapse 3D array
+    V <- ifelse(upper.tri(V)+lower.tri(V), V * par["lambda"], V) # lambda
+    if(par["delta"] == 0) V <- (V > 0) else V <-  V ^ par["delta"] # delta catching NA^0=1
+
+	attr(V, 'blenTransform') <- par
+	return(V)
+}
+
 plot.pglm <- function(x, ...) {
 	
 	# layout(matrix(c(1,2,3,4), 2, 2, byrow = FALSE))
 	res <- residuals(x, phylo = TRUE)
 	res <- res / sqrt(var(res))[1]
-	truehist(res, xlab = "Residual value (corrected for phylogeny)")
+	# truehist(res, xlab = "Residual value (corrected for phylogeny)")
+	plot(density(res))
 	qqnorm(res)
-	abline(0, 1)
+	qqline(res)
 	plot(fitted(x), res, xlab = "Fitted value", ylab = "Residual value (corrected for phylogeny)"  )
 	plot(x$y, fitted(x), xlab = "Observed value", ylab = "Fitted value")
 }
@@ -439,7 +446,6 @@ summary.pglm <- function(object,...) {
 	return(ans)
 	
 }
-
 
 print.summary.pglm <- function(x, digits = max(3, getOption("digits") - 3), ...){
 	
@@ -489,7 +495,6 @@ print.pglm <- function(x,  digits = max(3, getOption("digits") - 3), ...){
 	cat("\n")
 }
 
-
 coef.pglm <- function(object, ...){
 	
 	cf <- object$model$coef
@@ -497,4 +502,150 @@ coef.pglm <- function(object, ...){
 	cf <- structure(as.vector(cf), names=nm)
 	return(cf)
 	
+}
+
+# This returns the residuals from the model
+## CDLO - argument name changed for consistency with S3 generic
+residuals.pglm <- function(object, phylo = FALSE, ...) {
+    ret <- NULL
+	if(phylo == FALSE){ret <- object$res} else {ret <- object$phyres}
+	return(ret)
+}
+
+# This returns the fitted values
+## CDLO - argument name changed for consistency with S3 generic
+fitted.pglm <- function(object, ...){
+    ret <- object$fitted
+    return(ret)
+}
+
+# This predicts for given x
+## CDLO - argument name changed for consistency with S3 generic
+## CDLO - argument name of x changed to discriminate from generic to plot and print
+
+predict.pglm <- function(object, pred.x, ...) {
+    mu <- as.matrix(coef(object) )
+    ret <- cbind(1,  pred.x) %*% t(mu)
+    return(ret)
+}
+
+## enables the generic AIC methods for objects and lists of objects 
+logLik.pglm <- function(object, REML = FALSE, ...){
+	
+	val <- object$logLikY
+	
+	attr(val, "nall") <- object$n
+    attr(val, "nobs") <- object$n
+    attr(val, "df") <- object$k
+    class(val) <- "logLik"
+    val
+}
+
+## # This returns the AICc
+## ## CDLO - argument name changed for consistency with S3 generic
+## AICc.pglm <- function(object) {
+##     ret <- object$aicc
+##     return(ret[1])
+## }
+
+anova.pglm <- function(object, ...){
+	
+	## SEQUENTIAL SUMS OF SQUARES.
+	## ASSUMES ORDER OF TERMS PRESERVE MARGINALITY
+	
+    if (length(list(object, ...)) > 1L){
+        return(anova.pglmlist(object, ...))
+	} else {
+	    data <- object$data
+	    tlabels <- attr( terms(object$formula), "term.labels")
+		k <- object$k
+		n <- object$n
+		NR <- length(tlabels) + 1
+	
+		# track residual ss and residual df and get residuals and df of null model 
+		rss <- resdf <- rep(NA, NR)
+		rss[1] <- object$NSSQ
+		resdf[1] <- n - 1
+	
+		lm <- object$param['lambda']
+		dl <- object$param['delta']
+		kp <- object$param['kappa']
+	
+		# fit the sequential models
+	    for( i in 1:(k-1)) {
+	    		fmla <- as.formula(paste( object$namey, " ~ ", paste(tlabels[1:i], collapse = "+") ))
+	    		plm <- pglm(fmla, data, lambda=lm, delta=dl, kappa=kp)
+	    		rss[i+1] <- plm$RSSQ
+	    		resdf[i+1] <- (n - 1) - plm$k + 1
+	    }
+
+		ss <- c(abs(diff(rss)), object$RSSQ)
+		df <- c(abs(diff(resdf)), n -k)
+		ms <- ss/df
+		f <- ms / ms[NR]
+	    P <-  pf(F, df, df[NR], lower.tail=FALSE)
+
+	    table <- data.frame(df, ss, ms, f, P)
+	    table[length(P), 4:5] <- NA
+	    dimnames(table) <- list(c(tlabels, "Residuals"), c("Df", 
+	        "Sum Sq", "Mean Sq", "F value", "Pr(>F)"))
+	    #if (attr(object$terms, "intercept")) 
+	    #    table <- table[-1, ]
+	    structure(table, heading = c("Analysis of Variance Table", 
+	        sprintf("Sequential SS for pglm: lambda = %0.2f, delta = %0.2f, kappa = %0.2f\n", lm, dl,kp), 
+	        paste("Response:", deparse(formula(object)[[2L]]))), 
+	        class = c("anova", "data.frame"))
+	}
+}
+
+anova.pglmlist <- function(object, ..., scale = 0, test = "F"){
+	
+    objects <- list(object, ...)
+
+	## check the models use the same response
+    responses <- as.character(lapply(objects, function(x) deparse(terms(x$formula)[[2L]])))
+    sameresp <- responses == responses[1L]
+    if (!all(sameresp)) {
+        objects <- objects[sameresp]
+        warning("models with response ", deparse(responses[!sameresp]), 
+            " removed because response differs from ", "model 1")
+    }
+    
+	## check the models have the same number of cases (not actually that they are the same values)
+    ns <- sapply(objects, function(x) length(x$residuals))
+    if (any(ns != ns[1L])) 
+        stop("models were not all fitted to the same size of dataset")
+    
+	## check that the model parameters are the same
+	param <- sapply(objects, '[[', 'param')
+	paramChk <- apply(param, 1, function(X) all(X == X[1]))
+	if(! all(paramChk))
+	    stop('models were fitted with different branch length transformations.')
+	
+    nmodels <- length(objects)
+    if (nmodels == 1) 
+        return(anova.lm(object))
+    resdf <- as.numeric(lapply(objects, function(X) X$n - X$k))
+    resdev <- as.numeric(lapply(objects, '[[', 'RSSQ'))
+    table <- data.frame(resdf, resdev, c(NA, -diff(resdf)), c(NA, 
+        -diff(resdev)))
+    variables <- lapply(objects, function(x) paste(deparse(formula(x)), 
+        collapse = "\n"))
+    dimnames(table) <- list(1L:nmodels, c("Res.Df", "RSS", "Df", 
+        "Sum of Sq"))
+    title <- "Analysis of Variance Table"
+    subtitle <- sprintf("pglm: lambda = %0.2f, delta = %0.2f, kappa = %0.2f\n", 
+                        param['lambda', 1], param['delta', 1], param['kappa', 1])
+    topnote <- paste("Model ", format(1L:nmodels), ": ", variables, 
+        sep = "", collapse = "\n")
+    if (!is.null(test)) {
+        bigmodel <- order(resdf)[1L]
+        scale <- if (scale > 0) 
+            scale
+        else resdev[bigmodel]/resdf[bigmodel]
+        table <- stat.anova(table = table, test = test, scale = scale, 
+            df.scale = resdf[bigmodel], n = length(objects[bigmodel$residuals]))
+    }
+    structure(table, heading = c(title, subtitle, topnote), class = c("anova", 
+        "data.frame"))
 }

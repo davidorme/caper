@@ -62,9 +62,9 @@ function(phy, tips=FALSE, tip.labels=FALSE, include.nodes=FALSE){
 	return(clade.list)
 }
 
-"all.clades" <-
-function(phy, tips=FALSE, tip.labels=FALSE){
-    
-    .Deprecated("clade.members.list")
-    clade.members.list(phy, tips=FALSE, tip.labels=FALSE)
-}
+## "all.clades" <-
+## function(phy, tips=FALSE, tip.labels=FALSE){
+##     
+##     .Deprecated("clade.members.list")
+##     clade.members.list(phy, tips=FALSE, tip.labels=FALSE)
+## }

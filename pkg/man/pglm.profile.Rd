@@ -60,7 +60,7 @@ shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE,
 mod <- pglm(log(Egg.Mass) ~ log(M.Mass), shorebird, lambda='ML')
 mod.l <- pglm.profile(mod, 'lambda')
 plot(mod.l)
-pglm.confint(mod, 'delta')
+pglm.confint(mod, 'lambda')
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

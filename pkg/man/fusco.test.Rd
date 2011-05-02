@@ -62,6 +62,7 @@ Purvis A.,  Katzourakis A. & Agapow, P-M (2002) Evaluating Phylogenetic Tree Sha
 }
 \author{David Orme, Andy Purvis}
 \examples{
+data(syrphidae)
 syrphidae <- comparative.data(phy=syrphidaeTree, dat=syrphidaeRich, names.col=genus)
 summary(fusco.test(syrphidae, rich=nSpp))
 summary(fusco.test(syrphidae, tipsAsSpecies=TRUE))

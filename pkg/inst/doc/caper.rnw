@@ -44,9 +44,10 @@
 <<setup, print=FALSE, echo=FALSE>>=
 	## THESE WILL EVENTUALLY BE REPLACED BY A SINGLE CALL TO library(caper) 
 	## AND HENCE ACTUALLY WORKS TO TRACK DEPENDENCIES A BIT!
+	library(caper)
 	library(ape)
 	library(mvtnorm) 
-	for(f in dir('../../R', full=TRUE)) (source(f))
+	# for(f in dir('../../R', full=TRUE)) (source(f))
 @
 
 \maketitle

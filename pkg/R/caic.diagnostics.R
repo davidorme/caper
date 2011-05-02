@@ -70,11 +70,11 @@ caic.diagnostics <- function(caicObj, which.terms=NULL, which.tests=c("NV","SD",
      		## extract the t-test on the slope
 	        slopes['NV',,term] <- summary.lm(mod)$coef[2,]
 	
-			## plot it
+			## plot it and add the line, if requested, if the model is sane, and if it is significant
 			if(plot){
 			    plot(y ~ x, pch=outlier.pch, col=outlier.col, ylab=ylabExpr, xlab=paste(term, "@ node"), ...)
 				if(any(outlier)) text.id(x, y, outlier)
-				if(plot.signif & slopes['NV',4,term] <= alpha) abline(mod, col='red')
+				if(plot.signif && is.finite(slopes['NV',3,term]) && slopes['NV',4,term] <= alpha) abline(mod, col='red')
 			}
 		}
 		
@@ -93,7 +93,7 @@ caic.diagnostics <- function(caicObj, which.terms=NULL, which.tests=c("NV","SD",
 			if(plot){
 			    plot(y ~ x, pch=outlier.pch, col=outlier.col, ylab=ylabExpr, xlab=paste("SD @ node"), ...)
 				if(any(outlier)) text.id(x, y, outlier)
-				if(plot.signif & slopes['SD',4,term] <= alpha) abline(mod, col='red')
+				if(plot.signif && is.finite(slopes['NV',3,term]) && slopes['SD',4,term] <= alpha) abline(mod, col='red')
 			}
 		}
 
@@ -112,7 +112,7 @@ caic.diagnostics <- function(caicObj, which.terms=NULL, which.tests=c("NV","SD",
 			if(plot){
 			    plot(y ~ x, pch=outlier.pch, col=outlier.col, ylab=ylabExpr, xlab=paste("Age @ node"), ...)
 				if(any(outlier)) text.id(x, y, outlier)
-				if(plot.signif & slopes['AGE',4,term] <= alpha) abline(mod, col='red')
+				if(plot.signif && is.finite(slopes['NV',3,term]) &&slopes['AGE',4,term] <= alpha) abline(mod, col='red')
 			}
 		}
 	}

@@ -24,8 +24,8 @@ The clade matrix shows the tips from a phylogeny that subtend from each internal
 
 %\seealso{}%%\code{\link{pd.calc}}, \code{\link{pd.bootstrap}}, \code{\link{clade.stats}}}
 \examples{
-data(SmallTree)
-clade.matrix(diTree)
+data(perrisodactyla)
+clade.matrix(perrisodactyla.tree)
 }
 
 \keyword{manip}

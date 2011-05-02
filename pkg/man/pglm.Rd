@@ -82,7 +82,7 @@ review of evidence. American Naturalist, 160:712-726, 2002.}
 data(shorebird)
 shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
 mod1 <- pglm(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird, lambda='ML')
-mod2 <- pglmEstLambda(Cl.size ~ M.Mass, data=shorebird, lambda='ML', delta='ML')
+mod2 <- pglm(log(Egg.Mass) ~ log(M.Mass), data=shorebird, lambda='ML', delta='ML')
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

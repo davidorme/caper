@@ -21,16 +21,16 @@ The datafile contains species level phylogenies and accompanying data frames of 
 
 The variables (all saved as natural log values) are:
 \describe{
-\item{species.rich       }{Species richness at the tips - all are set to 1 for use in \code{macrocaic}}
-\item{body.mass          }{The average body mass in grams}
+\item{species.rich}{Species richness at the tips - all are set to 1 for use in \code{macrocaic}}
+\item{body.mass}{The average body mass in grams}
 \item{age.sexual.maturity}{Age at sexual maturity in months}
-\item{gestation          }{Gestation length in days}
+\item{gestation}{Gestation length in days}
 \item{interbirth.interval}{Interbirth interval in months}
-\item{litter.size        }{The average number of offspring in a litter}
-\item{population.density }{Population density}
-\item{group.size         }{Number of individuals in a typical group}
-\item{mass.dimorphism    }{Male mass /female mass}
-\item{length.dimorphism  }{Male length / female length}
+\item{litter.size}{The average number of offspring in a litter}
+\item{population.density}{Population density}
+\item{group.size}{Number of individuals in a typical group}
+\item{mass.dimorphism}{Male mass /female mass}
+\item{length.dimorphism}{Male length / female length}
 }
 }
 \examples{

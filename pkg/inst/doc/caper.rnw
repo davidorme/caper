@@ -238,7 +238,7 @@ plot(z, no.margin=TRUE, cex=0.6, label.offset=0.3, edge.col=ec)
 	%\hfill
 	%\framebox{
 	\begin{minipage}[c]{0.5\linewidth}
-	%\newcolumntype{P}{>{\centering\arraybackslash$}m{4mm}<{$}}
+	\newcolumntype{P}{>{\centering\arraybackslash$}m{4mm}<{$}}
 	\newcommand{\bl}{\cellcolor{PowderBlue}}
 	\newcommand{\pk}{\cellcolor{LightPink}}
 	\renewcommand\arraystretch{1.2}

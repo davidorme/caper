@@ -1,0 +1,513 @@
+#NEXUS
+
+Begin taxa;
+	Dimensions ntax=250;
+	Taxlabels
+		Struthio.camelus
+		Tetrao.tetrix
+		Tetrao.urogallus
+		Lagopus.lagopus
+		Lagopus.muta
+		Perdix.perdix
+		Chrysolophus.amherstiae
+		Chrysolophus.pictus
+		Phasianus.colchicus
+		Coturnix.coturnix
+		Alectoris.rufa
+		Oxyura.jamaicensis
+		Branta.canadensis
+		Branta.leucopsis
+		Branta.bernicla
+		Anser.anser
+		Anser.albifrons
+		Cygnus.cygnus
+		Cygnus.columbianus
+		Cygnus.olor
+		Clangula.hyemalis
+		Aix.galericulata
+		Somateria.mollissima
+		Bucephala.clangula
+		Mergellus.albellus
+		Melanitta.nigra
+		Aythya.ferina
+		Aythya.fuligula
+		Aythya.marila
+		Tadorna.tadorna
+		Melanitta.fusca
+		Alopochen.aegyptiaca
+		Mergus.serrator
+		Netta.rufina
+		Mergus.merganser
+		Anas.querquedula
+		Anas.clypeata
+		Anas.discors
+		Anas.platyrhynchos
+		Anas.rubripes
+		Anas.acuta
+		Anas.strepera
+		Anas.penelope
+		Anas.crecca
+		Psittacula.krameri
+		Passer.domesticus
+		Passer.montanus
+		Calcarius.lapponicus
+		Plectrophenax.nivalis
+		Emberiza.calandra
+		Emberiza.cirlus
+		Emberiza.citrinella
+		Emberiza.schoeniclus
+		Coccothraustes.coccothraustes
+		Serinus.serinus
+		Carduelis.flavirostris
+		Carduelis.cannabina
+		Carduelis.spinus
+		Carduelis.flammea
+		Loxia.curvirostra
+		Loxia.pytyopsittacus
+		Loxia.scotica
+		Carduelis.chloris
+		Carduelis.carduelis
+		Pyrrhula.pyrrhula
+		Carpodacus.erythrinus
+		Fringilla.montifringilla
+		Fringilla.coelebs
+		Motacilla.cinerea
+		Motacilla.flava
+		Motacilla.alba
+		Anthus.trivialis
+		Anthus.petrosus
+		Anthus.spinoletta
+		Anthus.pratensis
+		Prunella.modularis
+		Periparus.ater
+		Lophophanes.cristatus
+		Cyanistes.caeruleus
+		Parus.major
+		Poecile.montanus
+		Poecile.palustris
+		Pyrrhocorax.pyrrhocorax
+		Corvus.monedula
+		Corvus.frugilegus
+		Corvus.corax
+		Corvus.corone
+		Pica.pica
+		Garrulus.glandarius
+		Lanius.excubitor
+		Phylloscopus.trochilus
+		Phylloscopus.collybita
+		Hippolais.icterina
+		Acrocephalus.scirpaceus
+		Acrocephalus.palustris
+		Acrocephalus.schoenobaenus
+		Riparia.riparia
+		Delichon.urbicum
+		Cecropis.daurica
+		Hirundo.rustica
+		Cettia.cetti
+		Aegithalos.caudatus
+		Phylloscopus.sibilatrix
+		Sylvia.atricapilla
+		Sylvia.borin
+		Sylvia.curruca
+		Sylvia.undata
+		Sylvia.communis
+		Locustella.luscinioides
+		Locustella.naevia
+		Panurus.biarmicus
+		Eremophila.alpestris
+		Lullula.arborea
+		Alauda.arvensis
+		Sitta.europaea
+		Bombycilla.garrulus
+		Troglodytes.troglodytes
+		Certhia.familiaris
+		Luscinia.megarhynchos
+		Ficedula.hypoleuca
+		Saxicola.torquata
+		Saxicola.rubetra
+		Phoenicurus.ochruros
+		Phoenicurus.phoenicurus
+		Oenanthe.oenanthe
+		Luscinia.svecica
+		Erithacus.rubecula
+		Muscicapa.striata
+		Cinclus.cinclus
+		Turdus.viscivorus
+		Turdus.torquatus
+		Turdus.pilaris
+		Turdus.merula
+		Turdus.iliacus
+		Turdus.philomelos
+		Sturnus.vulgaris
+		Regulus.ignicapilla
+		Regulus.regulus
+		Alcedo.atthis
+		Dendrocopos.major
+		Dendrocopos.minor
+		Picus.viridis
+		Jynx.torquilla
+		Merops.apiaster
+		Rallus.aquaticus
+		Porzana.carolina
+		Gallinula.chloropus
+		Grus.grus
+		Haematopus.ostralegus
+		Recurvirostra.avosetta
+		Pluvialis.apricaria
+		Pluvialis.squatarola
+		Charadrius.hiaticula
+		Charadrius.morinellus
+		Stercorarius.parasiticus
+		Stercorarius.skua
+		Larus.minutus
+		Rissa.tridactyla
+		Larus.canus
+		Larus.michahellis
+		Larus.marinus
+		Larus.argentatus
+		Larus.fuscus
+		Larus.glaucoides
+		Larus.hyperboreus
+		Larus.melanocephalus
+		Larus.ridibundus
+		Sternula.albifrons
+		Gelochelidon.nilotica
+		Sterna.sandvicensis
+		Sterna.bengalensis
+		Sterna.paradisaea
+		Sterna.hirundo
+		Sterna.dougallii
+		Chlidonias.niger
+		Alle.alle
+		Uria.aalge
+		Alca.torda
+		Cepphus.grylle
+		Fratercula.arctica
+		Limosa.lapponica
+		Limosa.limosa
+		Numenius.arquata
+		Numenius.phaeopus
+		Arenaria.interpres
+		Calidris.canutus
+		Calidris.alba
+		Calidris.maritima
+		Calidris.alpina
+		Philomachus.pugnax
+		Tringa.ochropus
+		Tringa.totanus
+		Tringa.glareola
+		Tringa.nebularia
+		Tringa.erythropus
+		Scolopax.rusticola
+		Actitis.hypoleucos
+		Actitis.macularius
+		Phalaropus.lobatus
+		Lymnocryptes.minimus
+		Gallinago.gallinago
+		Vanellus.vanellus
+		Upupa.epops
+		Cuculus.canorus
+		Pandion.haliaetus
+		Aquila.chrysaetos
+		Accipiter.nisus
+		Accipiter.gentilis
+		Circus.aeruginosus
+		Circus.cyaneus
+		Buteo.buteo
+		Buteo.lagopus
+		Milvus.milvus
+		Haliaeetus.albicilla
+		Pernis.apivorus
+		Podiceps.nigricollis
+		Podiceps.grisegena
+		Tachybaptus.ruficollis
+		Podiceps.cristatus
+		Podiceps.auritus
+		Podilymbus.podiceps
+		Oceanodroma.leucorhoa
+		Hydrobates.pelagicus
+		Apus.apus
+		Gavia.arctica
+		Gavia.immer
+		Gavia.stellata
+		Caprimulgus.europaeus
+		Ardea.cinerea
+		Puffinus.puffinus
+		Fulmarus.glacialis
+		Phalacrocorax.aristotelis
+		Phalacrocorax.carbo
+		Morus.bassanus
+		Ixobrychus.minutus
+		Botaurus.stellaris
+		Asio.flammeus
+		Asio.otus
+		Strix.aluco
+		Athene.noctua
+		Tyto.alba
+		Streptopelia.turtur
+		Columba.oenas
+		Columba.livia
+		Columba.palumbus
+		Streptopelia.decaocto
+		Falco.tinnunculus
+		Falco.subbuteo
+		Falco.columbarius
+		Falco.peregrinus
+		;
+End;
+
+Begin trees;
+	Translate
+		1 Struthio.camelus,
+		2 Tetrao.tetrix,
+		3 Tetrao.urogallus,
+		4 Lagopus.lagopus,
+		5 Lagopus.muta,
+		6 Perdix.perdix,
+		7 Chrysolophus.amherstiae,
+		8 Chrysolophus.pictus,
+		9 Phasianus.colchicus,
+		10 Coturnix.coturnix,
+		11 Alectoris.rufa,
+		12 Oxyura.jamaicensis,
+		13 Branta.canadensis,
+		14 Branta.leucopsis,
+		15 Branta.bernicla,
+		16 Anser.anser,
+		17 Anser.albifrons,
+		18 Cygnus.cygnus,
+		19 Cygnus.columbianus,
+		20 Cygnus.olor,
+		21 Clangula.hyemalis,
+		22 Aix.galericulata,
+		23 Somateria.mollissima,
+		24 Bucephala.clangula,
+		25 Mergellus.albellus,
+		26 Melanitta.nigra,
+		27 Aythya.ferina,
+		28 Aythya.fuligula,
+		29 Aythya.marila,
+		30 Tadorna.tadorna,
+		31 Melanitta.fusca,
+		32 Alopochen.aegyptiaca,
+		33 Mergus.serrator,
+		34 Netta.rufina,
+		35 Mergus.merganser,
+		36 Anas.querquedula,
+		37 Anas.clypeata,
+		38 Anas.discors,
+		39 Anas.platyrhynchos,
+		40 Anas.rubripes,
+		41 Anas.acuta,
+		42 Anas.strepera,
+		43 Anas.penelope,
+		44 Anas.crecca,
+		45 Psittacula.krameri,
+		46 Passer.domesticus,
+		47 Passer.montanus,
+		48 Calcarius.lapponicus,
+		49 Plectrophenax.nivalis,
+		50 Emberiza.calandra,
+		51 Emberiza.cirlus,
+		52 Emberiza.citrinella,
+		53 Emberiza.schoeniclus,
+		54 Coccothraustes.coccothraustes,
+		55 Serinus.serinus,
+		56 Carduelis.flavirostris,
+		57 Carduelis.cannabina,
+		58 Carduelis.spinus,
+		59 Carduelis.flammea,
+		60 Loxia.curvirostra,
+		61 Loxia.pytyopsittacus,
+		62 Loxia.scotica,
+		63 Carduelis.chloris,
+		64 Carduelis.carduelis,
+		65 Pyrrhula.pyrrhula,
+		66 Carpodacus.erythrinus,
+		67 Fringilla.montifringilla,
+		68 Fringilla.coelebs,
+		69 Motacilla.cinerea,
+		70 Motacilla.flava,
+		71 Motacilla.alba,
+		72 Anthus.trivialis,
+		73 Anthus.petrosus,
+		74 Anthus.spinoletta,
+		75 Anthus.pratensis,
+		76 Prunella.modularis,
+		77 Periparus.ater,
+		78 Lophophanes.cristatus,
+		79 Cyanistes.caeruleus,
+		80 Parus.major,
+		81 Poecile.montanus,
+		82 Poecile.palustris,
+		83 Pyrrhocorax.pyrrhocorax,
+		84 Corvus.monedula,
+		85 Corvus.frugilegus,
+		86 Corvus.corax,
+		87 Corvus.corone,
+		88 Pica.pica,
+		89 Garrulus.glandarius,
+		90 Lanius.excubitor,
+		91 Phylloscopus.trochilus,
+		92 Phylloscopus.collybita,
+		93 Hippolais.icterina,
+		94 Acrocephalus.scirpaceus,
+		95 Acrocephalus.palustris,
+		96 Acrocephalus.schoenobaenus,
+		97 Riparia.riparia,
+		98 Delichon.urbicum,
+		99 Cecropis.daurica,
+		100 Hirundo.rustica,
+		101 Cettia.cetti,
+		102 Aegithalos.caudatus,
+		103 Phylloscopus.sibilatrix,
+		104 Sylvia.atricapilla,
+		105 Sylvia.borin,
+		106 Sylvia.curruca,
+		107 Sylvia.undata,
+		108 Sylvia.communis,
+		109 Locustella.luscinioides,
+		110 Locustella.naevia,
+		111 Panurus.biarmicus,
+		112 Eremophila.alpestris,
+		113 Lullula.arborea,
+		114 Alauda.arvensis,
+		115 Sitta.europaea,
+		116 Bombycilla.garrulus,
+		117 Troglodytes.troglodytes,
+		118 Certhia.familiaris,
+		119 Luscinia.megarhynchos,
+		120 Ficedula.hypoleuca,
+		121 Saxicola.torquata,
+		122 Saxicola.rubetra,
+		123 Phoenicurus.ochruros,
+		124 Phoenicurus.phoenicurus,
+		125 Oenanthe.oenanthe,
+		126 Luscinia.svecica,
+		127 Erithacus.rubecula,
+		128 Muscicapa.striata,
+		129 Cinclus.cinclus,
+		130 Turdus.viscivorus,
+		131 Turdus.torquatus,
+		132 Turdus.pilaris,
+		133 Turdus.merula,
+		134 Turdus.iliacus,
+		135 Turdus.philomelos,
+		136 Sturnus.vulgaris,
+		137 Regulus.ignicapilla,
+		138 Regulus.regulus,
+		139 Alcedo.atthis,
+		140 Dendrocopos.major,
+		141 Dendrocopos.minor,
+		142 Picus.viridis,
+		143 Jynx.torquilla,
+		144 Merops.apiaster,
+		145 Rallus.aquaticus,
+		146 Porzana.carolina,
+		147 Gallinula.chloropus,
+		148 Grus.grus,
+		149 Haematopus.ostralegus,
+		150 Recurvirostra.avosetta,
+		151 Pluvialis.apricaria,
+		152 Pluvialis.squatarola,
+		153 Charadrius.hiaticula,
+		154 Charadrius.morinellus,
+		155 Stercorarius.parasiticus,
+		156 Stercorarius.skua,
+		157 Larus.minutus,
+		158 Rissa.tridactyla,
+		159 Larus.canus,
+		160 Larus.michahellis,
+		161 Larus.marinus,
+		162 Larus.argentatus,
+		163 Larus.fuscus,
+		164 Larus.glaucoides,
+		165 Larus.hyperboreus,
+		166 Larus.melanocephalus,
+		167 Larus.ridibundus,
+		168 Sternula.albifrons,
+		169 Gelochelidon.nilotica,
+		170 Sterna.sandvicensis,
+		171 Sterna.bengalensis,
+		172 Sterna.paradisaea,
+		173 Sterna.hirundo,
+		174 Sterna.dougallii,
+		175 Chlidonias.niger,
+		176 Alle.alle,
+		177 Uria.aalge,
+		178 Alca.torda,
+		179 Cepphus.grylle,
+		180 Fratercula.arctica,
+		181 Limosa.lapponica,
+		182 Limosa.limosa,
+		183 Numenius.arquata,
+		184 Numenius.phaeopus,
+		185 Arenaria.interpres,
+		186 Calidris.canutus,
+		187 Calidris.alba,
+		188 Calidris.maritima,
+		189 Calidris.alpina,
+		190 Philomachus.pugnax,
+		191 Tringa.ochropus,
+		192 Tringa.totanus,
+		193 Tringa.glareola,
+		194 Tringa.nebularia,
+		195 Tringa.erythropus,
+		196 Scolopax.rusticola,
+		197 Actitis.hypoleucos,
+		198 Actitis.macularius,
+		199 Phalaropus.lobatus,
+		200 Lymnocryptes.minimus,
+		201 Gallinago.gallinago,
+		202 Vanellus.vanellus,
+		203 Upupa.epops,
+		204 Cuculus.canorus,
+		205 Pandion.haliaetus,
+		206 Aquila.chrysaetos,
+		207 Accipiter.nisus,
+		208 Accipiter.gentilis,
+		209 Circus.aeruginosus,
+		210 Circus.cyaneus,
+		211 Buteo.buteo,
+		212 Buteo.lagopus,
+		213 Milvus.milvus,
+		214 Haliaeetus.albicilla,
+		215 Pernis.apivorus,
+		216 Podiceps.nigricollis,
+		217 Podiceps.grisegena,
+		218 Tachybaptus.ruficollis,
+		219 Podiceps.cristatus,
+		220 Podiceps.auritus,
+		221 Podilymbus.podiceps,
+		222 Oceanodroma.leucorhoa,
+		223 Hydrobates.pelagicus,
+		224 Apus.apus,
+		225 Gavia.arctica,
+		226 Gavia.immer,
+		227 Gavia.stellata,
+		228 Caprimulgus.europaeus,
+		229 Ardea.cinerea,
+		230 Puffinus.puffinus,
+		231 Fulmarus.glacialis,
+		232 Phalacrocorax.aristotelis,
+		233 Phalacrocorax.carbo,
+		234 Morus.bassanus,
+		235 Ixobrychus.minutus,
+		236 Botaurus.stellaris,
+		237 Asio.flammeus,
+		238 Asio.otus,
+		239 Strix.aluco,
+		240 Athene.noctua,
+		241 Tyto.alba,
+		242 Streptopelia.turtur,
+		243 Columba.oenas,
+		244 Columba.livia,
+		245 Columba.palumbus,
+		246 Streptopelia.decaocto,
+		247 Falco.tinnunculus,
+		248 Falco.subbuteo,
+		249 Falco.columbarius,
+		250 Falco.peregrinus
+		;
+tree TREE1  = [&R] (1[&height_median=1.4210854715202004E-14,height=1.1583386626604958E-14,height_95%_HPD={7.105427357601002E-15,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:50.55028039780289,(((((((2[&height_median=1.4210854715202004E-14,height=1.1602306200574261E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:5.702376039063574,3[&height_median=1.4210854715202004E-14,height=1.1602306200574261E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:5.702376039063574)[&height_median=3.799778186820049,height=3.9675673507203872,height_95%_HPD={1.9795257262999968,6.312446485211304},height_range={1.3316258457642505,9.401697667170886},posterior=1.0]:1.281504443224283,(4[&height_median=1.4210854715202004E-14,height=1.1583190568843618E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.242637055562208,5[&height_median=1.4210854715202004E-14,height=1.1582798453320938E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.242637055562208)[&height_median=4.383939529340001,height=4.496574379508509,height_95%_HPD={2.0179861358310163,6.986790043046497},height_range={1.2666810176249896,10.302500453405415},posterior=0.9692479615909938]:1.7412434267256485)[&height_median=6.570640574526912,height=6.652864172016239,height_95%_HPD={4.047564589105654,9.239823165971991},height_range={3.1282055889075835,12.993117881668724},posterior=1.0]:7.96746973326354,6[&height_median=1.4210854715202004E-14,height=1.1603090431619621E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:14.951350215551397)[&posterior=0.4993998592773478]:4.355721282786451,((7[&height_median=1.4210854715202004E-14,height=1.1602110142812921E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.54461801529945,8[&height_median=1.4210854715202004E-14,height=1.1602110142812921E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.54461801529945)[&height_median=1.703098948881184,height=1.794521735330497,height_95%_HPD={0.7226118425052235,3.066289405221511},height_range={0.4863548468590295,5.324538953052809},posterior=0.9998206476001269]:6.198274509525314,9[&height_median=1.4210854715202004E-14,height=1.16054431247557E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.742892524824764)[&height_median=9.182500893367802,height=9.349844737002817,height_95%_HPD={4.487453330293306,14.369486267216125},height_range={2.5172166965610714,20.3009529129141},posterior=0.9947435950498738]:11.564178973513084)[&height_median=17.36929300183067,height=17.45417312205009,height_95%_HPD={12.098035689375799,22.529700851950867},height_range={9.367078660277542,28.35407234461889},posterior=0.7569085164797262]:7.004613370692823,(10[&height_median=1.4210854715202004E-14,height=1.1572309363089252E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:11.743290307638759,11[&height_median=1.4210854715202004E-14,height=1.1562408446141585E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:11.743290307638759)[&height_median=12.569705439140797,height=12.92242483151455,height_95%_HPD={5.960476901788134,21.161751220445808},height_range={3.048415338293367,26.641642175966684},posterior=0.7807899783397486]:14.568394561391912)[&height_median=26.648242709624405,height=26.651593150097032,height_95%_HPD={25.130846104050296,28.20993642233904},height_range={23.500880566843453,30.190960633508016},posterior=1.0]:5.169067688284144,((12[&height_median=1.4210854715202004E-14,height=1.1562408446141585E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:12.972875599035818,((((13[&height_median=1.4210854715202004E-14,height=1.1609658366624509E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.112007163100238,14[&height_median=1.4210854715202004E-14,height=1.1609658366624509E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.112007163100238)[&height_median=1.109080635641881,height=1.188785165406262,height_95%_HPD={0.40151226066846846,2.1372323379416684},height_range={0.19531193763020127,3.956347218627471},posterior=1.0]:3.4575918074478937,15[&height_median=1.4210854715202004E-14,height=1.1589954561609845E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:4.569598970548132)[&height_median=4.586242337970059,height=4.6596631484366595,height_95%_HPD={2.619809903778524,6.8319660082415155},height_range={1.7861232453945135,10.40752265180808},posterior=0.9992412013851524]:2.4244336239507067,(16[&height_median=1.4210854715202004E-14,height=1.1629264142758501E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.8437602904655535,17[&height_median=1.4210854715202004E-14,height=1.1629264142758501E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.8437602904655535)[&height_median=1.3092392839822153,height=1.4325455644375615,height_95%_HPD={0.3242423737323179,2.821459630660655},height_range={0.10415412540525182,6.167770703907529},posterior=1.0]:4.150272304033285)[&height_median=6.524658787738062,height=6.5805749333739945,height_95%_HPD={4.292295046744485,8.932644545003654},height_range={3.362962852026719,12.408544498633958},posterior=1.0]:2.6285473895960028,((18[&height_median=1.4210854715202004E-14,height=1.1565055225919676E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.242639984977479,19[&height_median=1.4210854715202004E-14,height=1.1565055225919676E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.242639984977479)[&height_median=0.7841948912207783,height=0.8662288710959044,height_95%_HPD={0.20930112140241874,1.6815836018070627},height_range={0.13534575032625895,3.360185728859129},posterior=1.0]:7.723140090769365,20[&height_median=1.4210854715202004E-14,height=1.1587405810712426E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.965780075746844)[&height_median=6.1220530425049375,height=6.215688073028815,height_95%_HPD={3.5320994016834035,9.219501184559874},height_range={2.3930450480396956,12.312928731411155},posterior=0.9996412952002538]:0.6567999083479972)[&height_median=9.37573951565274,height=9.459911992583216,height_95%_HPD={6.966823607453996,11.983135881724465},height_range={6.129306530723277,14.0679729822252},posterior=1.0]:3.3502956149409773)[&height_median=13.486024406994503,height=13.443434193875062,height_95%_HPD={11.039695168625713,15.795566533100253},height_range={8.76172187099381,17.164339985559504},posterior=0.8611674461597892]:2.9274892084384767,(((((21[&height_median=1.4210854715202004E-14,height=1.1600737738483542E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:3.9906191833220768,22[&height_median=1.4210854715202004E-14,height=1.1566231572487714E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:3.9906191833220768)[&posterior=0.2588331056937489]:3.9697466948038183,23[&height_median=1.4210854715202004E-14,height=1.1588092012877117E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.960365878125895)[&posterior=0.10752866189313356]:1.4141965114389503,((24[&height_median=1.4210854715202004E-14,height=1.1541136179036204E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.646541626826975,25[&height_median=1.4210854715202004E-14,height=1.1538587428138785E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.646541626826975)[&height_median=4.379420206638258,height=4.473687531581543,height_95%_HPD={2.304856085557965,6.867565770372863},height_range={1.100520406550686,9.94386772821992},posterior=0.9228784680545783]:2.1968224642558747,26[&height_median=1.4210854715202004E-14,height=1.1595150092285354E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:7.84336409108285)[&height_median=6.664255259511265,height=6.66379802802148,height_95%_HPD={4.473681788289774,8.86516765421004},height_range={3.143930288986361,10.677888285706409},posterior=0.9707241698053337]:1.5311982984819954)[&posterior=0.2871845812121463]:0.7716783991939309,(((27[&height_median=1.4210854715202004E-14,height=1.1583680713246968E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.4247934988568294,(28[&height_median=1.4210854715202004E-14,height=1.1588484128399797E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.6896260339535105,29[&height_median=1.4210854715202004E-14,height=1.160612932692039E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.6896260339535105)[&height_median=0.7099752444986507,height=0.772538126768253,height_95%_HPD={0.2106754538843063,1.470582490419794},height_range={0.07228286782576276,3.341184962745494},posterior=0.8231033483713422]:0.7351674649033189)[&height_median=1.5838808703361664,height=1.6596425562764772,height_95%_HPD={0.6922585313888092,2.7800873215770636},height_range={0.45844757512509915,5.082750138212795},posterior=0.6199660610074086]:5.801713663787769,((30[&height_median=1.4210854715202004E-14,height=1.1601227882886892E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.8127575390424664,31[&height_median=1.4210854715202004E-14,height=1.1588778215041806E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:1.8127575390424664)[&posterior=0.234248030572686]:2.953299009756009,32[&height_median=1.4210854715202004E-14,height=1.1568780323385133E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:4.766056548798475)[&posterior=0.13022363864630326]:2.460450613846123)[&posterior=0.34427382972559084]:0.675400075353366,((33[&height_median=1.4210854715202004E-14,height=1.1595640236688704E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.6308953127910382,34[&height_median=1.4210854715202004E-14,height=1.1611226828715229E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.6308953127910382)[&posterior=0.13335540747485616]:1.593337844027305,35[&height_median=1.4210854715202004E-14,height=1.1603678604903641E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:3.224233156818343)[&posterior=0.31298373411696534]:4.677674081179621)[&posterior=0.29282728363892224]:2.244333550760812)[&posterior=0.4684408757915649]:0.5872956478933382,((36[&height_median=1.4210854715202004E-14,height=1.1552409500313249E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:4.708757485934782,(37[&height_median=1.4210854715202004E-14,height=1.155486022233E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.1492010074929353,38[&height_median=1.4210854715202004E-14,height=1.155486022233E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.1492010074929353)[&height_median=1.4977219597396143,height=1.5569213486353184,height_95%_HPD={0.6517773127015118,2.576032138206905},height_range={0.4627801231546087,3.8463272208035093},posterior=1.0]:2.5595564784418463)[&height_median=4.357862519138372,height=4.393867951110506,height_95%_HPD={2.588842458381002,6.234062991497815},height_range={1.8341987658824763,7.942870509745013},posterior=1.0]:2.2720750232933007,(((39[&height_median=1.4210854715202004E-14,height=1.1590052590490516E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.19112020331507534,40[&height_median=1.4210854715202004E-14,height=1.1590052590490516E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.19112020331507534)[&height_median=0.3729246646491262,height=0.40322755991257975,height_95%_HPD={0.13063952604271378,0.7384146364460875},height_range={0.06539704514530342,2.1769130382469584},posterior=1.0]:4.3957427366844914,(41[&height_median=1.4210854715202004E-14,height=1.1586621579667066E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:4.14987552861274,(42[&height_median=1.4210854715202004E-14,height=1.1599267305273493E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.9934339751094576,43[&height_median=1.4210854715202004E-14,height=1.1599267305273493E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.9934339751094576)[&height_median=2.064979887244199,height=2.1332593840751497,height_95%_HPD={1.0252366477716919,3.2587049518005244},height_range={0.7625572353754038,4.880040166014048},posterior=1.0]:2.1564415535032824)[&height_median=3.8108991411066526,height=3.852406886083438,height_95%_HPD={2.51033742174441,5.285859333174102},height_range={1.9670256075986146,6.975549942003553},posterior=0.9852103251796973]:0.43698741138682706)[&height_median=4.65299825500437,height=4.670400221019446,height_95%_HPD={3.1973735798106873,6.1924786270489705},height_range={2.420624629787163,7.721868238595249},posterior=0.985720789702413]:0.8701391757646855,44[&height_median=1.4210854715202004E-14,height=1.1545743536427692E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.4570021157642525)[&height_median=5.571615698501418,height=5.5925855823770645,height_95%_HPD={4.14002928171675,7.198259437565071},height_range={3.18430016127553,8.59800257360643},posterior=1.0]:1.5238303934638298)[&height_median=7.249114304184154,height=7.252728660500382,height_95%_HPD={5.581548162790753,8.90001685817871},height_range={4.1600774205774655,10.372356361194441},posterior=0.9977511968323607]:3.752703927424032)[&height_median=10.512506662914916,height=10.566657389194237,height_95%_HPD={8.689664618018291,12.476355113842708},height_range={7.670867258772539,16.58521136342771},posterior=0.9998620366154822]:5.166828370822181)[&height_median=15.245721138730424,height=15.240431286947537,height_95%_HPD={13.567994291655097,16.925352329910645},height_range={11.985579918042532,18.29054009287155},posterior=1.0]:15.58038774984052)[&height_median=30.8713343154148,height=30.866556117241363,height_95%_HPD={29.399031505893362,32.32344396157863},height_range={28.034170145190465,33.82106291838515},posterior=1.0]:17.389921556757393,(45[&height_median=1.4210854715202004E-14,height=1.1583190568843618E-14,height_95%_HPD={7.105427357601002E-15,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:44.55655558241938,((((((((((((46[&height_median=1.4210854715202004E-14,height=1.1569564554430493E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.02520210420573,47[&height_median=1.4210854715202004E-14,height=1.1569564554430493E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.02520210420573)[&height_median=5.953197546597103,height=6.266777697570568,height_95%_HPD={2.6407712331132984,10.53221026284369},height_range={1.9514213913388687,16.70447773192154},posterior=1.0]:10.350215156648575,((((48[&height_median=1.4210854715202004E-14,height=1.1597502785421433E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.652554433597125,49[&height_median=1.4210854715202004E-14,height=1.1597502785421433E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.652554433597125)[&height_median=7.18263374564674,height=7.226095494813073,height_95%_HPD={3.6934371651634024,10.583138174930973},height_range={2.8453785673814522,13.01109905879077},posterior=1.0]:2.0034185847366004,((50[&height_median=1.4210854715202004E-14,height=1.1583680713246968E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:4.043701793185829,(51[&height_median=1.4210854715202004E-14,height=1.1601129854006221E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.9896655606001645,52[&height_median=1.4210854715202004E-14,height=1.1602502258335601E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.9896655606001645)[&height_median=4.8738857144911805,height=5.020037536727944,height_95%_HPD={2.7787706069679103,7.623922085880672},height_range={1.6441178741950964,11.84990618668887},posterior=0.9940813708041886]:1.054036232585664)[&height_median=7.022704564640197,height=7.11542398538763,height_95%_HPD={4.634721657740286,9.866879060738611},height_range={3.223908710950397,13.27114954158683},posterior=0.9998482402770305]:3.137753100535641,53[&height_median=1.4210854715202004E-14,height=1.1586327493025057E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.18145489372147)[&height_median=9.948800967025925,height=9.986465038256878,height_95%_HPD={7.233927320874223,12.812515133826743},height_range={5.069299825575342,16.365027949839828},posterior=0.9996688878771574]:2.4745181246122554)[&height_median=12.239643081646918,height=12.26021720466066,height_95%_HPD={9.614160438565321,14.64846729948006},height_range={7.461139197424153,17.469560805571586},posterior=1.0]:3.5647631824443984,((54[&height_median=1.4210854715202004E-14,height=1.1597796872063442E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.812960303802587,((((55[&height_median=1.4210854715202004E-14,height=1.1587405810712426E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:4.586069090600448,((56[&height_median=1.4210854715202004E-14,height=1.1612893319686617E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:2.81192537034383,57[&height_median=1.4210854715202004E-14,height=1.1613089377447957E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:2.81192537034383)[&height_median=1.9755469196594433,height=2.0488149570567944,height_95%_HPD={0.9625705260511737,3.2171668823389155},height_range={0.6563220722137189,5.22685244118167},posterior=0.9967164714484775]:1.4934361692516953,58[&height_median=1.4210854715202004E-14,height=1.1628283853951802E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:4.305361539595525)[&height_median=3.20392460730271,height=3.264937774697764,height_95%_HPD={1.9915851698084523,4.724442635945955},height_range={1.2117023348851461,6.97460337149009},posterior=0.9544444904322393]:0.28070755100492306)[&height_median=4.020081843438394,height=4.07949927139547,height_95%_HPD={2.6627053217375973,5.623152720150351},height_range={1.8331790654942353,7.436422539975688},posterior=0.7774512644344191]:0.5388891449275199,(59[&height_median=1.4210854715202004E-14,height=1.1599757449676842E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:4.102922908589834,(60[&height_median=1.4210854715202004E-14,height=1.1643772417097657E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.6687576828762429,(61[&height_median=1.4210854715202004E-14,height=1.1642105926126266E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:0.3660046701708227,62[&height_median=1.4210854715202004E-14,height=1.1642301983887606E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:0.3660046701708227)[&height_median=0.4470418288409448,height=0.4803170089556029,height_95%_HPD={0.16087403523544452,0.8769939552402803},height_range={0.08555513229904221,1.7784261217591109},posterior=0.9975028627402287]:0.3027530127054202)[&height_median=0.9032084481168425,height=0.9444901903885912,height_95%_HPD={0.43092625168560517,1.534634010920719},height_range={0.23828401741321414,2.5764766211966545},posterior=1.0]:3.434165225713591)[&height_median=4.093531867128174,height=4.130694237904894,height_95%_HPD={2.6061592655828676,5.852279393783377},height_range={1.6201937072098005,7.686824439619301},posterior=0.6983706524288454]:1.0220353269381341)[&height_median=5.051987940596479,height=5.090454483295656,height_95%_HPD={3.574052690939574,6.566348911502288},height_range={2.7971718934223873,8.58248741056449},posterior=0.9811404053364237]:0.6689960834532203,(63[&height_median=1.4210854715202004E-14,height=1.1587503839593097E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.259859999074546,64[&height_median=1.4210854715202004E-14,height=1.1591130908177885E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.259859999074546)[&height_median=4.966462953052524,height=5.003177581063915,height_95%_HPD={3.0096416871683545,6.911554035365569},height_range={2.019246152604971,9.225016530970592},posterior=0.9499606804354125]:0.5340943199066421)[&height_median=6.06600831429359,height=6.103713738854949,height_95%_HPD={4.436742051369734,7.845700765924214},height_range={3.4100959990423476,9.597622113787665},posterior=1.0]:1.5791755166691468,(65[&height_median=1.4210854715202004E-14,height=1.1595934323330713E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.436063192673009,66[&height_median=1.4210854715202004E-14,height=1.1582406337798258E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.436063192673009)[&posterior=0.3395968709904391]:1.9370666429773262)[&height_median=8.700283416865474,height=8.745971919101189,height_95%_HPD={6.613568411622573,10.757241812075286},height_range={5.633240488139535,13.204056473337019},posterior=0.8311052246733717]:1.4398304681522518)[&height_median=9.63357973267361,height=9.653921280349769,height_95%_HPD={7.430195890949463,11.815929080084082},height_range={6.259227642204387,14.217850182286401},posterior=1.0]:2.543369691182974,(67[&height_median=1.4210854715202004E-14,height=1.1601521969528901E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.11765166714106,68[&height_median=1.4210854715202004E-14,height=1.1601521969528901E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.11765166714106)[&height_median=5.048666758505547,height=5.259807984367011,height_95%_HPD={2.5693064223982844,8.431462019819023},height_range={1.8083327180257456,11.358557350344896},posterior=1.0]:6.238678327844501)[&height_median=12.341406491980564,height=12.36708396961907,height_95%_HPD={10.175891437108021,14.781732091146942},height_range={8.058027717621698,17.28664528179629},posterior=1.0]:1.8644062057925623)[&height_median=14.652881457084064,height=14.678418160488643,height_95%_HPD={12.458692946395338,16.96727717383839},height_range={10.335867065930884,19.32486818433399},posterior=0.9980133272629444]:1.7016607461789093,(((69[&height_median=1.4210854715202004E-14,height=1.160632538468173E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:6.300645557428162,70[&height_median=1.4210854715202004E-14,height=1.1599463363034833E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:6.300645557428162)[&height_median=3.811217633389038,height=3.9328233482741752,height_95%_HPD={2.0862324424771757,5.937859956638832},height_range={1.3680680747321858,8.846387233411214},posterior=0.9032186857607991]:0.5929120163649539,71[&height_median=1.4210854715202004E-14,height=1.160750173124977E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:6.893557573793116)[&height_median=5.253085774660697,height=5.374658585385939,height_95%_HPD={3.254740962980911,7.7141838229481365},height_range={2.427364730205319,10.664972738647606},posterior=1.0]:6.221725436906581,(72[&height_median=1.4210854715202004E-14,height=1.160240422945493E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:10.37469186695997,((73[&height_median=1.4210854715202004E-14,height=1.1563780850470965E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.7557687684741827,74[&height_median=1.4210854715202004E-14,height=1.1563780850470965E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.7557687684741827)[&height_median=0.7244545740728014,height=0.7799464125641452,height_95%_HPD={0.22410261483744875,1.4498329449232017},height_range={0.13205451516302702,3.236753833998172},posterior=1.0]:4.777343485444726,75[&height_median=1.4210854715202004E-14,height=1.157652460495806E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.533112253918909)[&height_median=4.248202124083178,height=4.362529381260823,height_95%_HPD={2.2417843926848633,6.749992739767563},height_range={1.3634544711174783,9.713160813137215},posterior=1.0]:4.841579613041062)[&height_median=7.1753628961118,height=7.285776302559993,height_95%_HPD={4.386219152282415,10.199056456483298},height_range={3.256285131638357,13.839450570463512},posterior=1.0]:2.740591143739726)[&height_median=11.257498408614673,height=11.271478061991687,height_95%_HPD={8.46915039711562,14.26737270931254},height_range={6.324973815660172,17.24056276240545},posterior=1.0]:1.8071139362573359)[&height_median=15.720173744407248,height=15.706170798379862,height_95%_HPD={13.387908581171622,17.861167225998216},height_range={11.568096858056705,20.064870616943654},posterior=0.9339155388159982]:0.45302031389727304)[&height_median=16.55879225795571,height=16.543131200252343,height_95%_HPD={14.31622848973317,18.807284845958147},height_range={11.904940956249845,21.07229479173534},posterior=1.0]:2.048033614919362,76[&height_median=1.4210854715202004E-14,height=1.1610050482147189E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:17.423450875773668)[&height_median=18.342077292023493,height=18.345806716387468,height_95%_HPD={16.06302689095031,20.547251024941573},height_range={13.976899120284202,22.541867300157897},posterior=1.0]:3.808625329609164,((77[&height_median=1.4210854715202004E-14,height=1.1581818164514238E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:10.47857585636933,((78[&height_median=1.4210854715202004E-14,height=1.1616422359390737E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.176155896950018,(79[&height_median=1.4210854715202004E-14,height=1.1611815001999248E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.767555242691741,80[&height_median=1.4210854715202004E-14,height=1.1600835767364212E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.767555242691741)[&height_median=5.702870582429441,height=5.801347284579123,height_95%_HPD={3.0528795050706705,8.755393102936416},height_range={2.090591430176289,13.16582026375611},posterior=0.948332712498103]:2.4086006542582767)[&height_median=7.299774317331874,height=7.356544363608559,height_95%_HPD={4.544651287436473,10.289264215677328},height_range={3.050714879638761,13.560260265709715},posterior=0.8029606942317509]:1.1257342599416198,(81[&height_median=1.4210854715202004E-14,height=1.1591621052581236E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.926785350803511,82[&height_median=1.4210854715202004E-14,height=1.1591621052581236E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.926785350803511)[&height_median=3.9301987531359543,height=4.07568396940305,height_95%_HPD={1.9233577676528029,6.53818367632541},height_range={1.2617907579867733,8.629325583152102},posterior=1.0]:7.375104806088126)[&height_median=8.210795955573825,height=8.274541989662614,height_95%_HPD={5.502917737504504,11.216550379535946},height_range={4.125724706834198,14.102867200679562},posterior=0.9845067119186568]:1.1766856994776926)[&height_median=9.95951992038043,height=10.05715039381532,height_95%_HPD={6.822846391225838,13.632417057001554},height_range={5.0306257255923725,17.53916481629802},posterior=1.0]:9.921743107308481,((83[&height_median=1.4210854715202004E-14,height=1.1595346150046694E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:12.065858257687962,((84[&height_median=1.4210854715202004E-14,height=1.1636518279928078E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:9.176164745355043,((85[&height_median=1.4210854715202004E-14,height=1.162877399835515E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:4.708148884732361,86[&height_median=1.4210854715202004E-14,height=1.1624264669844333E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:4.708148884732361)[&height_median=4.449490929808896,height=4.5614560631224315,height_95%_HPD={2.3919947282594336,6.793169757880378},height_range={1.7920748896336605,9.284253135893017},posterior=0.7187616406605687]:0.822399021759308,87[&height_median=1.4210854715202004E-14,height=1.1624950872009022E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.530547906491669)[&height_median=5.2612882043336455,height=5.352148085135985,height_95%_HPD={3.1328451417750713,7.687397734139111},height_range={2.492309179650256,10.410598358782536},posterior=1.0]:3.6456168388633747)[&height_median=8.302939671823111,height=8.385292206878315,height_95%_HPD={5.768353841430695,11.155057731733066},height_range={4.198562547013424,14.431796714184685},posterior=0.9747113116178966]:0.299477080093256,(88[&height_median=1.4210854715202004E-14,height=1.1629068084997161E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.407298313800807,89[&height_median=1.4210854715202004E-14,height=1.1629460200519841E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.407298313800807)[&height_median=8.049193972137623,height=8.123884159186193,height_95%_HPD={5.234855231856855,11.01181930027181},height_range={3.6490322846657293,13.79364886368657},posterior=0.9912255287446712]:1.0683435116474929)[&height_median=9.954020003432568,height=10.032832477997463,height_95%_HPD={7.598902620343694,12.825739742755019},height_range={5.569143820881926,16.011093684745802},posterior=1.0]:2.5902164322396626)[&height_median=13.199058522707759,height=13.266281726944277,height_95%_HPD={10.270570173858381,16.50402500222883},height_range={8.543476035971679,19.34177787673923},posterior=0.986948663824621]:2.0970610766416957,90[&height_median=1.4210854715202004E-14,height=1.1616128272748726E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:14.162919334329658)[&height_median=15.522628826508264,height=15.515258201917877,height_95%_HPD={12.470402936687755,18.574702887881333},height_range={9.995656899443432,20.861287891880263},posterior=1.0]:6.237399629348154)[&height_median=20.224393017840097,height=20.217336823784365,height_95%_HPD={17.891236050015447,22.42934669264126},height_range={15.566017738842284,24.141730672333757},posterior=0.6520149552308817]:0.8317572417050201)[&height_median=21.51959534318403,height=21.50654907017301,height_95%_HPD={19.540059820750734,23.318653583133713},height_range={18.161017484298,24.904912594812224},posterior=0.8756949905495082]:1.9135764869322998,((((((91[&height_median=1.4210854715202004E-14,height=1.1556036568898038E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:6.460490802522304,92[&height_median=1.4210854715202004E-14,height=1.1556036568898038E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:6.460490802522304)[&height_median=6.4489370907732635,height=6.652644196760246,height_95%_HPD={3.274300559422869,10.697161155027565},height_range={2.2695917151693124,15.485717605649434},posterior=1.0]:11.195077992333726,((93[&height_median=1.4210854715202004E-14,height=1.1593679659075305E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:10.368198218149152,((94[&height_median=1.4210854715202004E-14,height=1.1563388734948285E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.528830644137191,95[&height_median=1.4210854715202004E-14,height=1.1563388734948285E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.528830644137191)[&height_median=5.409601428237131,height=5.554439470426975,height_95%_HPD={2.878645354663526,8.567546561284146},height_range={1.8950090729862694,12.477823342923742},posterior=1.0]:4.835695139590467,96[&height_median=1.4210854715202004E-14,height=1.1575348258390021E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:10.364525783727657)[&height_median=8.75288333976281,height=8.814490495337518,height_95%_HPD={5.644663427763476,12.185014924064788},height_range={3.9391031872881612,15.096466856790038},posterior=0.7060690092849358]:0.0036724344214942306)[&height_median=10.000540891377128,height=10.040275440012698,height_95%_HPD={6.764485902542354,13.378735131052686},height_range={5.009915365745208,16.678916744822004},posterior=1.0]:6.3701378717395425,(97[&height_median=1.4210854715202004E-14,height=1.157779898040677E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:12.57483260915133,((98[&height_median=1.4210854715202004E-14,height=1.1513197948045264E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.86466086941243,99[&height_median=1.4210854715202004E-14,height=1.1512217659238564E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.86466086941243)[&height_median=7.854358025396028,height=7.867520853789562,height_95%_HPD={4.756303296921786,11.019880653699694},height_range={3.034197357081993,13.698960217959453},posterior=0.9959024874798229]:2.355984587263479,100[&height_median=1.4210854715202004E-14,height=1.1542312525604244E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:10.220645456675909)[&height_median=9.7459276715609,height=9.745103430906124,height_95%_HPD={6.548613657267843,12.750033349163878},height_range={5.171234925765319,14.935158175922304},posterior=0.9218713353475988]:2.3541871524754203)[&height_median=11.334234627146337,height=11.325513403221214,height_95%_HPD={8.20789300793291,14.655661260970135},height_range={6.572439468209318,17.777705265254404},posterior=1.0]:4.163503480737365)[&posterior=0.27959659506367013]:0.9172327049673363)[&height_median=17.150095988514064,height=17.11228542379755,height_95%_HPD={14.59167248756696,19.36392252393333},height_range={12.588055167074103,22.546300111591503},posterior=0.5807016817736572]:1.5892641928589448,(101[&height_median=1.4210854715202004E-14,height=1.1574171911821981E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:18.144236958180684,((102[&height_median=1.4210854715202004E-14,height=1.1588288070638457E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:15.788268213759443,103[&height_median=1.4210854715202004E-14,height=1.158083787570754E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:15.788268213759443)[&posterior=0.4877971386394051]:1.4294885175714125,((104[&height_median=1.4210854715202004E-14,height=1.1535450503957345E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:8.225799626190444,105[&height_median=1.4210854715202004E-14,height=1.1535450503957345E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:8.225799626190444)[&height_median=8.489654461418361,height=8.557269036300221,height_95%_HPD={5.354610490663148,11.581529877505552},height_range={3.8117093536813513,16.216154483737526},posterior=1.0]:1.7421152938849715,(106[&height_median=1.4210854715202004E-14,height=1.1556134597778708E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:7.856482507959509,(107[&height_median=1.4210854715202004E-14,height=1.1556624742182057E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:6.691380208238352,108[&height_median=1.4210854715202004E-14,height=1.1556624742182057E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:6.691380208238352)[&height_median=5.004463683941971,height=5.161102587380471,height_95%_HPD={2.33733602642841,7.9683064429325725},height_range={1.739065845513295,11.532006722391657},posterior=1.0]:1.1651022997211573)[&height_median=8.332096705791827,height=8.408021288517189,height_95%_HPD={5.358877171282366,11.597422000982391},height_range={3.791061778132793,15.141933370734883},posterior=1.0]:2.1114324121159065)[&height_median=11.559798272348154,height=11.603588893425817,height_95%_HPD={8.59669632076038,14.444674946265067},height_range={7.187092907815199,18.32315689973585},posterior=1.0]:7.24984181125544)[&posterior=0.49254307906681566]:0.9264802268498293)[&height_median=17.133672684549122,height=17.112451822225978,height_95%_HPD={14.638378757118339,19.738619348750277},height_range={11.73704817340645,21.873631276559752},posterior=0.6018514686202282]:1.100596029534291)[&height_median=18.377794624190557,height=18.363458571334814,height_95%_HPD={16.19314810364682,20.444930455164254},height_range={14.06757796855021,23.213221854272927},posterior=0.7272325924699585]:0.5082279321914882,(109[&height_median=1.4210854715202004E-14,height=1.1594071774597985E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:12.544652498823918,110[&height_median=1.4210854715202004E-14,height=1.1594267832359325E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:12.544652498823918)[&height_median=9.36543875850391,height=9.451049397960013,height_95%_HPD={4.486191732061897,14.319614532336345},height_range={3.2345572864741,18.547444625575512},posterior=0.9969510092021577]:7.208408421082545)[&height_median=19.017170619695605,height=18.97757681531082,height_95%_HPD={16.94426560181821,21.006410053982876},height_range={14.341004409919165,22.36044903967482},posterior=0.7271222217623443]:1.284949414627686,(111[&height_median=1.4210854715202004E-14,height=1.157887729809414E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:17.147122935962056,((112[&height_median=1.4210854715202004E-14,height=1.1582504366678929E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:9.092526100962615,113[&height_median=1.4210854715202004E-14,height=1.1569074410027144E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:9.092526100962615)[&posterior=0.31349419863968103]:1.271835242228354,114[&height_median=1.4210854715202004E-14,height=1.1554174020165309E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:10.36436134319097)[&height_median=8.701712759282294,height=8.798125763958783,height_95%_HPD={5.139543395454204,12.782169921255239},height_range={3.534959962689207,16.549727818473464},posterior=1.0]:6.782761592771086)[&height_median=16.407921451136104,height=16.341482924875365,height_95%_HPD={12.657648802336553,20.030888701681658},height_range={9.537920894231512,22.577265614092877},posterior=0.9992549977236042]:3.8908873985720938)[&height_median=20.219499668768837,height=20.20526803733954,height_95%_HPD={18.145152434122785,22.16742716539645},height_range={16.75097777096546,23.62784266929757},posterior=0.5871031828152808]:1.761428669636171,(115[&height_median=1.4210854715202004E-14,height=1.1590738792655205E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:17.322033257711034,116[&height_median=1.4210854715202004E-14,height=1.157995561578151E-14,height_95%_HPD={7.105427357601002E-15,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:17.322033257711034)[&posterior=0.150711201247189]:5.4774057464592865)[&posterior=0.42456851951492075]:0.346213688144811)[&height_median=22.666403633114275,height=22.624521112689884,height_95%_HPD={21.059140860158283,24.124276914259394},height_range={19.908280702544292,25.1848596546043},posterior=0.5374087717119876]:0.5713386831457861,((117[&height_median=1.4210854715202004E-14,height=1.160456086482967E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:20.553537255693808,118[&height_median=1.4210854715202004E-14,height=1.160524706699436E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:20.553537255693808)[&height_median=17.98206576014495,height=17.778330549297458,height_95%_HPD={13.376088910927429,21.801422730951238},height_range={8.548087854488848,23.449579400213892},posterior=0.9978615675399749]:2.185321449087809,(((((119[&height_median=1.4210854715202004E-14,height=1.1601031825125552E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:6.226570736751292,120[&height_median=1.4210854715202004E-14,height=1.160710961572709E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:6.226570736751292)[&posterior=0.2264393030089814]:7.742053288564124,(121[&height_median=1.4210854715202004E-14,height=1.1635930106644058E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:5.30154871126192,122[&height_median=1.4210854715202004E-14,height=1.1631028662610561E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:5.30154871126192)[&height_median=4.643879627452151,height=4.823284567006706,height_95%_HPD={2.2811165678579144,7.677237000424967},height_range={1.5636927763034265,10.822883958565349},posterior=0.5850061393706111]:8.667075314053495)[&posterior=0.2486100189009837]:0.6437676128491425,(((123[&height_median=1.4210854715202004E-14,height=1.163240106693994E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:4.612501518538005,124[&height_median=1.4210854715202004E-14,height=1.163347938462731E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:4.612501518538005)[&posterior=0.47195894209676753]:5.629462505388927,125[&height_median=1.4210854715202004E-14,height=1.1636910395450758E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:10.241964023926933)[&posterior=0.3302153608432322]:3.3490134805382077,(126[&height_median=1.4210854715202004E-14,height=1.160612932692039E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:11.599782998497503,127[&height_median=1.4210854715202004E-14,height=1.1609658366624509E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:11.599782998497503)[&height_median=9.874057016471124,height=9.84845577283793,height_95%_HPD={5.964113667665231,13.432120278259319},height_range={3.813213987578365,17.134590243998268},posterior=0.712249768911331]:1.9911945059676377)[&posterior=0.12840252197066898]:1.0214141336994178)[&height_median=12.872887313962483,height=12.86500211455613,height_95%_HPD={9.965209673068792,15.794084161468668},height_range={7.523135454390967,19.167261440998992},posterior=0.8593187368072513]:4.300637707397675,128[&height_median=1.4210854715202004E-14,height=1.1586915666309077E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:18.913029345562233)[&height_median=15.527635651347705,height=15.490500615794097,height_95%_HPD={12.404935975416244,18.68201861584151},height_range={10.077579964392392,20.55803987071417},posterior=0.9640605383331264]:0.9932983525180816,((129[&height_median=1.4210854715202004E-14,height=1.1593973745717314E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:15.369421341045868,((130[&height_median=1.4210854715202004E-14,height=1.1540253919110173E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.475316246095447,(((131[&height_median=1.4210854715202004E-14,height=1.1525255500367669E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.587749396292575,132[&height_median=1.4210854715202004E-14,height=1.152388309603829E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.587749396292575)[&height_median=3.5701503526829654,height=3.6688440835506326,height_95%_HPD={1.7910617381946068,5.527099088355364},height_range={1.4538339893996124,7.9453335472619315},posterior=0.9979029565553302]:1.575347919012097,133[&height_median=1.4210854715202004E-14,height=1.1506237897517696E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:4.163097315304672)[&posterior=0.14734489466495593]:0.9624656213697378,134[&height_median=1.4210854715202004E-14,height=1.1535548532838016E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.1255629366744095)[&height_median=5.713977032795121,height=5.796693345018933,height_95%_HPD={3.8712824105923147,7.969797377116613},height_range={2.6235930218788894,10.014969861137942},posterior=0.9904943228067271]:3.349753309421038)[&height_median=9.390315262851324,height=9.40975558747347,height_95%_HPD={6.70739980619188,12.150832184642816},height_range={5.306478040813069,14.703689208139323},posterior=0.9287419118965826]:0.9159480105082043,135[&height_median=1.4210854715202004E-14,height=1.160583524027838E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:9.391264256603652)[&height_median=10.582701384801588,height=10.601969405409303,height_95%_HPD={7.777172419263543,13.421950932839046},height_range={6.284912198153712,16.215934609296987},posterior=0.968682311714471]:5.978157084442216)[&height_median=15.68128344977125,height=15.692492064297136,height_95%_HPD={12.843138293237153,18.6688110935587},height_range={10.494692270269105,21.10330474466992},posterior=0.9592594125519087]:3.8620281330637347,136[&height_median=1.4210854715202004E-14,height=1.1586817637428406E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:19.231449474109603)[&height_median=17.374350359082946,height=17.365017277068578,height_95%_HPD={14.493886672107543,19.949544217857454},height_range={11.64500355984083,22.03424570905234},posterior=0.9642398907329994]:0.6748782239707118)[&height_median=18.491759636086854,height=18.466802443597278,height_95%_HPD={15.775934480936769,21.04818038192175},height_range={13.676212688047436,22.87056158728957},posterior=1.0]:2.832531006701302)[&height_median=22.027132260076037,height=21.974045421572136,height_95%_HPD={19.41070246726222,24.090485457014832},height_range={17.16852497089675,26.346950409783982},posterior=0.9765738173088863]:0.978132670679301)[&height_median=23.509242674435168,height=23.480630570640464,height_95%_HPD={21.93203806385314,24.93784397489186},height_range={20.900753582029598,26.135995706025263},posterior=0.5502255701336866]:2.339359066189349,(137[&height_median=1.4210854715202004E-14,height=1.157691672048074E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:10.669918036100032,138[&height_median=1.4210854715202004E-14,height=1.157711277824208E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:10.669918036100032)[&height_median=9.20824432353465,height=9.75349699480075,height_95%_HPD={4.733070191797545,16.265576669423737},height_range={3.274327935555945,22.528859644377665},posterior=0.9989928672930204]:15.386432405550234)[&height_median=25.090267497289112,height=25.066714366295287,height_95%_HPD={23.153144156771564,26.90864139385369},height_range={22.168890513742163,28.869316681646307},posterior=1.0]:6.706437696548932,139[&height_median=1.4210854715202004E-14,height=1.1583582684366298E-14,height_95%_HPD={7.105427357601002E-15,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:32.7627881381992)[&height_median=31.55430075602886,height=31.60550709714748,height_95%_HPD={28.112683832724652,35.102815506522184},height_range={25.82615721974989,38.84581510973806},posterior=0.9995585171695432]:1.5484849104989493,((((140[&height_median=1.4210854715202004E-14,height=1.154966469165449E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:5.520575691477152,141[&height_median=1.4210854715202004E-14,height=1.154966469165449E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:5.520575691477152)[&height_median=6.442648839743605,height=6.691922929918872,height_95%_HPD={3.4086896510604845,10.767997250582852},height_range={2.2357830504221283,16.377048649665475},posterior=1.0]:2.101242143334362,142[&height_median=1.4210854715202004E-14,height=1.1524471269322309E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:7.621817834811514)[&height_median=11.689991010882927,height=11.942431338896187,height_95%_HPD={7.034504458990057,17.329204855803376},height_range={4.912585422379003,24.180770473587636},posterior=1.0]:10.148851124688269,143[&height_median=1.4210854715202004E-14,height=1.157917138473615E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:17.770668959499783)[&height_median=18.19905983218012,height=18.40549164050803,height_95%_HPD={11.989457520017993,25.284866006400485},height_range={8.66970538797014,31.409261118789736},posterior=0.9653435978091415]:10.420151376298488,144[&height_median=1.4210854715202004E-14,height=1.1572113305327913E-14,height_95%_HPD={0.0,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:28.19082033579827)[&height_median=24.84181927541781,height=24.718664361213918,height_95%_HPD={17.08219581747042,32.076089526493334},height_range={12.720736665044655,37.79216677550478},posterior=0.5669329359987859]:6.120452712899876)[&height_median=35.148909923221616,height=35.149412821418125,height_95%_HPD={31.75995797239762,38.675915579064224},height_range={29.167870641493792,40.75967327413215},posterior=0.5630285722169336]:3.27148098014888,((((145[&height_median=1.4210854715202004E-14,height=1.1582994511082278E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:5.709248400657406,146[&height_median=1.4210854715202004E-14,height=1.1584366915411657E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:5.709248400657406)[&height_median=7.589723098000604,height=7.946511032504536,height_95%_HPD={3.7197582225433123,13.049682372227792},height_range={2.25995000290515,20.071230350049575},posterior=0.8459224921705779]:9.431653609227148,147[&height_median=1.4210854715202004E-14,height=1.1589268359445156E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:15.140902009884552)[&height_median=12.04937727711495,height=12.377697104891373,height_95%_HPD={6.718894134534139,18.673748655067822},height_range={4.723175615790595,30.304404396986047},posterior=1.0]:18.900428228799345,148[&height_median=1.4210854715202004E-14,height=1.1583386626604958E-14,height_95%_HPD={7.105427357601002E-15,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:34.0413302386839)[&height_median=34.06591194415164,height=33.99016728545684,height_95%_HPD={31.942344639598794,35.97683928840615},height_range={29.669250186004888,38.17775733681487},posterior=1.0]:0.6866320384268008,(((((149[&height_median=1.4210854715202004E-14,height=1.1628577940593811E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:9.501338281450558,150[&height_median=1.4210854715202004E-14,height=1.1637106453212098E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:9.501338281450558)[&height_median=9.871066512702829,height=10.063994869344484,height_95%_HPD={4.142318241579304,16.34302141567548},height_range={2.212086302724316,21.807787958871053},posterior=0.8420181283887256]:12.535801210083434,((151[&height_median=1.4210854715202004E-14,height=1.1571329074282553E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.536489256537071,152[&height_median=1.4210854715202004E-14,height=1.1571329074282553E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.536489256537071)[&height_median=4.7134999997069755,height=4.965456807826765,height_95%_HPD={1.8380061712265388,8.592020716500201},height_range={1.155861669340517,13.423985614770935},posterior=1.0]:12.197167946301303,(153[&height_median=1.4210854715202004E-14,height=1.1573485709657292E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:11.81548648350194,154[&height_median=1.4210854715202004E-14,height=1.157721080712275E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:11.81548648350194)[&height_median=11.655753809210388,height=11.760674657733329,height_95%_HPD={5.660788954240317,17.33412264177389},height_range={3.9054119270542316,23.16656288267993},posterior=0.8222893644026875]:7.918170719336432)[&height_median=16.110298765623515,height=16.139891252954357,height_95%_HPD={10.547387138430246,21.571800419543223},height_range={7.010676046201759,27.251913812733417},posterior=0.7899231543948236]:2.303482288695619)[&height_median=18.847013475727678,height=18.831277664785986,height_95%_HPD={13.10765226623144,24.139462438928085},height_range={10.59817789969857,29.939991176042813},posterior=1.0]:5.191179295976706,(((155[&height_median=1.4210854715202004E-14,height=1.157926941361682E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:2.7230429457393943,156[&height_median=1.4210854715202004E-14,height=1.157926941361682E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:2.7230429457393943)[&height_median=3.7019207638547513,height=3.885012523119924,height_95%_HPD={1.7148098455170029,6.478525855040303},height_range={1.2413756229233712,10.599574068406731},posterior=1.0]:12.215738802138654,(((157[&height_median=1.4210854715202004E-14,height=1.1568290178981784E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.7082346182734796,(158[&height_median=1.4210854715202004E-14,height=1.1562114359499576E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.485486013114771,(((159[&height_median=1.4210854715202004E-14,height=1.1563878879351636E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.9952786093823027,(160[&height_median=1.4210854715202004E-14,height=1.157740686488409E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.5974894153619554,(161[&height_median=1.4210854715202004E-14,height=1.1590248648251856E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.42829419599842694,(162[&height_median=1.4210854715202004E-14,height=1.1589758503848506E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.4045040154387465,((163[&height_median=1.4210854715202004E-14,height=1.1543586901052953E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:0.19157789756718493,164[&height_median=1.4210854715202004E-14,height=1.1548390316205781E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:0.19157789756718493)[&height_median=0.20090372999030848,height=0.22206402483715687,height_95%_HPD={0.05525034015579422,0.4357890438821883},height_range={0.018696421343015857,0.8816993312248869},posterior=0.9653849868244968]:0.10552847938477303,165[&height_median=1.4210854715202004E-14,height=1.1572603449731262E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:0.29710637695195796)[&posterior=0.3552695114716554]:0.10739763848678852)[&posterior=0.3181573610363809]:0.023790180559680463)[&posterior=0.3767780031179725]:0.1691952193635285)[&height_median=0.5039530790363003,height=0.5222292145908775,height_95%_HPD={0.27343453175891597,0.8130847344371759},height_range={0.16833465571978934,1.452925246804682},posterior=0.9999034256308376]:0.3977891940203473)[&height_median=1.0740134334077212,height=1.114816330963087,height_95%_HPD={0.5709274577230019,1.735105541003115},height_range={0.3976275663637452,2.9681857479129903},posterior=1.0]:1.9213061470788904,166[&height_median=1.4210854715202004E-14,height=1.1585445233099028E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.916584756461193)[&height_median=2.528546860089506,height=2.6023428769895602,height_95%_HPD={1.4134940604317592,3.9269499475148493},height_range={0.9812995310789603,6.238594206003192},posterior=1.0]:3.3411421376689767,167[&height_median=1.4210854715202004E-14,height=1.1518687565362781E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:6.25772689413017)[&height_median=4.260692153186554,height=4.328531805919578,height_95%_HPD={2.792690007632835,6.052655746233903},height_range={1.918299527316023,8.374982197963995},posterior=0.9992825904005077]:1.2277591189846015)[&posterior=0.3019052743401901]:0.2227486051587082)[&height_median=6.231772141683308,height=6.3208513220859475,height_95%_HPD={4.34736485746263,8.600565077132849},height_range={3.322996756877025,12.82414840092239},posterior=1.0]:3.942905927851733,(168[&height_median=1.4210854715202004E-14,height=1.1573191623015281E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:9.19941365391187,(169[&height_median=1.4210854715202004E-14,height=1.163426361567267E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:6.918897629689773,(((170[&height_median=1.4210854715202004E-14,height=1.1618284908123465E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:0.470013674153148,171[&height_median=1.4210854715202004E-14,height=1.1618284908123465E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:0.470013674153148)[&height_median=0.31550947399627205,height=0.3447162384474708,height_95%_HPD={0.10409087331788669,0.6574045546001486},height_range={0.05021189606799226,1.335484599009412},posterior=1.0]:3.118441940034585,(172[&height_median=1.4210854715202004E-14,height=1.1601914085051581E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:2.3946424970847677,(173[&height_median=1.4210854715202004E-14,height=1.1588680186161137E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:1.7455559216268624,174[&height_median=1.4210854715202004E-14,height=1.1584857059815008E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.973799150320701E-14}]:1.7455559216268624)[&height_median=2.5031957179049655,height=2.596393879462164,height_95%_HPD={1.3647477100965517,4.051071033843648},height_range={1.0141323100418589,6.024279463788666},posterior=0.9453527033925196]:0.6490865754579054)[&height_median=3.253858930679698,height=3.3268650228127705,height_95%_HPD={1.9449968402048583,4.8503863239517955},height_range={1.2996001717507042,6.872253860262916},posterior=1.0]:1.1938131171029656)[&height_median=4.844678086664636,height=4.925691351063326,height_95%_HPD={3.058603778219073,6.742345130442779},height_range={2.3032353770234195,8.440131943355865},posterior=1.0]:1.84947774286809,175[&height_median=1.4210854715202004E-14,height=1.1569662583311164E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.437933357055823)[&height_median=6.713386391139316,height=6.7678867447926985,height_95%_HPD={4.630406252402892,8.924641591694623},height_range={3.8639730468668603,11.45154624523797},posterior=0.9986203661548225]:1.4809642726339494)[&height_median=8.207407061625005,height=8.263899309223799,height_95%_HPD={5.889119773544145,10.792803549345457},height_range={4.767520256477894,13.224125740798115},posterior=0.6539878316294855]:2.2805160242220976)[&height_median=9.268843729294112,height=9.31719550661242,height_95%_HPD={6.778232061499445,11.849103210338292},height_range={5.728406098235666,14.550399596470555},posterior=1.0]:2.451726892213342)[&height_median=13.506877357042427,height=13.590983354274222,height_95%_HPD={10.794042718312234,16.904451392643672},height_range={8.29149269735995,20.00628280422986},posterior=1.0]:2.7030439127492514,(((176[&height_median=1.4210854715202004E-14,height=1.1575054171748012E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:4.725551498464514,(177[&height_median=1.4210854715202004E-14,height=1.1568976381146473E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:4.58714747894256,178[&height_median=1.4210854715202004E-14,height=1.1570544843237193E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:4.58714747894256)[&posterior=0.35311728267317855]:0.13840401952195425)[&height_median=7.431179780247369,height=7.558350479737633,height_95%_HPD={4.5710599282538595,10.652086717719627},height_range={3.2794916933271807,13.72425101047478},posterior=1.0]:4.241434112497822,179[&height_median=1.4210854715202004E-14,height=1.1575446287270692E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.966985610962336)[&height_median=9.86411367071905,height=9.892497780591627,height_95%_HPD={6.567940731256698,13.191717352323813},height_range={4.7876903282501,16.81594952237686},posterior=0.9932122014817267]:0.3370606142462744,180[&height_median=1.4210854715202004E-14,height=1.1584661002053668E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:9.30404622520861)[&height_median=11.37693061077431,height=11.37888769478441,height_95%_HPD={7.923155767121173,14.810752340678889},height_range={6.01405668355914,18.33660862152069},posterior=1.0]:5.050138233665853)[&height_median=15.709854527196342,height=15.731471477694392,height_95%_HPD={12.402672981673192,18.69950584674267},height_range={11.005645556238363,21.38488395573928},posterior=0.9955575790185285]:0.5845972890035842)[&height_median=16.795475343631633,height=16.825482828597288,height_95%_HPD={13.474495339463772,19.940508317761296},height_range={12.223490216520986,22.66990229469353},posterior=1.0]:6.568727325807741,((181[&height_median=1.4210854715202004E-14,height=1.1589856532729176E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:13.556234573693533,182[&height_median=1.4210854715202004E-14,height=1.1589856532729176E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:13.556234573693533)[&height_median=9.895800757583231,height=9.9156437873807,height_95%_HPD={4.709097852368245,15.068243402013053},height_range={2.0307304507416504,17.942767997590906},posterior=1.0]:3.4182175039887035,((183[&height_median=1.4210854715202004E-14,height=1.1572897536373272E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:9.790264378561167,184[&height_median=1.4210854715202004E-14,height=1.1572897536373272E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:9.790264378561167)[&height_median=7.347227740446435,height=7.498261326084041,height_95%_HPD={3.578318604045336,11.560492035216818},height_range={2.1398734927687855,15.213437432701774},posterior=1.0]:5.2828427626613745,((185[&height_median=1.4210854715202004E-14,height=1.1538293341496775E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.408741096211998,((186[&height_median=1.4210854715202004E-14,height=1.155162526926789E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.300798820910267,(187[&height_median=1.4210854715202004E-14,height=1.1544175074336973E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:3.595059377035364,(188[&height_median=1.4210854715202004E-14,height=1.1511923572596555E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.541937671691446,189[&height_median=1.4210854715202004E-14,height=1.1508982706176456E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.541937671691446)[&height_median=4.523350160677431,height=4.594387143236937,height_95%_HPD={2.3278115389210257,6.8999632805969995},height_range={1.4396737918372295,9.637913321491325},posterior=0.9875970917318544]:1.053121705343918)[&height_median=6.172620083530717,height=6.240218297984387,height_95%_HPD={3.772928402902359,8.751162026175344},height_range={2.1482660832216567,11.714448808965884},posterior=0.9758840003862975]:1.7057394438749034)[&height_median=7.719967274152303,height=7.801973871297543,height_95%_HPD={5.426436678163618,10.085321317024892},height_range={4.050483921905759,12.35306290768196},posterior=0.550197977456783]:0.5120407188045313,190[&height_median=1.4210854715202004E-14,height=1.1553389789119949E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.8128395397147985)[&height_median=8.526443061333715,height=8.560479163511353,height_95%_HPD={6.112167012880796,10.934868290170343},height_range={4.754893721122485,13.118421510528904},posterior=1.0]:2.595901556497199)[&height_median=11.811853174968544,height=11.820866348671771,height_95%_HPD={9.37348244812425,14.28841918701572},height_range={7.808987838255604,16.14418046095136},posterior=0.9989100892623097]:5.088781309725791,(((((191[&height_median=1.4210854715202004E-14,height=1.155309570247794E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:6.763708264529285,(192[&height_median=1.4210854715202004E-14,height=1.1519569825288812E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.967820167181179,193[&height_median=1.4210854715202004E-14,height=1.1519569825288812E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:2.967820167181179)[&height_median=4.1617268075021485,height=4.306148457911766,height_95%_HPD={1.7449603890327339,6.556187614574604},height_range={1.5720319279272346,8.629685391770394},posterior=1.0]:3.795888097348106)[&height_median=7.687352439550011,height=7.68663548234128,height_95%_HPD={5.175288527299202,10.104442324479983},height_range={4.0199088974377375,11.557835420179373},posterior=0.5799842721741649]:1.2396525807885208,(194[&height_median=1.4210854715202004E-14,height=1.1575642345032032E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.523673934348106,195[&height_median=1.4210854715202004E-14,height=1.1572505420850592E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.523673934348106)[&height_median=6.327787014246674,height=6.351496075673144,height_95%_HPD={3.3919984837604744,8.785217708117592},height_range={2.583406319430381,11.149159937135224},posterior=0.9848240277030477]:2.4796869109696997)[&height_median=8.86081776567952,height=8.879690556224537,height_95%_HPD={6.4334102566184015,11.167222199885984},height_range={5.308915075043338,13.034576736915653},posterior=0.8536484417035719]:0.7969261018397447,196[&height_median=1.4210854715202004E-14,height=1.1587503839593097E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.80028694715755)[&posterior=0.24213953616710124]:1.480837416249015,(197[&height_median=1.4210854715202004E-14,height=1.15538799335233E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.07419614535648,198[&height_median=1.4210854715202004E-14,height=1.15538799335233E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:7.07419614535648)[&height_median=6.42597719847614,height=6.465135808601309,height_95%_HPD={3.641831522112028,9.51252936635764},height_range={2.3782398605250563,12.04513291222542},posterior=1.0]:3.206928218050085)[&height_median=12.169625113227873,height=12.166079610425713,height_95%_HPD={10.07985414841103,14.272425221946655},height_range={8.331342970220398,16.711443468110886},posterior=0.9757598333402315]:2.5971176822628887,(199[&height_median=1.4210854715202004E-14,height=1.1591719081461905E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:12.442323915509828,(200[&height_median=1.4210854715202004E-14,height=1.1558683348676128E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:10.370867277685287,201[&height_median=1.4210854715202004E-14,height=1.1565349312561685E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:10.370867277685287)[&height_median=10.201369562162355,height=10.186019477615606,height_95%_HPD={7.067658440906548,13.257850776474264},height_range={5.239510861736754,15.448451860447683},posterior=0.6634245271304996]:2.071456637824541)[&height_median=11.840232370531158,height=11.787008308213425,height_95%_HPD={8.926503677001605,14.524011908657847},height_range={6.047450756219,16.283710292668736},posterior=0.8221789936950733]:0.4359181301596262)[&posterior=0.46918587806796075]:0.6192803602683341)[&height_median=13.919616210705861,height=13.929936496815696,height_95%_HPD={11.760536356338811,16.029464748744417},height_range={10.300853356956374,17.771039719979576},posterior=0.9993653684312184]:1.5755847352847532)[&height_median=15.782323758254176,height=15.796671759128703,height_95%_HPD={13.264685133358924,18.3218512274886},height_range={11.359909596225208,23.449864943422554},posterior=0.9784363229998758]:1.9013449364596955)[&height_median=17.024343896464387,height=17.030668281502177,height_95%_HPD={14.150456678927199,19.79407567733471},height_range={12.571599428387117,23.821682719373076},posterior=1.0]:4.533056996003552)[&height_median=22.493456027428866,height=22.562277250018045,height_95%_HPD={18.6979040195588,26.30544897761651},height_range={17.073352318100678,29.744320759804857},posterior=1.0]:5.720809713824909)[&height_median=25.627315140370193,height=25.78189706780386,height_95%_HPD={21.62823054141183,30.368961648394052},height_range={20.024576947541032,34.15451774559231},posterior=0.9998344439385787]:7.025133475991179,202[&height_median=1.4210854715202004E-14,height=1.1583386626604958E-14,height_95%_HPD={7.105427357601002E-15,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:34.25345226350188)[&height_median=33.762480350675,height=33.77471205666425,height_95%_HPD={31.868427974714844,35.40310589333838},height_range={30.772253197089636,36.77034440381921},posterior=1.0]:0.09504305901309351,(((203[&height_median=1.4210854715202004E-14,height=1.157760292264543E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:26.97219147569129,204[&height_median=1.4210854715202004E-14,height=1.157760292264543E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:26.97219147569129)[&height_median=19.89471098215214,height=19.90042788137374,height_95%_HPD={12.26052227100795,27.619624650715128},height_range={8.21047536613574,31.23157896886896},posterior=0.9999310183077411]:4.881235102883114,((205[&height_median=1.4210854715202004E-14,height=1.1588778215041806E-14,height_95%_HPD={0.0,1.4210854715202004E-14},height_range={0.0,4.263256414560601E-14}]:24.156296027820247,((206[&height_median=1.4210854715202004E-14,height=1.157750489376476E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:18.752332300974942,(((207[&height_median=1.4210854715202004E-14,height=1.1555350366733349E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:12.92798331779796,208[&height_median=1.4210854715202004E-14,height=1.1590934850416545E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:12.92798331779796)[&posterior=0.3998730736862437]:1.1441402616438818,(209[&height_median=1.4210854715202004E-14,height=1.1570250756595184E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:10.403728097959997,210[&height_median=1.4210854715202004E-14,height=1.1570250756595184E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:10.403728097959997)[&height_median=4.687877036277733,height=4.791357128268449,height_95%_HPD={2.315405057786883,7.344755916178471},height_range={1.566828124952245,11.42617592917513},posterior=1.0]:3.668395481481845)[&height_median=9.469794877377467,height=9.562624695277504,height_95%_HPD={6.743328505640136,12.50614535601106},height_range={4.986373671888003,15.63460817270979},posterior=1.0]:2.8986488504975956,((211[&height_median=1.4210854715202004E-14,height=1.1594169803478654E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.0038976140525078,212[&height_median=1.4210854715202004E-14,height=1.1594169803478654E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.0038976140525078)[&height_median=0.9736669978431038,height=1.0624525765656871,height_95%_HPD={0.33106204921378435,2.062700807639615},height_range={0.18363172530391836,4.4422852884355635},posterior=1.0]:8.35543450425379,(213[&height_median=1.4210854715202004E-14,height=1.1553585846881289E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.064807850464586,214[&height_median=1.4210854715202004E-14,height=1.155368387576196E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:8.064807850464586)[&height_median=8.06455086318109,height=8.110759629172778,height_95%_HPD={5.054800262732613,11.21783537532523},height_range={3.4865478772991807,13.954024845358283},posterior=0.9995861098464468]:1.2945242678417124)[&height_median=10.035294284175329,height=10.111019236996894,height_95%_HPD={7.30734199754243,12.952441824857658},height_range={5.542691181356652,15.641024164377392},posterior=0.9998344439385787]:7.611440311633139)[&height_median=11.532394037866531,height=11.651082460873099,height_95%_HPD={8.964182519213907,14.506541623316664},height_range={7.051790004265783,17.324451046462897},posterior=1.0]:1.7815598710355047)[&height_median=13.68471619401081,height=13.750905487929774,height_95%_HPD={10.629907459487079,17.15658999203893},height_range={8.691269870031022,20.940515187925005},posterior=0.9997240732309645]:0.5542987827803572,215[&height_median=1.4210854715202004E-14,height=1.157652460495806E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:19.3066310837553)[&height_median=15.970311353025224,height=16.070405263736305,height_95%_HPD={12.541479892432818,19.962831735879906},height_range={10.388147242632542,24.10839064533267},posterior=1.0]:4.849664944064948)[&height_median=21.198289272353694,height=21.36892717691723,height_95%_HPD={17.18848763214347,25.84405081025063},height_range={15.098431141022814,28.339898784574256},posterior=1.0]:7.473406396640883,(((216[&height_median=1.4210854715202004E-14,height=1.1559271521960148E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:4.879517884290314,((217[&height_median=1.4210854715202004E-14,height=1.1590052590490516E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.2229860320091581,218[&height_median=1.4210854715202004E-14,height=1.1584170857650318E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:1.2229860320091581)[&posterior=0.35097885021315345]:2.204988459710486,(219[&height_median=1.4210854715202004E-14,height=1.1565153254800345E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:3.0761719809440677,220[&height_median=1.4210854715202004E-14,height=1.1548880460609132E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:3.0761719809440677)[&height_median=3.6050008296166567,height=3.706385115891076,height_95%_HPD={1.8116121236812361,5.674474126628894},height_range={1.253641949691776,8.14499164742972},posterior=0.5800118648510685]:0.3518025107755762)[&height_median=5.1149129645000215,height=5.165106403015277,height_95%_HPD={3.32316115800095,7.168687605609023},height_range={2.0747133687004364,8.955310253266724},posterior=0.5016624587834388]:1.4515433925706698)[&height_median=5.685750519421902,height=5.709633565965942,height_95%_HPD={3.855632419309771,7.59536323709699},height_range={2.7622221683963204,9.74118779712581},posterior=0.5390229433108453]:1.4842256925722799,221[&height_median=1.4210854715202004E-14,height=1.1574956142867341E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:6.363743576862594)[&height_median=7.018303639846032,height=7.036209672389305,height_95%_HPD={5.354512992432738,8.678955869678987},height_range={4.330200372030163,10.96261487474436},posterior=1.0]:24.049879900669186,(222[&height_median=1.4210854715202004E-14,height=1.1607795817891778E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:7.292345912356363,223[&height_median=1.4210854715202004E-14,height=1.1607795817891778E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:7.292345912356363)[&height_median=11.352488708514102,height=11.638016018884336,height_95%_HPD={4.787148466209544,18.44663013677311},height_range={3.1795931284911845,26.209270992760842},posterior=1.0]:23.121277565175415)[&posterior=0.3001531393568147]:1.2160789469293505)[&posterior=0.17117117117117117]:0.22372415411327395)[&posterior=0.11678600499427452]:1.1175007923052753,((224[&height_median=1.4210854715202004E-14,height=1.1583190568843618E-14,height_95%_HPD={7.105427357601002E-15,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:29.930456824875293,((225[&height_median=1.4210854715202004E-14,height=1.1595052063404684E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:3.669997805583752,226[&height_median=1.4210854715202004E-14,height=1.1595052063404684E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:3.669997805583752)[&height_median=3.6935759017950573,height=3.8490932710500845,height_95%_HPD={1.5740459354161374,6.443691554754437},height_range={0.8179747780135145,9.567997941444318},posterior=1.0]:1.3637855853723826,227[&height_median=1.4210854715202004E-14,height=1.1559565608602157E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:5.033783390956135)[&height_median=8.174883093265542,height=8.41644936139178,height_95%_HPD={3.9869192872869306,13.204247773443974},height_range={3.2095203443498406,19.217626580793763},posterior=1.0]:24.896673433919158)[&posterior=0.36436129851137505]:2.9493287248817452,(((228[&height_median=1.4210854715202004E-14,height=1.157652460495806E-14,height_95%_HPD={0.0,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:19.49180560772279,229[&height_median=1.4210854715202004E-14,height=1.1584562973172997E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:19.49180560772279)[&posterior=0.3281872990908213]:10.243789831374414,(230[&height_median=1.4210854715202004E-14,height=1.1590248648251856E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:12.335308935620944,231[&height_median=1.4210854715202004E-14,height=1.1590248648251856E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:12.335308935620944)[&height_median=19.783619083936138,height=19.59563623964929,height_95%_HPD={11.025787537579184,27.671250822760083},height_range={5.511236711499272,31.264654228109972},posterior=1.0]:17.40028650347626)[&posterior=0.09853344922257633]:0.35754113396290776,(((232[&height_median=1.4210854715202004E-14,height=1.160652144244307E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:6.458939592771075,233[&height_median=1.4210854715202004E-14,height=1.160652144244307E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:6.458939592771075)[&height_median=6.659803051401802,height=7.029016388194362,height_95%_HPD={3.1125698857097177,12.014271739408024},height_range={1.7903726332802137,18.66825530493222},posterior=1.0]:16.18921342422126,234[&height_median=1.4210854715202004E-14,height=1.1597208698779422E-14,height_95%_HPD={0.0,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:22.648153016992335)[&height_median=22.5129449700977,height=22.35776918640367,height_95%_HPD={16.011245605759676,28.608370687066994},height_range={10.625465575615394,32.97441344019704},posterior=0.9241339348536898]:0.9100623402734911,(235[&height_median=1.4210854715202004E-14,height=1.1575250229509352E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:7.995422211343648,236[&height_median=1.4210854715202004E-14,height=1.1575250229509352E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:7.995422211343648)[&height_median=9.750255378071543,height=10.063106762527768,height_95%_HPD={4.304878765119241,16.131188620616587},height_range={2.955726497746447,23.692643120731812},posterior=1.0]:15.562793145922178)[&height_median=24.668795707461577,height=24.516067399819192,height_95%_HPD={18.084250982026205,30.76791472531204},height_range={12.453969255154767,34.97398195628288},posterior=0.6526633831381151]:6.534921215794284)[&posterior=0.20310969468703005]:2.7866489766969273)[&posterior=0.07422430087054896]:0.09114182112264047)[&posterior=0.2920270960087193]:1.3775679516352923)[&posterior=0.40528123835933944]:0.37946695459572766)[&height_median=35.515407645926295,height=35.59276233979163,height_95%_HPD={33.74251368607271,37.61157973129439},height_range={32.34340414023491,40.16053713261081},posterior=0.5569443869597009]:2.854791751736329)[&height_median=38.0693220105927,height=38.20731696953882,height_95%_HPD={35.78643887520901,41.162744449200005},height_range={34.67513112537405,42.78100022910005},posterior=0.6013823931128679]:0.8215372956786169,(((((237[&height_median=1.4210854715202004E-14,height=1.1546527767473052E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:9.543339426686604,238[&height_median=1.4210854715202004E-14,height=1.1546527767473052E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:9.543339426686604)[&height_median=10.785409548011266,height=11.03129203025317,height_95%_HPD={5.242343520782171,16.80700036964634},height_range={3.735312439857907,24.28958106141305},posterior=0.9997792585847716]:2.629988468273609,239[&height_median=1.4210854715202004E-14,height=1.1567407919055754E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:12.173327894960213)[&height_median=15.692616896616002,height=15.846813142578263,height_95%_HPD={9.378023306449066,22.589690434450226},height_range={5.963064848169701,30.710496478204277},posterior=0.9998620366154822]:7.303020773604583,240[&height_median=1.4210854715202004E-14,height=1.1584464944292328E-14,height_95%_HPD={0.0,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:19.476348668564796)[&height_median=22.609275348334076,height=22.671144065207613,height_95%_HPD={15.572358632260986,29.903522392524042},height_range={11.612282146948807,34.36923564262861},posterior=1.0]:12.752815191959783,241[&height_median=1.4210854715202004E-14,height=1.1583386626604958E-14,height_95%_HPD={7.105427357601002E-15,1.4210854715202004E-14},height_range={0.0,3.552713678800501E-14}]:32.22916386052458)[&height_median=33.74296239888948,height=33.732488368190374,height_95%_HPD={31.84252434096991,35.52004531359564},height_range={30.18277943360161,37.69543641058179},posterior=1.0]:3.7015462647453674,(242[&height_median=1.4210854715202004E-14,height=1.1588386099519126E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:15.947690562660851,((243[&height_median=1.4210854715202004E-14,height=1.1607991875653118E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:4.374306153451609,244[&height_median=1.4210854715202004E-14,height=1.160681552908508E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:4.374306153451609)[&height_median=6.0917841605666965,height=6.296884742835985,height_95%_HPD={2.442774464747508,10.443552208531827},height_range={1.350034774806538,14.89226108466488},posterior=0.9768497440779217]:5.51386974525093,(245[&height_median=1.4210854715202004E-14,height=1.157858321145213E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:3.31590373493575,246[&height_median=1.4210854715202004E-14,height=1.1572211334208582E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:3.31590373493575)[&height_median=2.6346039785017155,height=3.5648244936467317,height_95%_HPD={3.9872205892521606E-4,9.781533048505942},height_range={5.7471866128366855E-5,15.273024660317922},posterior=0.5797083454051295]:6.5722721637667885)[&height_median=11.530339216943098,height=11.419171368196723,height_95%_HPD={7.581476226721392,15.155108009729553},height_range={4.8408069742914535,17.769198451369462},posterior=0.6998744533200888]:6.059514663958312)[&height_median=15.077795663177035,height=15.072631574188351,height_95%_HPD={13.294845455439791,17.033022268857007},height_range={11.396204285628613,19.386629070480833},posterior=1.0]:19.983019562609094)[&posterior=0.19603217306126955]:2.4735811992556975)[&posterior=0.15462936136749306]:5.105366712413016,(((247[&height_median=1.4210854715202004E-14,height=1.15528996447166E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:8.817534675938981,248[&height_median=1.4210854715202004E-14,height=1.1518687565362781E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,3.552713678800501E-14}]:8.817534675938981)[&posterior=0.4435798739014665]:0.40591199563688285,249[&height_median=1.4210854715202004E-14,height=1.1559173493079477E-14,height_95%_HPD={0.0,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:9.223446671575864)[&height_median=8.418853213021343,height=8.378453808868944,height_95%_HPD={5.375335417502114,11.32302878886751},height_range={2.95034976277028,13.030867965516336},posterior=0.7575845370638633]:2.568479301512829,250[&height_median=1.4210854715202004E-14,height=1.1558683348676128E-14,height_95%_HPD={7.105427357601002E-15,2.1316282072803006E-14},height_range={0.0,4.263256414560601E-14}]:11.791925973088693)[&height_median=11.003026185783504,height=10.99877278751391,height_95%_HPD={9.194727096926812,12.884155348798423},height_range={7.569153385382087,14.574052337071329},posterior=1.0]:31.717732063849965)[&posterior=0.1609342880399542]:1.046897545480718)[&height_median=43.658984442932166,height=43.647352490299596,height_95%_HPD={41.82426474462097,45.49988462457949},height_range={39.600532917188794,47.280775535157716},posterior=1.0]:4.314118531652831)[&height_median=46.624413352984405,height=46.63589873285511,height_95%_HPD={44.983531235467574,48.4325615622106},height_range={43.21442472105119,50.40110068731693},posterior=1.0]:1.6796062837306778)[&height_median=48.942704137908436,height=49.44796602913769,height_95%_HPD={45.48790359828466,54.83359280187291},height_range={43.672292313310066,65.738725336039},posterior=1.0];
+End;

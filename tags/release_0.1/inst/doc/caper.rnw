@@ -1,0 +1,771 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+\documentclass[a4paper]{article}
+
+% \VignetteIndexEntry{Comparative analysis of phylogenetics and evolution in R} 
+% \VignetteDepends{ape} 
+% \VignetteKeyword{stats} 
+% \VignetteKeyword{kwd2} 
+
+\usepackage{geometry}
+\usepackage[utf8]{inputenc} % for fancy quotes
+\usepackage[round]{natbib}
+\usepackage{makeidx} 
+\usepackage[font=small,format=plain,labelfont=bf,up,textfont=rm,up]{caption}
+\usepackage{array}
+\usepackage[svgnames]{xcolor}
+\usepackage{colortbl} %% for markup of V matrices
+
+\geometry{a4paper, textwidth=15cm, textheight=25cm}
+\makeindex
+
+% \SweaveOpts{keep.source=TRUE, echo=TRUE}
+
+%%
+%% Problems with comments in R code - want to keep them
+%% but SweaveOpts keep.source=TRUE still ditches leading
+%% and trailing comments, so currently need to duplicate the
+%% code block inside verbatim if you want comments. 
+%% R 2.14 may solve this
+%%
+
+% common representation of package name
+\newcommand{\caper}{\textit{caper}}
+\newcommand{\fnidx}[1]{\texttt{#1}\index{Functions!#1}}
+\newcommand{\dtidx}[1]{\texttt{#1}\index{Data!#1}}
+\newcommand{\pkgidx}[1]{\texttt{#1}\index{Packages!#1}}
+
+
+\title{The \caper{} package: comparative analysis of phylogenetics and evolution in R}
+\author{David Orme}
+
+
+\begin{document}
+
+<<setup, print=FALSE, echo=FALSE>>=
+	## THESE WILL EVENTUALLY BE REPLACED BY A SINGLE CALL TO library(caper) 
+	## AND HENCE ACTUALLY WORKS TO TRACK DEPENDENCIES A BIT!
+	library(caper)
+	library(ape)
+	library(mvtnorm) 
+	# for(f in dir('../../R', full=TRUE)) (source(f))
+@
+
+\maketitle
+
+This vignette documents the use of the \caper{} package for R \citep{R-Development-Core-Team.2010.a} in carrying out a range of comparative analysis methods for phylogenetic data. 
+
+\tableofcontents
+
+%% add more space between paragraphs at this point
+\addtolength{\parskip}{\baselineskip}
+\section{Background}
+Comparing the traits of species (or of groups of species of higher taxonomic rank) can produce deep insights into evolutionary processes. However, all such analyses should take into account the degree to which species are related and hence do not provide independent data on a hypothesis. This can lead both to situations in which apparently strong relationships rest on relatively few truly independent events (Fig. \ref{whycaper}a) or where strong relationships within groups are masked by phylogenetic differences between groups (Fig. \ref{whycaper}b). 
+
+\begin{figure}[htbp]
+  \begin{center}
+<<whycaper, echo= false, fig=true, width=6, height=6>>=
+par(mfrow=c(2,2), mar=c(3,3,1,1), mgp=c(2,0.7,0))
+
+plot(c(0,13),c(0,10), typ="n", bty="n", xaxt="n",yaxt="n", xlab="", ylab="", xaxs="i",yaxs="i")
+lines(c(0,7), c(5,8.5))
+lines(c(0,7), c(5,1.5))
+lines(c(3.5,7), c(3.25,5))
+polygon(c(7,10,10), y=c(8.5,10,7))
+polygon(c(7,10,10), y=c(5,6.5,3.5))
+polygon(c(7,10,10), y=c(1.5,3,0))
+
+
+points( c(0.5,1.5) +0.5, c(5,5), cex=1, col=1:2)
+points(c(7.5,8.5)+0.5, c(8.5,8.5), cex=1, col=1:2)
+points(c(4,5)+0.5, c(3.25,3.25), cex=1.5, col=1:2)
+points(c(7.5,8.5)+0.5, c(5,5), cex=1.5, col=1:2)
+points(c(7.5,8.5)+0.5, c(1.5,1.5), cex=2, col=1:2)
+
+rect(11 - c(.3,.2,.1), c(0,3.5,7), 11 + c(.3,.2,.1) , c(3,6.5,10))
+rect(12 - c(.3,.2,.1), c(0,3.5,7), 12 + c(.3,.2,.1) , c(3,6.5,10), border="red")
+par(usr=c(0,1,0,1)); text(0.1,0.9, cex=2,"a")
+
+dat <- data.frame(x = rnorm(120, mean= rep(2:4, each=40), sd=0.5),
+ 				  y = rnorm(120, mean= rep(2:4, each=40), sd=0.5),
+				  tx = gl(3,40))
+
+plot(y~x, col=unclass(tx), data=dat, xaxt="n", xlab="", ylab="")
+axis(1, col.axis="red")
+abline(lm(y~x, data=dat))
+for(sub in split(dat, dat$tx)) abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1], lty=2) 
+
+
+plot(c(0,13),c(0,10), typ="n", bty="n", xaxt="n",yaxt="n", xlab="", ylab="", xaxs="i",yaxs="i")
+lines(c(0,7), c(5,8.5))
+lines(c(0,7), c(5,1.5))
+lines(c(3.5,7), c(3.25,5))
+polygon(c(7,10,10), y=c(8.5,10,7))
+polygon(c(7,10,10), y=c(5,6.5,3.5))
+polygon(c(7,10,10), y=c(1.5,3,0))
+
+points(c(0.5,1.5)+0.5, c(5,5), cex=1, col=1:2)
+points(c(7.5,8.5)+0.5, c(8.5,8.5), cex=1, col=1:2)
+points(c(4,5)+0.5, c(3.25,3.25), cex=c(1,1.5), col=1:2)
+points(c(7.5,8.5)+0.5, c(5,5), cex=c(1,1.5), col=1:2)
+points(c(7.5,8.5)+0.5, c(1.5,1.5), cex=c(1,2), col=1:2)
+
+polygon(11 + c(-0,-0.1,0.1,0), c(3,0,0,3))
+polygon(12 + c(-0.2,-0.3,0.3,0.2), c(3,0,0,3), border="red")
+polygon(11 + c(-0,-0.1,0.1,0), c(6.5,3.5,3.5,6.5))
+polygon(12 + c(-0.1,-0.2,0.2,0.1), c(6.5,3.5,3.5,6.5), border="red")
+polygon(11 + c(-0,-0.1,0.1,0), c(10,7.5,7.5,10))
+polygon(12 + c(-0.0,-0.1,0.1,0.), c(10,7.5,7.5,10), border="red")
+par(usr=c(0,1,0,1)); text(0.1,0.9, cex=2, "b")
+
+
+dat <- data.frame(x = rnorm(120, mean= rep(2:4, each=40), sd=0.5),
+				  tx = gl(3,40))
+dat$y <- dat$x - rnorm(120, mean= rep(0:2, each=40), sd=0.5)
+
+plot(y~x, col=unclass(tx), data=dat, xaxt="n", xlab="", ylab="")
+axis(1, col.axis="red")
+abline(lm(y~x, data=dat))
+for(sub in split(dat, dat$tx)) abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1], lty=2) 
+
+@ 
+    \caption{Phylogenetic autocorrelation in action. a) Simple regression (solid line) suggests a strong relationship between two variables; the phylogeny shows that within the three main groups, there is no consistent relationship (dashed lines) and the apparent relationship stems from only two linked shifts in the means of the traits early in the evolution of the clade. b) Simple regression (solid line) suggests a weak positive relationship between the two variables; the phylogeny shows that there are strong positive relationships between the traits within each of the three main groups but this is masked by early shifts in the mean value of the red trait.}
+    \label{whycaper}
+  \end{center}
+\end{figure}
+
+The \caper{} package implements two methods that account for this phylogenetic autocorrelation. The first, originally described by \citet{Felsenstein.1985.a}, is to recognize that the differences between taxa on either side of a bifurcating node represent independent evolutionary trajectories and that these differences (`independent contrasts') can be used to test hypotheses in a way that accounts for the phylogenetic autocorrelation between the taxa. \citet{Pagel.1992.a} extended this method to permit contrasts to be calculated at polytomies. The second, described by [refs], is to include the phylogenetic structure as a covariance matrix in a linear model. 
+
+The \caper{} package also provides a number of other phylogenetic comparative methods, along with a flexible method for simulating trait evolution on phylogenies.
+
+%% COMPARATIVE DATASETS
+
+\section{Comparative datasets}
+
+\subsection{The \fnidx{comparative.data} class and objects.}
+The majority of functions in \caper{} require both a phylogeny and data set of traits for the taxa at the tips of that phylogeny. Crucially, the rows of data need to be matched carefully to the tips to ensure that the phylogenetic structure in the variables is represented correctly: \caper{} provides the function \fnidx{comparative.data} to facilitate this. The following simple example shows the basic operation:
+
+<<comparative.data>>=
+phy <- read.tree(text='(((B:2,A:2):1,D:3):1,(C:1,E:1):3);')
+dat <- data.frame(taxa=c("A","B","C","D","E"), n.species=c(5,9,12,1,13), mass=c(4.1,4.5,5.9,3.0,6.0))
+cdat <- comparative.data(data=dat, phy=phy, names.col="taxa")
+
+print(cdat)
+@
+
+In order to make it easier to use contrast methods, where values are estimated at internal nodes, the \fnidx{comparative.data} function and contrast methods use internal node labels to identify values. Creating a comparative data object will not replace existing labels but will insert simple numeric labels for unlabelled nodes. The \fnidx{comparative.data} class has a number of generic methods that allow users to extract a subset of taxa and the relevant linked data from within a \fnidx{comparative.data} object.
+
+\subsubsection{\texttt{na.omit}\index{Functions!comparative.data!na.omit}}
+ This method returns a subset of the object containing only those taxa for which the data are complete (i.e no \texttt{NA} values). By default, the \fnidx{comparative.data} function drops incomplete rows, but this can be altered. The examples below show the function in use on the \dtidx{perrisodactyla} dataset.
+
+<<na.omit>>=
+data(perrisodactyla)
+(perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial))
+# but this can be turned off
+(perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial, na.omit=FALSE))
+na.omit(perriso)
+@
+
+\subsubsection{\texttt{subset}\index{Functions!comparative.data!subset}}
+ This method functions like the \texttt{subset} function for data frames: the \texttt{subset} argument is used to specify a logical subset of rows using one or more of the data columns; the \texttt{select} argument can be used to choose which variables to include in the subset.
+
+
+\subsubsection{\texttt{\char91}\index{Functions!comparative.data!\texttt{\char91}}}
+ This method treats the dataset as the rows (taxa) and columns (variables) of a matrix. The first index allows taxa to be specified by name or by their position in the sequence of tip labels for the phylogeny. The second index selects variables in the same way as in the extract method (\texttt{\char91}.data.frame) for a data frame.
+
+
+Far more functionality for creating and manipulating comparative datasets is provided by the \pkgidx{phylobase} package. It is intended to incorporate this functionality into \pkgidx{caper}.
+
+%%
+%% EXAMPLE DATASETS
+%%
+
+\subsection{Example datasets}
+
+The examples in this vignette make use of the following datasets:
+
+\begin{description}
+  \item[\dtidx{shorebird}] This dataset includes a phylogeny of 71 species of shorebirds along with data on male and female body mass, egg mass, clutch size and mating system \citep{Lislevand.Thomas.2006.a}.
+  \item[\dtidx{syrphidae}] This dataset includes a phylogeny of 204 genera of hoverfly along with data on the species richness of each of those genera \citep{Katzourakis.Purvis.ea.2001.a}.
+  \item[\dtidx{perrisodactyla}] This dataset includes a phylogeny of 18 perrisodactyl species and a data frame of female and neonatal mass, gestation length and territoriality for 13 of those species. The data frame contains missing data and the dataset was provided as an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
+  \item[\dtidx{IsaacEtAl}] The datafile contains  species level phylogenies and data sets of nine variables for each of four mammalian orders (Primates, Carnivora, Chiroptera and Marsupialia). The data were published in supplementary material for \citet{Isaac.Jones.ea.2005.a}. The variables are body mass, age at sexual maturity, gestation length, interbirth interval, litter size , population density, group size, mass dimorphism and length.dimorphism. The data sets all contain missing data and all the variables have been natural log transformed.
+  \item[\dtidx{British Birds}] The datafile contains a species level phylogeny for 249 species of British birds (some represented by congeneric surrogates) and a data set on the conservation status of 181 of those species \citep{Thomas.2008.a}.
+\end{description}
+
+%%%%%%%%%%
+%% METHODS
+%%%%%%%%%%
+
+\section{Methods and functions provided by \caper{}.}
+
+%%%%%%%%%%
+%% METHODS
+%%%%%%%%%%
+
+The \caper{} package provides two broad sets of methods of accounting for phylogenetic autocorrelation in analyses. One is the use of phylogenetic independent contrasts \citep{Felsenstein.1985.a}, the other is the use of a phylogenetic variance-covariance matrix within a standard linear model \cite{Freckleton.Harvey.ea.2002.a} [other refs]. These two approaches are basically equivalent, although small differences may arise from the way in which polytomies are handled.
+
+<<pglmSetup, echo=FALSE>>=
+## demo tree
+z <- structure(list(edge = structure(c(11L, 15L, 18L, 18L, 15L, 16L, 
+16L, 11L, 12L, 13L, 13L, 19L, 19L, 12L, 14L, 14L, 17L, 17L, 15L, 
+18L, 1L, 2L, 16L, 3L, 4L, 12L, 13L, 5L, 19L, 6L, 7L, 14L, 8L, 
+17L, 9L, 10L), .Dim = c(18L, 2L)), edge.length = c(5.723, 2.186, 
+1.09, 1.09, 0.627, 2.649, 2.649, 1.049, 1.411, 6.54, 5.538, 1.001, 
+1.001, 1.863, 6.088, 4.777, 1.312, 1.312), tip.label = c("t8", 
+"t6", "t4", "t10", "t9", "t5", "t7", "t1", "t3", "t2"), Nnode = 9L), .Names = c("edge", 
+"edge.length", "tip.label", "Nnode"), class = "phylo", order = "cladewise")
+V <- vcv.array(z)
+@
+
+\subsubsection{Phylogenetic linear models}
+
+In a basic linear regression, the response variable ($y$) is modelled as the product of the estimated coefficients ($\beta$) and the explanatory variables ($\mathbf{X}$), plus residual variation ($\epsilon$): $y = \beta\mathbf{X} + \epsilon$. If the cases in the model are related taxa, then the values in $y$
+and $\mathbf{X}$ are no longer independent: each value will be more similar to some values (closer relatives) than others (distant relatives). 
+
+The \fnidx{pglm} function addresses this problem by incorporating the covariance between taxa into the calculation of estimated coefficients: this is a generalized least squares (GLS) model. The covariance matrix ($\mathbf{V}$), showing the expected covariance between each pair of tips is calculated using the branch lengths of a phylogeny showing how the taxa are related (Fig. \ref{vcvFig}). 
+
+\begin{figure}[htbp]
+  \begin{center}
+	%\framebox{  
+	\begin{minipage}[c]{0.3\linewidth}
+	\raggedleft
+<<vcvFig, fig=TRUE, echo=FALSE, print=FALSE, height=2.13, width=1.5>>=
+ec <- rep('grey50', 18)
+ec[c(1,5,7)] <- 'red'
+ec[c(8,14)] <- 'blue'
+plot(z, no.margin=TRUE, cex=0.6, label.offset=0.3, edge.col=ec)
+@
+	\end{minipage}%}
+	%\hfill
+	%\framebox{
+	\begin{minipage}[c]{0.5\linewidth}
+	\newcolumntype{P}{>{\centering\arraybackslash$}m{4mm}<{$}}
+	\newcommand{\bl}{\cellcolor{PowderBlue}}
+	\newcommand{\pk}{\cellcolor{LightPink}}
+	\renewcommand\arraystretch{1.2}
+	{%\small              
+	$\left[
+	\begin{array}{*{10}{P}}
+	%% V <- vcv.array(z)
+	%% V <- V[10:1,10:1]
+	%% xV <- xtable(unclass(V), digits=1)
+	%% print(xV, only.contents=TRUE, include.rownames=FALSE, 
+	%%       hline.after=NULL, include.colnames=FALSE, digits=1)
+	% latex table generated in R 2.12.0 by xtable 1.5-6 package
+	% Sat Apr 30 12:14:40 2011
+	\mathbf{9.0} & 7.7 & \bl 2.9 & 1.0 & 1.0 & 1.0 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+	7.7 & \mathbf{9.0} & \bl 2.9 & 1.0 & 1.0 & 1.0 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+	\bl 2.9 & \bl 2.9 & \mathbf{9.0} & 1.0 & 1.0 & 1.0 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+	1.0 & 1.0 & 1.0 & \mathbf{9.0} & 8.0 & 2.5 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+	1.0 & 1.0 & 1.0 & 8.0 & \mathbf{9.0} & 2.5 & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+	1.0 & 1.0 & 1.0 & 2.5 & 2.5 & \mathbf{9.0} & 0.0 & 0.0 & 0.0 & 0.0 \\ 
+	0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & \pk \mathbf{9.0} & 6.3 & 5.7 & 5.7 \\ 
+	0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 6.3 & \mathbf{9.0} & 5.7 & 5.7 \\ 
+	0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 5.7 & 5.7 & \mathbf{9.0} & 7.9 \\ 
+	0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 5.7 & 5.7 & 7.9 & \mathbf{9.0} \\ 
+	\end{array}
+	\hspace{1mm}\right]$}
+	\end{minipage}%}
+    \caption{A phylogenetic tree of 10 taxa and the variance covariance matrix ($\mathbf{V}$) of that phylogeny. The diagonal of the matrix (bold values) shows the path length from each tip to the root (example in red). Off diagonal values show the shared path length for a given pair of tips (example in blue).}
+    \label{vcvFig}
+  \end{center}
+\end{figure}
+
+The initial covariance matrix ($\mathbf{V}$) taken from an ultrametric phylogeny assumes a Brownian model of evolution: that variation between tips accumulates along all branches of the tree at a rate proportional to the length of the branches. However, not all variables necessarily correspond to this assumption and likelihood methods can be used to find transformations of $\mathbf{V}$ that improve the fit of the model to the data. Three transformations are implemented in the \fnidx{pglm} function (Fig. \ref{bltrans}):
+
+\begin{description}
+	\item[lambda ($\lambda$)]{The internal branch lengths of the phylogeny are multiplied by a constant. When $\lambda = 0$, internal branch lengths are all zero and all the variation in the data is modelled as a function of the independent evolution along the branches leading to the tips. If $\lambda > 1$, then the data shows more covariance than expected under a Brownian model.
+	 Note that a \fnidx{pglm} model with a lambda of 0 will not be the same as a standard linear model if the tree is not ultrametric: although the covariance terms will all be zero, the variances of the tips will differ.}
+	\item[delta ($\delta$)]{In this case, all the values in the $\mathbf{V}$ matrix are raised to the power of $\delta$. This is a transformation of the sum of the length of the shared branches between two tips {$l$}: $\sum{\left(l\right)}^\delta$.}
+	\item[kappa ($\kappa$)]{All branch lengths in the phylogeny are raised to the power $\kappa$ --- the elements of the $\mathbf{V}$ are the sum of the individually transformed branch lengths $\sum{\left(l^\kappa\right)}$. As $\kappa$ decrease towards zero, all branches will become of equal length, representing an evolutionary model where variation accumulates only when two clades diverge.}
+\end{description}
+
+\begin{figure}[htbp]
+  \begin{center}
+<<bltrans, fig=TRUE, echo=FALSE, print=FALSE>>=
+## internal branch lengths
+internal <- z$edge[,2] > 10
+vlines <- 9 * c(0, 0.5, 1, 1.5)
+zz <- z
+
+# layout
+layout(matrix(c(1:9), ncol=3))
+par(mar=c(0,0.5,2,0.5))
+cx <- 0.8
+ln <- 0.5
+xl <- c(0,15)
+
+# lambda
+pvals <- c(1.4, 0.5)
+ec <- ifelse(internal,'red', 'grey30')
+
+zz$edge.length <- ifelse(internal, z$edge.length*pvals[1], z$edge.length)
+plot(zz, edge.col=ec, x.lim=xl, label.offset=0.2)
+mtext(bquote(lambda == .(pvals[1])), side=3, cex=cx, line=ln)
+abline(v=vlines, lty=2, col='grey')
+
+plot(z,  edge.col=ec, x.lim=xl, label.offset=0.2)
+abline(v=vlines, lty=2, col='grey')
+mtext(expression(lambda == 1), side=3, cex=cx, line=ln)
+
+zz$edge.length <- ifelse(internal, z$edge.length*pvals[2], z$edge.length)
+plot(zz,  edge.col=ec, x.lim=xl, label.offset=0.2)
+mtext(bquote(lambda == .(pvals[2])), side=3, cex=cx, line=ln)
+abline(v=vlines, lty=2, col='grey')
+
+# delta: 
+pvals <- c(1.2, 0.5)
+
+# get the branching structure back from the matrix
+dd <- V ^ pvals[1]
+ddh <- as.phylo(hclust(dist(dd)))
+plot(ddh, edge.col = 'red', x.lim=xl, label.offset=0.2)
+mtext(bquote(delta == .(pvals[1])), side=3, cex=cx, line=ln)
+abline(v=vlines, lty=2, col='grey')
+
+plot(z,  edge.col='red', x.lim=xl, label.offset=0.2)
+abline(v=vlines, lty=2, col='grey')
+mtext(expression(delta == 1), side=3, cex=cx, line=ln)
+
+dd <- V ^ pvals[2]
+ddh <- as.phylo(hclust(dist(dd)))
+plot(ddh, edge.col='red', x.lim=xl, label.offset=0.2)
+mtext(bquote(delta == .(pvals[2])),  cex=cx, line=ln)
+abline(v=vlines, lty=2, col='grey')
+
+# kappa
+pvals <- c(1.2, 0.0)
+ec <- ifelse(internal,'red', 'grey30')
+
+zz$edge.length <- z$edge.length^pvals[1]
+plot(zz, edge.col = 'red', x.lim=xl, label.offset=0.2)
+mtext(bquote(kappa == .(pvals[2])), side=3, cex=cx, line=ln)
+abline(v=vlines, lty=2, col='grey')
+
+plot(z,  edge.col='red', x.lim=xl, label.offset=0.2)
+abline(v=vlines, lty=2, col='grey')
+mtext(expression(kappa == 1), side=3, cex=cx, line=ln)
+
+zz$edge.length <- z$edge.length^pvals[2]
+plot(zz, edge.col='red', x.lim=xl, label.offset=0.2)
+mtext(bquote(kappa == .(pvals[2])),  cex=cx, line=ln)
+abline(v=vlines, lty=2, col='grey')
+
+@
+    \caption{Examples of $\lambda$,  $\delta$ and  $\kappa$ branch length transformations. The branches affected by a given transformation are shown in red.}
+    \label{bltrans}
+  \end{center}
+\end{figure}
+
+\subsubsection{Fitting phylogenetic GLS models: \fnidx{pglm}}
+
+The \fnidx{pglm} function implements GLS models accounting for phylogeny. It also includes the three branch length transformations ($\lambda, \kappa, \delta$) described above. The values of these  may be fixed at values provided by the user or optimised within bounds to find the maximum likelihood transformation. Multiple transformations can be optimised simultaneously, although the underlying evolutionary model may be hard to interpret.
+
+The function uses a formula interface to describe the model and uses data provided as a comparative data object. Because the model fitting uses a covariance matrix, which can be computationally expensive to extract from a phylogeny, it is useful to include this when creating the comparative data object at the start of an analysis using \texttt{vcv=TRUE}. The resulting \texttt{pglm} model object has standard \fnidx{print} and \fnidx{summary} methods.
+
+<<basicPGLS>>=
+data(shorebird)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE)
+mod <- pglm(log(Egg.Mass) ~ log(M.Mass), shorebird)
+print(mod)
+summary(mod)
+@
+
+\subsection{Optimising branch length transformations: \fnidx{profile.pglm}.}
+
+The \fnidx{pglm} function has three arguments to specify parameter values for the $\lambda$, $\kappa$ and $\delta$ transformations. However, the value for these parameters can alternatively be specified as \texttt{"ML"}, in which case the maximum likelihood value for each ML parameter will be found within set bounds. The default bounds ($\lambda = [1\times10^{-6},1], \kappa = [1\times10^{-6},3], \delta = [1\times10^{-6},3]$) may be altered but cannot be negative. Optimising multiple parameters can lead to computational problems with lower bounds very close to zero, so it may be necessary to increase the lower bound slightly.
+
+Because calculating likelihood under a $\kappa$ transformation requires a transformation of the individual branch lengths, it is not possible with a simple $\mathbf{V}$ matrix. This is because $\mathbf{V}$ only holds the sums of those branch lengths. Any variation of $\kappa$, whether for optimization or for profiling likelihood values, therefore needs a 3 dimensional $\mathbf{V}$ array, in which the branch lengths are held separately. The \texttt{vcv.dim} argument to the \fnidx{comparative.data} function creates this.
+
+By default, \fnidx{pglm} will use likelihood ratio tests to establish confidence bounds on optimised parameters. The likelihood value at the ML estimate is tested against the values at the parameter bounds and confidence intervals of the ML estimate are also calculated. The \fnidx{profile.glm} function allows the likelihood surface of a parameter for a model to be displayed. If the ML estimate of the parameter is known then then the profile will show this along with confidence limits (Fig. \ref{lambdaOptPlot}). The likelihood profile is taken for a single parameter at a time, with the other two parameters held at their fixed or optimum values.
+
+<<lambdaOpt>>=
+data(shorebird)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+mod <- pglm(log(Egg.Mass) ~ log(M.Mass), shorebird, lambda='ML')
+summary(mod)
+mod.l <- pglm.profile(mod, 'lambda')
+mod.d <- pglm.profile(mod, 'delta')
+mod.k <- pglm.profile(mod, 'kappa')
+plot(mod.l); plot(mod.d); plot(mod.k)
+@
+
+\begin{figure}[htbp]
+  \begin{center}
+<<lambdaOptPlot, fig=TRUE, echo=FALSE, print=FALSE, height=3, width=8>>=
+par(mar=c(4.5,3,1,1), mfrow=c(1,3), mgp=c(1.8,0.8,0), tcl=-0.2)
+plot(mod.l); plot(mod.d); plot(mod.k)
+@
+    \caption{Likelihood surfaces of $\lambda$, $\kappa$ and $\delta$ for a simple model (\texttt{log(Egg.Mass) \~ log(M.Mass)}) on the \dtidx{shorebird} dataset. The ML estimate has only been fitted for $\lambda$ and so this is the only plot that shows confidence limits.}
+    \label{lambdaOptPlot}
+  \end{center}
+\end{figure}
+
+\subsubsection{Criticism and simplification of\fnidx{pglm} models: \fnidx{plot}, \fnidx{anova} and \fnidx{AIC}.}
+
+The \caper{} package provides standard generic methods for examining \texttt{pglm} models. The first is the \fnidx{plot} methods, which produces four diagnostic plots. The first two show the fit of the residuals to a normal distribution: a density plot of the distribution of the residuals and a normal Q-Q plot the distribution of the residuals against their expected distribution under a normal distribution. The second two show the fitted values against both the residuals and the observed value to look for pattern in the residuals within the model. Figure \ref{pglmPlotCmd} shows these plots for the model above using the command \texttt{plot(mod)}.
+
+\begin{figure}[htbp]
+  \begin{center}
+<<pglmPlotCmd, fig=TRUE, echo=FALSE, print=FALSE, height=6, width=6>>=
+par(mfrow=c(2,2), mar=c(3,3,1,1), mgp=c(2,0.7,0), tcl=-0.2)
+plot(mod)
+@    
+\caption{Model diagnostic plots for a simple model (\texttt{log(Egg.Mass) \~ log(M.Mass)}) on the \dtidx{shorebird} dataset.}
+    \label{pglmPlotCmd}
+  \end{center}
+\end{figure}
+
+The package also provides \fnidx{anova} and \fnidx{logLik} methods that allow model comparison. The \fnidx{logLik} method allows the generic \fnidx{AIC} methods to be used with \texttt{pglm} models. Analysis of variance tables for a \texttt{pglm} model uses sequential sums of squares: each F value is the marginal improvement in the model given the combined effects of the terms above. The \fnidx{anova} command can also be used to compare a set of models.
+
+<<pglmCrit>>=
+mod1 <- pglm(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird) 
+anova(mod1)
+
+mod2 <- pglm(log(Egg.Mass) ~ log(M.Mass) + log(F.Mass), shorebird)  
+mod3 <- pglm(log(Egg.Mass) ~ log(M.Mass) , shorebird)
+mod4 <- pglm(log(Egg.Mass) ~ 1, shorebird)
+
+anova(mod1, mod2, mod3, mod4)
+AIC(mod1, mod2, mod3, mod4)
+@
+
+%%%%%%%%%%
+%% CONTRAST METHODS
+%%%%%%%%%%
+
+\subsection{Phylogenetic independent contrasts}
+
+The \caper{} package implements the methods originally provided in the  programs CAIC \citep{Purvis.Rambaut.1995.a} and MacroCAIC \citep{Agapow.Isaac.2002.a}. Both programs calculate phylogenetically independent contrasts in a set of variables and then use linear models of those contrasts to test for evolutionary relationships. All of the functions in this section require a comparative dataset object and a description of a linear model as an R formula (see \texttt{formula()}).
+
+In contrast model functions, a reference variable (\texttt{ref.var}) may also be provided. This is used to standardize the directions in which contrasts are calculated in multivariate models. If no reference variable is provided, the function defaults to using the first explanatory variable specified in the model formula. All contrast model functions enforce regression through the origin \citep{Garland.Harvey.ea.1992.a}.
+
+\subsubsection{Variable names in contrast functions}
+The three functions below (\fnidx{crunch}, \fnidx{brunch}, \fnidx{macrocaic}) all make use of existing methods within R to generate a model matrix. In normal linear models, the terms in the model formula allow transformations to be specified within models: a model can use \texttt{y ~ log(x)} and subsequent modifications of the model will expect to be able to use a data frame containing \texttt{x} that will be logged before use. These contrast  functions do support this in initial model fitting. However modifications cannot be made so simply to contrast models: the variable \texttt{log(x)} now represents \emph{contrasts} in \texttt{log(x)}, and reference back to the original variable \texttt{x} will not yield the correct results. Generating consistent behaviour using the R modelling framework in these cases is not easy.
+
+It is therefore strongly recommended that any transformation of data should be carried out in the original data frame and that these transformed variables are used in model specification.
+
+%%%%%%%%%%
+%% CRUNCH
+%%%%%%%%%%
+
+\subsubsection{Continuous variables: \fnidx{crunch}}
+
+The \fnidx{crunch} function provides calculation of independent contrasts \citep{Felsenstein.1985.a} for continuous variables, as implemented in the `crunch' option of the CAIC package \citep{Purvis.Rambaut.1995.a}, using the method of \citet{Pagel.1992.a} to calculate contrasts at polytomies. The following example shows an example analysis using the \dtidx{shorebird} dataset.
+
+%% EXPAND? - contrast calculation example from CAIC manual
+
+<<crunchExample>>=
+data(shorebird)
+
+shorebird.data$lgEgg.Mass <- log(shorebird.data$Egg.Mass)
+shorebird.data$lgM.Mass <- log(shorebird.data$M.Mass)
+shorebird.data$lgF.Mass <- log(shorebird.data$F.Mass)
+
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+crunchMod <- crunch(lgEgg.Mass ~ lgF.Mass + lgM.Mass, data=shorebird)
+summary(crunchMod)
+@
+
+%%%%%%%%%%
+%% BRUNCH
+%%%%%%%%%%
+
+\subsubsection{Categorical variables: \fnidx{brunch}}
+\label{brunchSection}
+The inclusion of categorical variables in phylogenetic independent contrast models is problematic. Continuous variables are assumed to evolve under a Brownian process, which permits estimates of nodal values and hence allows nested contrasts to be drawn.  There is no sensible model for reconstructing the nodal values of a categorical variable, except where all daughters share the same categorical value. However, identifying nodes with daughter variables that differ in the value of the categorical variable permit independent contrasts to be identified \citep{Burt.1989.a}. While nodal estimates of continuous variables can be made below at nodes below a \fnidx{brunch} contrast, to do so would assume independent evolution of these variables at the nodes of any deeper contrasts \citep{Burt.1989.a}. As a result, the \fnidx{brunch} algorithm only uses the data from any single tip in the calculation of a single contrast. 
+
+The example below shows \fnidx{brunch} contrasts for the \dtidx{perrisodactyla} dataset calculated using territoriality. Figure \ref{brunchPlot} shows how these contrasts are extracted from the available data. In each case, a contrast is drawn between groups of species showing differing territorial behaviour and no species is used in more than one contrast.
+
+<<brunchExample>>=
+perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
+brunchMod <- brunch(log.female.wt ~ Territoriality, data=perriso)
+caic.table(brunchMod)
+@
+
+\begin{figure}[htbp]
+  \begin{center}
+<<brunchPlot, fig=TRUE, echo=FALSE, print=FALSE, height=3, width=6>>=
+bwd <- rep(1,15)
+bwd[c(5,6,11,12,9,13,14,15)] <- 3
+plot(perriso$phy,  'cladogram', use.edge.length=FALSE, label.offset=0.4, show.node=TRUE, cex=0.7, show.tip=FALSE, x.lim=c(0,12), no.margin=TRUE, edge.width=bwd)
+points(rep(8.25,9), 1:9, pch=ifelse(perriso$data$Terr=='Yes', 1,19))
+text(rep(8.5,9), 1:9, perriso$phy$tip.label, font=3, adj=0)
+@
+    \caption{Location of \fnidx{brunch} contrasts for territoriality in the \dtidx{perrisodactyla} dataset. Branches in bold show the tips contributing to each contrast. See also the output of \fnidx{caic.table} in the main text.}
+    \label{brunchPlot}
+  \end{center}
+\end{figure}
+
+%%%%%%%%%%
+%% MACROCAIC
+%%%%%%%%%%
+
+\subsubsection{Species richness contrasts: \fnidx{macrocaic}}
+
+One common approach in macroevolution is to investigate the links between the traits of taxa and their species richness. It is inappropriate to calculate \fnidx{crunch} contrasts in species richness, particularly for nested nodes, where \fnidx{crunch} contrasts would estimate nodal values as a weighted average of species richness for the daughter taxa, rather than tracking total species richness. For this reason, \citet{Agapow.Isaac.2002.a} developed the program MacroCAIC, which implemented the calculation of species richness contrasts.
+
+The MacroCAIC program, and the \fnidx{macrocaic} function, take a statistical model of species richness as a function of continuous explanatory variables and calculate \fnidx{crunch} contrasts in the explanatory variables and one of two recommended species richness contrasts as a response \citep{Isaac.Agapow.ea.2003.a}. These two contrasts are the relative rate difference (RRD: $ln(N_1/N_2)$) and the proportion dominance index (PDI: $(N_1/(N_1 + N_2)) - 0.5$), where $N_1$ and $N_2$ are the number of species in the daughter clades and $N_1$ is the richness of the clade with the higher value in the focal explanatory variable \citep{Agapow.Isaac.2002.a}.
+
+<<macrocaicExample>>=
+data(IsaacEtAl)
+primates <- comparative.data(primates.tree, primates.data, binomial, na.omit=FALSE)
+primatesBodySize <- macrocaic(species.rich ~ body.mass, data=primates)
+summary(primatesBodySize)
+
+@
+
+%% %%%%%%%%%%
+%% %% PICLM
+%% %%%%%%%%%%
+%% %% STILL THINKING WHETHER OR NOT TO INCLUDE THIS
+%% \subsubsection{\fnidx{piclm}}
+%% 
+
+
+%% %%%%%%%%%%
+%% %% PHYLO D
+%% %%%%%%%%%%
+
+
+\subsubsection{Phylogenetic signal: \fnidx{phylo.d}}
+
+\citet{Fritz.Purvis.2010.a} proposed the statistic $D$ as a measure of phylogenetic signal in binary traits. The $D$ statistic makes use of the way in which estimated nodal values calculated lusing \fnidx{crunch} change along the edges of a phylogeny. If a trait is highly conserved, with only a basal division between two clades expressing either trait value, then the only change will be along the edges  between the two daughter clades at the root. This will give a summed value of 1: the two differences between the root nodal value of 0.5 and the ancestors of the 1 and 0 clades. In contrast, if the trait is labile, more differences will be observed and the sum will be higher.
+
+The sum of these changes across a phylogeny will be governed by the phylogenetic signal in the variable, but also by the size of the phylogeny and by the relative proportions of the two states (prevalence). In order to standardise the effects of phylogeny size and prevalence, \fnidx{phylo.d} uses two simulated null models:
+
+\begin{description}
+\item[Phylogenetic randomness]{Trait values are randomly shuffled relative to the tips of the phylogeny.}
+\item[Brownian threshold model]{A continuous trait is evolved along the phylogeny under a Brownian process and then converted to a binary trait using a threshold that reproduces the relative prevalence of the observed trait.}
+\end{description}
+
+The mean sum of changes under the Brownian ($\bar{s_b}$) and random ($\bar{s_r}$) models are used to calibrate the observed sum of changes ($s_o$) values: $D = (s_o - \bar{s_b})/(\bar{s_r}-\bar{s_b})$ (Fig \ref{phylodScale}). On this standardised scale, a variable with random association will have $D \approx 1$ since $s_o \approx \bar{s_r}$ and a variable following the Brownian model will have $D \approx 0$ since $s_o = \bar{s_b}$. Values of $D$ smaller than 0 are phylogenetically more conserved than under the Brownian model and values of $D$ greater than 1 are phylogenetically overdispersed. The simulated values can also be used to assess whether the observed $D$ differs significantly from the simulated models.
+
+\begin{figure}[htbp]
+  \begin{center}
+<<phylodScale, fig=TRUE, echo=FALSE, print=FALSE, height=3, width=6>>=
+data(BritishBirds)
+BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
+redPD <- phylo.d(BritishBirds, binvar=Red_list)
+
+par(mar=c(3,3,2,1), mgp=c(1.8,0.8,0), tcl=-0.3)
+
+plot(density(redPD$Permutations$random, bw=0.5), main='', xlim=c(10,55), col='blue', xlab='Sum of character change')
+lines(density(redPD$Permutations$brownian,bw=0.5), col='red')
+abline(v=redPD$Parameters$Observed)
+abline(v=redPD$Parameters$Observed, col='grey')
+abline(v=redPD$Parameters$MeanRandom, col='blue')
+abline(v=redPD$Parameters$MeanBrownian, col='red')
+
+with(redPD$Parameters, axis(3, at=c(MeanBrownian, Observed, MeanRandom), labels=c(0, round(redPD$DEstimate,2),1), mgp=c(1.5,0.7,0.25)))
+mtext(expression(italic(D)==phantom(x)), side=3, at=25, line=1.2)
+
+@
+    \caption{Scaling of $D$ values for the observed sum of character change from the distributions of simulated sums of character change under models of random association (blue line) and a Brownian process (red line). The distributions of the simulations are used to test the significance of departures from either model.}
+    \label{phylodScale}
+  \end{center}
+\end{figure}
+
+The example below uses the \dtidx{BritishBirds} dataset to calculate $D$ for the phylogenetic distribution of `Red' conservation status for 181 species of British birds \citep{Fritz.Purvis.2010.a,Thomas.2008.a}.
+
+<<phylodDemo>>=
+data(BritishBirds)
+BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
+redPhyloD <- phylo.d(BritishBirds, binvar=Red_list)
+print(redPhyloD)
+@
+
+%% %%%%%%%%%%
+%% %% USING CONTRASTS
+%% %%%%%%%%%%
+
+
+\subsection{Checking and comparing contrast models.}
+
+The three contrast model functions (\fnidx{crunch}, \fnidx{brunch} and \fnidx{macrocaic}) all return an object of class \texttt{caic} for which a number of common functions and methods are provided. These are useful for assessing the robustness of contrast models. The simplest function is \fnidx{caic.table}, which returns a table of contrasts and nodal values that is very like the original contrast files provided by CAIC and MacroCAIC. This data frame (see the example in the \fnidx{brunch} section, page \pageref{brunch}) provides all the information needed to assess model suitability but some convenience functions are provided for standard checks. 
+
+\subsubsection{Testing evolutionary assumptions: \fnidx{caic.diagnostics}.}
+
+This function implements three diagnostic regression tests for the robustness of a contrast model \citep{Garland.Harvey.ea.1992.a,Purvis.Rambaut.1995.b}.  The function performs regression for each test and optionally displays scatterplots of the diagnostic test data. The tests examine the behaviour of the absolute standardised contrasts with the scale of the following nodal values: 
+
+\begin{description}
+	\item[Estimated nodal value]{This tests an evolutionary assumption of the contrast model: that there is no relationship between the magnitude of estimated contrasts and the estimated nodal value. Put another way, the proportional difference between daughter clades should be independent of magnitude of their trait values. }
+	\item[Estimated standard deviation at the node]{The evolutionary model underlying contrasts \citep{Felsenstein.1985.a} assumes that variance accumulates in continuous characters equally along all branches and that the amount of variation is proportional to branch length. The square root of the expected variance calculated at each node can therefore be used to standardize the absolute difference (`raw contrasts') between sister taxa. If this standardization is successful, there should be no relationship between absolute values of standardized contrasts and the estimated standard deviation.}
+	\item[Age of the node]{If the phylogeny is ultrametric, then the node age, as time from the present, provides a further test of the effectiveness of the standardization of the contrasts.}
+\end{description}
+
+If any of these diagnostic regressions are significant, then the assumption of evolution under a Brownian walk has been violated and  a transformation of the data or branch lengths may be required. As in the example use below on the \dtidx{shorebird} dataset, log transformation of continuous variables is often an effective solution for problems with contrast diagnostics (Fig \ref{caicDiagExamplePlot}).
+
+%% don't echo and fig - the code becomes part of the float
+<<caicDiagExample>>=
+par(mfrow=c(2,3))
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+crunchMod <- crunch(Egg.Mass ~  M.Mass, data=shorebird)
+caic.diagnostics(crunchMod)
+
+shorebird.data$lgEgg.Mass <- log(shorebird.data$Egg.Mass)
+shorebird.data$lgM.Mass <- log(shorebird.data$M.Mass)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+
+crunchMod2 <- crunch(lgEgg.Mass ~  lgM.Mass, data=shorebird)
+caic.diagnostics(crunchMod2)
+@
+
+
+\begin{figure}[htbp]
+  \begin{center}
+<<caicDiagExamplePlot, fig=TRUE, echo=FALSE, print=FALSE, height=4, width=6>>=
+par(mfrow=c(2,3), mar=c(3,3,1,1), mgp=c(2,0.7,0), tcl=-0.2)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+# need to store the output of caic diagnostics to stop it
+# showing up in the float
+crunchMod <- crunch(Egg.Mass ~  M.Mass, data=shorebird)
+x <- caic.diagnostics(crunchMod)
+crunchMod2 <- crunch(lgEgg.Mass ~  lgM.Mass, data=shorebird)
+x <- caic.diagnostics(crunchMod2)
+@
+    \caption{Diagnostic plots for contrasts in male shorebird mass for contrast models on unlogged (top row, poorly distributed with one serious outlier) and logged (bottom row) data.}
+    \label{caicDiagExamplePlot}
+  \end{center}
+\end{figure}
+
+\subsubsection{Robust contrasts: \fnidx{caic.robust}}
+
+In Figure \ref{caicDiagExamplePlot}, there is a systematic problem with the unlogged model and, although one contrast has a high studentized residual, this point does not drive the relationship. In other cases, individual contrasts may exert undue influence over an otherwise well behaved set of contrasts. This is more commonly the case for models where there are known to be problems with branch length estimates or where all branch lengths are treated as equal length. In such cases, these nodes should be removed from the set of contrasts used in the linear model. A threshold of absolute studentized residuals greater than 3 is commonly applied \citep{Jones.Purvis.1997.a,Garland.Harvey.ea.1992.a}. 
+
+
+The contrast model functions in \caper{} provide the \texttt{robust} argument to set the size of this threshold. By default, this is set to infinity: all contrasts are used to fit the linear model. This can be changed by altering the \texttt{robust} argument but can also be modified after initial inspection of contrast diagnostics using the \fnidx{caic.robust} function. This simple method alter the threshold for a \texttt{caic} object and returns a modified version with this threshold filter enforced. 
+
+Note that  none of the contrasts or residuals are recalculated using the \texttt{robust} options: the \texttt{caic} object retains all of the original contrast data and the studentized residuals are \emph{always} those obtained from the full set of contrasts. The threshold filter is only applied in two contexts:
+\begin{enumerate}
+  \item The statistical model of the contrasts held in the \texttt{caic} object and displayed by the model summary.
+  \item The points displayed by \fnidx{caic.diagnostics}. Note that the \texttt{outlier} argument to this function is independent of the value of \texttt{robust} for an object.
+\end{enumerate}
+
+Although clearly a bad model, the example below uses unlogged data from \dtidx{shorebird} to illustrate the use of the functions (Fig. \ref{caicRobustExamplePlot}).
+
+<<caicRobustExample>>=
+data(shorebird)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+
+crunchMod <- crunch(Egg.Mass ~ M.Mass, data=shorebird)
+caic.diagnostics(crunchMod)
+
+crunchModRobust <- caic.robust(crunchMod)
+caic.diagnostics(crunchModRobust, outlier=2)
+@
+
+\begin{figure}[htbp]
+  \begin{center}
+<<caicRobustExamplePlot, fig=TRUE, echo=FALSE, print=FALSE, height=4, width=6>>=
+par(mfrow=c(2,3), mar=c(3,3,1,1), mgp=c(2,0.7,0), tcl=-0.2)
+data(shorebird)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+# need to store the output of caic diagnostics to stop ip showing up in the float
+crunchMod <- crunch(Egg.Mass ~ M.Mass, data=shorebird)
+x <-caic.diagnostics(crunchMod)
+
+crunchModRobust <- caic.robust(crunchMod)
+x <-caic.diagnostics(crunchModRobust, outlier=2)
+@
+
+    \caption{Diagnostic plots and \fnidx{caic.robust}: the upper row shows diagnostic plots for the full model, highlighting a single point with an absolute studentized residual $> 3$. The lower row shows the same plots after applying \fnidx{caic.robust}: the highlighted point has been excluded and the argument \texttt{outlier} has been used to reveal points with absolute residuals $> 2$.}
+    \label{caicRobustExamplePlot}
+  \end{center}
+\end{figure}
+
+\subsubsection{Model criticism: \fnidx{plot}}
+
+The preceding tools are broadly useful for assessing whether the evolutionary assumptions of contrast modelling have been met and for excluding problematic nodes. However it is still wise to check whether the statistical assumptions of the linear model on the contrasts are met. The  \caper{} package provides a simple wrapper to allow the standard model criticism plots to be generated for a \texttt{caic} object (Fig \ref{modelCritPlot}). 
+
+<<modelCrit>>=
+
+data(shorebird)
+
+shorebird.data$lgEgg.Mass <- log(shorebird.data$Egg.Mass)
+shorebird.data$lgM.Mass <- log(shorebird.data$M.Mass)
+shorebird.data$lgF.Mass <- log(shorebird.data$F.Mass)
+
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+crunchMod <- crunch(lgEgg.Mass ~ lgF.Mass + lgM.Mass, data=shorebird)
+par(mfrow=c(2,2))
+plot(crunchMod)
+
+@
+
+\begin{figure}[htbp]
+  \begin{center}
+<<modelCritPlot, fig=TRUE, echo=FALSE, print=FALSE, height=4, width=4.6>>=
+par(mfrow=c(2,2), mar=c(3,3,2,1), mgp=c(2,0.7,0), tcl=-0.2)
+data(shorebird)
+crunchMod <- crunch(lgEgg.Mass ~ lgF.Mass + lgM.Mass, data=shorebird)
+plot(crunchMod)
+@
+
+    \caption{Testing the assumptions of a linear model for a contrast plot}
+    \label{modelCritPlot}
+  \end{center}
+\end{figure}
+
+\subsubsection{Model comparison: \fnidx{anova} \& \fnidx{AIC}}
+
+In a similar fashion, the \caper{} package provides simple wrappers to standard \texttt{anova} and \texttt{AIC} methods to allow contrast models to be compared.
+
+<<modelComparison>>=
+shorebird.data$lgEgg.Mass <- log(shorebird.data$Egg.Mass)
+shorebird.data$lgM.Mass <- log(shorebird.data$M.Mass)
+shorebird.data$lgF.Mass <- log(shorebird.data$F.Mass)
+shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+
+cMod1 <- crunch(lgEgg.Mass ~ lgM.Mass * lgF.Mass, data=shorebird)
+cMod2 <- crunch(lgEgg.Mass ~ lgM.Mass + lgF.Mass, data=shorebird)
+cMod3 <- crunch(lgEgg.Mass ~ lgM.Mass , data=shorebird)
+
+anova(cMod1, cMod2, cMod3)
+AIC(cMod1, cMod2, cMod3)
+@
+
+
+\subsection{Other comparative functions}
+
+\subsubsection{\fnidx{fusco.test}}
+The $I$ statistic \citep{Fusco.Cronk.1995.a} is a measure of phylogenetic imbalance. It has the useful properties that it can be calculated for trees containing polytomies and that the tips of trees can be associated with species richness values. An imbalance score, in the interval $[0,1]$ is calculated for all nodes in the phylogeny and the distribution of the nodal values is used to assess overall balance. Nodes leading to  fewer than 4 species are uninformative about balance and $I$ cannot be calculated for polytomous nodes and hence both are omitted from balance calculations.
+
+The original $I$ statistic proposed by \citet{Fusco.Cronk.1995.a} has been shown to have a  bias at nodes with even numbers of species \citep{Purvis.Katzourakis.ea.2002.a}. This function therefore also implements the modified $I'$ statistic: a Wilcoxon test is used to assess whether the median of the observed $I'$ values differs from the value of 0.5 expected under a Markov process and a randomisation process is used to provide confidence intervals. 
+
+The function can make use of species richness data but can also be set to treat the tips of the phylogeny as species. These two approaches contrast the balance of the distribution of species richness across a topology and the balance of the topology itself. 
+<<>>=
+data(syrphidae)
+syrphidae <- comparative.data(phy=syrphidaeTree, dat=syrphidaeRich, names.col=genus)
+summary(fusco.test(syrphidae, rich=nSpp))
+summary(fusco.test(syrphidae, tipsAsSpecies=TRUE))
+@
+
+\subsection{\fnidx{growTree}}
+
+\subsection{Utility functions}
+
+\subsubsection{\fnidx{comparative.data}}
+\subsubsection{\fnidx{clade.members}}
+\subsubsection{\fnidx{clade.matrix}}
+\subsubsection{\fnidx{vcv.array}}
+
+
+\bibliographystyle{plainnat}
+\bibliography{caper_refs}
+
+\printindex
+
+\appendix
+
+\section{The CAIC `package'}
+comparative data
+ - now 'data' argument is assumed to be 'comparative.data'
+changes
+- lose the markov CI on fusco - test is biased so why use it.
+
+\section{Requirements}
+The \caper{} package, and the code in this vignette, requires the `ape' package \citep{Paradis.Claude.ea.2004.a}.
+
+
+\end{document}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   

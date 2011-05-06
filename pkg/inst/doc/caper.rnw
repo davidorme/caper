@@ -47,7 +47,7 @@
 	library(caper)
 	library(ape)
 	library(mvtnorm) 
-	# for(f in dir('../../R', full=TRUE)) (source(f))
+	for(f in dir('../../R', full=TRUE)) (source(f))
 @
 
 \maketitle
@@ -727,28 +727,212 @@ AIC(cMod1, cMod2, cMod3)
 
 \subsection{Other comparative functions}
 
-\subsubsection{\fnidx{fusco.test}}
+\subsubsection{Tree imbalance: \fnidx{fusco.test}}
 The $I$ statistic \citep{Fusco.Cronk.1995.a} is a measure of phylogenetic imbalance. It has the useful properties that it can be calculated for trees containing polytomies and that the tips of trees can be associated with species richness values. An imbalance score, in the interval $[0,1]$ is calculated for all nodes in the phylogeny and the distribution of the nodal values is used to assess overall balance. Nodes leading to  fewer than 4 species are uninformative about balance and $I$ cannot be calculated for polytomous nodes and hence both are omitted from balance calculations.
 
 The original $I$ statistic proposed by \citet{Fusco.Cronk.1995.a} has been shown to have a  bias at nodes with even numbers of species \citep{Purvis.Katzourakis.ea.2002.a}. This function therefore also implements the modified $I'$ statistic: a Wilcoxon test is used to assess whether the median of the observed $I'$ values differs from the value of 0.5 expected under a Markov process and a randomisation process is used to provide confidence intervals. 
 
 The function can make use of species richness data but can also be set to treat the tips of the phylogeny as species. These two approaches contrast the balance of the distribution of species richness across a topology and the balance of the topology itself. 
-<<>>=
+
+<<fuscoDemo>>=
 data(syrphidae)
 syrphidae <- comparative.data(phy=syrphidaeTree, dat=syrphidaeRich, names.col=genus)
 summary(fusco.test(syrphidae, rich=nSpp))
 summary(fusco.test(syrphidae, tipsAsSpecies=TRUE))
 @
 
-\subsection{\fnidx{growTree}}
+\subsection{Phylogeny simulation: \fnidx{growTree}}
 
+
+\subsection{Phylogenetic diversity: \fnidx{pd.calc}, \fnidx{pd.bootstrap} and \fnidx{ed.calc}.}
+
+There are two functions that provide simple ways to calculate phylogenetic diversity indices for a set of tips on a phylogeny (\fnidx{pd.calc}) and to bootstrap the distribution of those indices for a subset of a given size (\fnidx{pd.bootstrap}).
+
+The following indices of phylogenetic diversity are supported (Fig. \ref{pdMeasurePlot}):
+\begin{description}
+	\item[Total Branch Length (TBL)]{The sum of all the edge lengths in the subtree given by the tip subset. This measure can be partitioned into the two next measures.}
+  \item[Shared Branch Length (SBL)]{The sum of all edges in the subtree that are shared by more than one tip.}
+  \item[Unique Evolutionary History (UEH)]{The sum of the edge lengths that give rise to only one tip in the subtree.}
+  \item[Length of tip branch lengths (TIPS)]{Unlike UEH, this measure does not use the unique paths to each tips on the \emph{subtree} and instead gives the sum of the unique branches leading to the tips on the \emph{complete tree}.}
+  \item[Minimum Spanning Tree (MST)]{The sum of the lengths of the edges for the smallest tree that links the subset tips, excluding any edges below the node of the most recent common ancestor.}
+\end{description}
+
+These two functions can be used together to compare observed phylogenetic diversity for a group of species to the distribution of phylogenetic diversity for a similar sized group. These functions use a phylogeny arranged as a \fnidx{clade.matrix}, as this greatly accelerates sampling of phylogenetic diversity measures. A \texttt{phylo} object can be used but will be immediately converted to a clade matrix.
+
+
+<<pdExample>>=
+data(BritishBirds)
+BritishBirds.cm <- clade.matrix(BritishBirds.tree)
+redListSpecies <- with(BritishBirds.data, binomial[Red_list==1])
+obs <- pd.calc(BritishBirds.cm, redListSpecies, method="TBL")
+rand <- pd.bootstrap(BritishBirds.cm, ntips=length(redListSpecies), rep=1000, method="TBL")
+
+plot(density(rand), main='Total branch length for random sets of 32 species.')
+abline(v=obs, col='red')
+@
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[htbp]
+  \begin{center}
+<<pdMeasurePlot, fig=TRUE, echo=FALSE, print=FALSE, height=5, width=8>>=
+tree <- read.tree(text="((((A:1,B:1):1.5,C:2.5):0.5,(D:0.6,E:0.6):2.4):0.5,((F:1.9,G:1.9):0.8,(H:1.6,I:1.6):1.1):0.8):0.2;")
+
+clmat <- clade.matrix(tree)
+tips <- c("A","C","D","E","G","H")
+
+par(mfrow=c(2,3), mar=rep(1,4))
+
+tip.col <- rep('grey', length=length(tree$tip.label))              
+tip.col[c(1,3,4,5,7,8)] <- 'black'
+                                         
+# TBL
+cl <- rep('black', length=length(tree$edge.length))
+cl[c(1,2,3,4,6,7,8,9,10,11,13,14,15)] <- 'red'
+plot(tree, label.offset=0.1, cex=1.2, tip.color=tip.col, x.lim=3.8, edge.col=cl)
+text(0.2,8.5, "TBL", cex=1.2, adj=c(0,0))
+
+# UEH
+cl <- rep('black', length=length(tree$edge.length))
+cl[c(3,4,6,8,9,11,14,13,15)] <- 'red'
+plot(tree, label.offset=0.1, cex=1.2, tip.color=tip.col, x.lim=3.8, edge.col=cl)
+text(0.2,8.5, "UEH", cex=1.2, adj=c(0,0))
+
+# SBL
+cl <- rep('black', length=length(tree$edge.length))
+cl[c(1,2,7,10)] <- 'red'
+plot(tree, label.offset=0.1, cex=1.2, tip.color=tip.col, x.lim=3.8, edge.col=cl)
+text(0.2,8.5, "SBL", cex=1.2, adj=c(0,0))
+
+# TIP
+cl <- rep('black', length=length(tree$edge.length))
+cl[c(4,6,8,9,13,15)] <- 'red'
+plot(tree, label.offset=0.1, cex=1.2, tip.color=tip.col, x.lim=3.8, edge.col=cl)
+text(0.2,8.5, "TIP", cex=1.2, adj=c(0,0))
+
+
+# MST
+tips <- c("A","C")
+tip.col <- rep('grey', length=length(tree$tip.label))              
+tip.col[c(1,3)] <- 'black'
+
+cl <- rep('black', length=length(tree$edge.length))
+cl[c(3,4,6)] <- 'red'
+
+plot(tree, label.offset=0.1, cex=1.2, tip.color=tip.col, x.lim=3.8, edge.col=cl)
+text(0.2,8.5, "MST", cex=1.2, adj=c(0,0))
+
+par(mar=c(3,3,1,1))
+plot(density(rand), main='', xlab= 'TBL values for red listed British birds.')
+abline(v=obs, col='red')
+@
+    \caption{Illustration of the different measures of phylogenetic diversity available and a plot of observed (red) and randomized (black) TBL for red listed British birds}
+    \label{pdMeasurePlot}
+  \end{center}
+\end{figure}
+
+The \fnidx{ed.calc} function takes a phylogeny, again ideally converted using \fnidx{clade.matrix}, and calculates evolutionary distinctness (ED) scores for each tip \cite{Isaac.Turvey.ea.2007.a}. The length of each branch on the phylogeny is shared equally among all the tips descending from it and the sum of the per-tip contributions along the paths to each tip provides the ED measure of the distinctness of each tip (Fig \ref{edExamplePlots}a). In the example code below, two species (\textit{Allocebus trichotis} and \textit{Phaner furcifer}) share long branches and belong to species poor clades, resulting in high evolutionary distinctiveness (Fig \ref{edExamplePlots}b,c)
+
+<<edExample>>=
+data(IsaacEtAl)
+primates.cm <- clade.matrix(primates.tree)
+primateED <- ed.calc(primates.cm)
+str(primateED)
+plot(density(primateED$spp$ED))
+with(primateED, spp[spp$ED == max(spp$ED),])
+@
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[htbp]
+  \begin{center}
+<<edExamplePlots, fig=TRUE, echo=FALSE, print=FALSE, height=3, width=8>>=
+par(mfrow=c(1,3), mar=c(0,0,0,0), mgp=c(2,0.7,0))
+edDemo <- ed.calc(clmat)
+
+edge.col <- rep('gray30', 16)
+edge.col[c(1,2,6)] <- 'red'
+edge.col[10:12] <- 'blue'
+
+xx <-  plot(tree, show.tip.label=FALSE, x.lim=c(0,4),y.lim=c(0.6,9.4), edge.col=edge.col, edge.width=2, no.margin=TRUE)
+
+edgeLab <- with(edDemo$branch, paste(len, '/' , nSp)) [tree$edge[,2]]
+edgelabels(edgeLab, 1:16, adj=c(0.5,-0.3), frame='none', col='gray30', cex=0.7)
+
+edgeLab <- edDemo$branch$ED[tree$edge[,2]]
+edgelabels(sprintf("%0.2f", edgeLab), 1:16, adj=c(0.5,1.3), frame='none', col=edge.col, cex=0.9)
+
+tipLab <- with(edDemo$spp, sprintf("%0.2f", ED))
+tipCol <- rep('gray30', 9)
+tipCol[c(3,6)] <- c('red','blue')
+tiplabels(text=tipLab, adj=c(-0.25,0.5), frame='none', col=tipCol)
+
+par(usr=c(0,1,0,1))
+text(0.1, 0.9, "a)", cex=1.2)
+
+par(mar=c(3,3,1,1))
+plot(density(primateED$spp$ED), main='', xlab='Species ED score')
+
+edMax <- max(primateED$spp$ED)
+arrows(edMax, 0.04, edMax, 0.01, col='red', len=0.1)
+
+par(usr=c(0,1,0,1), mar=c(0,0,0,0))
+text(0.1, 0.9, "b)", cex=1.2)
+
+maxSpp <- which(primateED$spp$ED == edMax)
+xx <- which(rowSums(primates.cm$clade.matrix[,maxSpp])> 0)
+
+edgeCol <- rep('grey30', length(primates.tree$edge.length))
+edgeCol[match(xx, primates.tree$edge[,2])] <- 'red'
+
+plot(primates.tree, show.tip=FALSE, no.margin=TRUE, edge.col=edgeCol)
+
+par(usr=c(0,1,0,1))
+text(0.1, 0.9, "c)", cex=1.2)
+
+@
+    \caption{a) Calculation of ED scores. Edge labels show the calculation of ED contributions (below branch) from the branch length and number of descendent species (above branch). Tip labels show species ED scores and the component contribution values are highlighted for two species. b) The distribution of ED scores for a phylogeny of primate species (c). The paths leading to the species with the highest ED values (red arrow) are shown on the phylogeny.
+    \label{edExamplePlots}
+  \end{center}
+\end{figure}
+
+\clearpage
 \subsection{Utility functions}
 
-\subsubsection{\fnidx{comparative.data}}
-\subsubsection{\fnidx{clade.members}}
 \subsubsection{\fnidx{clade.matrix}}
+
+The \fnidx{clade.matrix} function turns a phylogeny into a binary matrix showing the tips (columns) descending from each node (rows) in the tree, along with a vector of the edge lengths leading to that node. Although this is an extremely bulky way to represent a phylogeny, a clade matrix allows calculations on subsets of a phylogeny to be calculated much more rapidly.
+
+<<cladeMatrixExample>>=
+data(perrisodactyla)
+perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
+perrisoCM <- clade.matrix(perriso$phy)
+str(perrisoCM)
+perrisoCM$clade.matrix
+@
+
+\subsubsection{\fnidx{clade.members} and \fnidx{clade.members.list}}
+
+These functions return a vector of the tips that descend from a given node (\fnidx{clade.members}) or a list of vectors showing the tips descending from every node (\fnidx{clade.members.list}) in a phylogeny. Options to both functions control whether vectors of internal nodes are also returned (\texttt{include.nodes}) and whether tip labels are used instead of the index of those tip labels (\texttt{tip.labels}). 
+
+<<cladeMembersExample>>=
+data(perrisodactyla)
+perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
+clade.members(15, perriso$phy)
+clade.members(15, perriso$phy, tip.labels=TRUE)
+clade.members(15, perriso$phy, tip.labels=TRUE, include.nodes=TRUE)
+str(clade.members.list(perriso$phy))
+str(clade.members.list(perriso$phy, tip.labels=TRUE))
+@
+
 \subsubsection{\fnidx{vcv.array}}
 
+This function replaces the \texttt{vcv.phylo} function provided by the ape package. This is primarily to provide covariance structures that retain separate branch lengths in order to support kappa transformations. For standard two dimensional covariance matrices, it is also faster than the \texttt{vcv.phylo} function for trees of more than about 100 tips.
+
+<<vcvArrayExample>>=
+data(perrisodactyla)
+perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
+str(vcv.array(perriso$phy))
+str(vcv.array(perriso$phy, dim=3))
+@
 
 \bibliographystyle{plainnat}
 \bibliography{caper_refs}

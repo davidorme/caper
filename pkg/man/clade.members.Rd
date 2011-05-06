@@ -11,7 +11,7 @@ clade.members.list(phy, tips = FALSE, tip.labels = FALSE, include.nodes=FALSE)
 }
 
 \arguments{
-  \item{x}{A integer in the range minus number of internal of nodes to positive number of tips. }
+  \item{x}{A integer identifying the node for which a list of tips is required.}
   \item{phy}{An object of class 'phylo'. }
   \item{tips}{ A logical indicating whether to include external node membership in the list.}
   \item{tip.labels}{A logical flag indicating whether to return the node numbers of the tips or their tip labels.}

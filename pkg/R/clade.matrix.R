@@ -37,7 +37,7 @@ function(phy){
 	names(edge.len) <- c(phy$edge[,2], nb.tips + 1)
 	edge.len <- edge.len[as.character(mat.names$edges)]
 	
-	RET <- list(clade.matrix=clade.mat, edge.length=edge.len, tip.label=phy$tip.label)
+	RET <- list(clade.matrix=clade.mat, edge.length=edge.len, tip.label=phy$tip.label, edge=phy$edge)
 	class(RET) <- "clade.matrix"
 	
 	return(RET)

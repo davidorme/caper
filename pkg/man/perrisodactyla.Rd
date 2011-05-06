@@ -1,7 +1,7 @@
-\name{perrisodactyla}
-\alias{perrisodactyla}
-\alias{perrisodactyla.data}
-\alias{perrisodactyla.tree}
+\name{perissodactyla}
+\alias{perissodactyla}
+\alias{perissodactyla.data}
+\alias{perissodactyla.tree}
 
 \title{Example dataset for the CAIC package}
 \description{
@@ -11,7 +11,7 @@ This is a comparative dataset on Perissodactyla taken from the examples include 
 data(shorebird)
 }
 \format{
-The datafile contains a phylogeny (\code{perrisodactyla.tree}) of 18 perrisodactyl species as a 'phylo' object from the \code{ape} library. The tip names are the binomial names of the species. The file also contains a data frame (\code{perrisodactyla.data}) of variables 5 variables for 13 of those species: 
+The datafile contains a phylogeny (\code{perissodactyla.tree}) of 18 perissodactyl species as a 'phylo' object from the \code{ape} library. The tip names are the binomial names of the species. The file also contains a data frame (\code{perissodactyla.data}) of variables 5 variables for 13 of those species: 
 \describe{
 \item{Binomial}{The species binomial name.}
 \item{log.female.wt}{Log female weight}
@@ -24,12 +24,12 @@ The dataset is incomplete - it does not include data for each species in the phy
 
 \references{Purvis, A. and Rambaut, A. (1995). Comparative Analysis by Independent Contrasts (CAIC) User's Guide.}
 \examples{
-data(perrisodactyla)
+data(perissodactyla)
 # default behaviour is to omit incomplete data rows
-(perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial))
+(perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial))
 # but this can be turned off
-(perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial, na.omit=FALSE))
-na.omit(perriso)
+(perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit=FALSE))
+na.omit(perisso)
 }
 \seealso{ caic, pglm }
 

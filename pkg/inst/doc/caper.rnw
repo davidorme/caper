@@ -155,14 +155,14 @@ print(cdat)
 In order to make it easier to use contrast methods, where values are estimated at internal nodes, the \fnidx{comparative.data} function and contrast methods use internal node labels to identify values. Creating a comparative data object will not replace existing labels but will insert simple numeric labels for unlabelled nodes. The \fnidx{comparative.data} class has a number of generic methods that allow users to extract a subset of taxa and the relevant linked data from within a \fnidx{comparative.data} object.
 
 \subsubsection{\texttt{na.omit}\index{Functions!comparative.data!na.omit}}
- This method returns a subset of the object containing only those taxa for which the data are complete (i.e no \texttt{NA} values). By default, the \fnidx{comparative.data} function drops incomplete rows, but this can be altered. The examples below show the function in use on the \dtidx{perrisodactyla} dataset.
+ This method returns a subset of the object containing only those taxa for which the data are complete (i.e no \texttt{NA} values). By default, the \fnidx{comparative.data} function drops incomplete rows, but this can be altered. The examples below show the function in use on the \dtidx{perissodactyla} dataset.
 
 <<na.omit>>=
-data(perrisodactyla)
-(perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial))
+data(perissodactyla)
+(perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial))
 # but this can be turned off
-(perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial, na.omit=FALSE))
-na.omit(perriso)
+(perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit=FALSE))
+na.omit(perisso)
 @
 
 \subsubsection{\texttt{subset}\index{Functions!comparative.data!subset}}
@@ -186,7 +186,7 @@ The examples in this vignette make use of the following datasets:
 \begin{description}
   \item[\dtidx{shorebird}] This dataset includes a phylogeny of 71 species of shorebirds along with data on male and female body mass, egg mass, clutch size and mating system \citep{Lislevand.Thomas.2006.a}.
   \item[\dtidx{syrphidae}] This dataset includes a phylogeny of 204 genera of hoverfly along with data on the species richness of each of those genera \citep{Katzourakis.Purvis.ea.2001.a}.
-  \item[\dtidx{perrisodactyla}] This dataset includes a phylogeny of 18 perrisodactyl species and a data frame of female and neonatal mass, gestation length and territoriality for 13 of those species. The data frame contains missing data and the dataset was provided as an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
+  \item[\dtidx{perissodactyla}] This dataset includes a phylogeny of 18 perissodactyl species and a data frame of female and neonatal mass, gestation length and territoriality for 13 of those species. The data frame contains missing data and the dataset was provided as an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
   \item[\dtidx{IsaacEtAl}] The datafile contains  species level phylogenies and data sets of nine variables for each of four mammalian orders (Primates, Carnivora, Chiroptera and Marsupialia). The data were published in supplementary material for \citet{Isaac.Jones.ea.2005.a}. The variables are body mass, age at sexual maturity, gestation length, interbirth interval, litter size , population density, group size, mass dimorphism and length.dimorphism. The data sets all contain missing data and all the variables have been natural log transformed.
   \item[\dtidx{British Birds}] The datafile contains a species level phylogeny for 249 species of British birds (some represented by congeneric surrogates) and a data set on the conservation status of 181 of those species \citep{Thomas.2008.a}.
 \end{description}
@@ -474,11 +474,11 @@ summary(crunchMod)
 \label{brunchSection}
 The inclusion of categorical variables in phylogenetic independent contrast models is problematic. Continuous variables are assumed to evolve under a Brownian process, which permits estimates of nodal values and hence allows nested contrasts to be drawn.  There is no sensible model for reconstructing the nodal values of a categorical variable, except where all daughters share the same categorical value. However, identifying nodes with daughter variables that differ in the value of the categorical variable permit independent contrasts to be identified \citep{Burt.1989.a}. While nodal estimates of continuous variables can be made below at nodes below a \fnidx{brunch} contrast, to do so would assume independent evolution of these variables at the nodes of any deeper contrasts \citep{Burt.1989.a}. As a result, the \fnidx{brunch} algorithm only uses the data from any single tip in the calculation of a single contrast. 
 
-The example below shows \fnidx{brunch} contrasts for the \dtidx{perrisodactyla} dataset calculated using territoriality. Figure \ref{brunchPlot} shows how these contrasts are extracted from the available data. In each case, a contrast is drawn between groups of species showing differing territorial behaviour and no species is used in more than one contrast.
+The example below shows \fnidx{brunch} contrasts for the \dtidx{perissodactyla} dataset calculated using territoriality. Figure \ref{brunchPlot} shows how these contrasts are extracted from the available data. In each case, a contrast is drawn between groups of species showing differing territorial behaviour and no species is used in more than one contrast.
 
 <<brunchExample>>=
-perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
-brunchMod <- brunch(log.female.wt ~ Territoriality, data=perriso)
+perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial)
+brunchMod <- brunch(log.female.wt ~ Territoriality, data=perisso)
 caic.table(brunchMod)
 @
 
@@ -487,11 +487,11 @@ caic.table(brunchMod)
 <<brunchPlot, fig=TRUE, echo=FALSE, print=FALSE, height=3, width=6>>=
 bwd <- rep(1,15)
 bwd[c(5,6,11,12,9,13,14,15)] <- 3
-plot(perriso$phy,  'cladogram', use.edge.length=FALSE, label.offset=0.4, show.node=TRUE, cex=0.7, show.tip=FALSE, x.lim=c(0,12), no.margin=TRUE, edge.width=bwd)
-points(rep(8.25,9), 1:9, pch=ifelse(perriso$data$Terr=='Yes', 1,19))
-text(rep(8.5,9), 1:9, perriso$phy$tip.label, font=3, adj=0)
+plot(perisso$phy,  'cladogram', use.edge.length=FALSE, label.offset=0.4, show.node=TRUE, cex=0.7, show.tip=FALSE, x.lim=c(0,12), no.margin=TRUE, edge.width=bwd)
+points(rep(8.25,9), 1:9, pch=ifelse(perisso$data$Terr=='Yes', 1,19))
+text(rep(8.5,9), 1:9, perisso$phy$tip.label, font=3, adj=0)
 @
-    \caption{Location of \fnidx{brunch} contrasts for territoriality in the \dtidx{perrisodactyla} dataset. Branches in bold show the tips contributing to each contrast. See also the output of \fnidx{caic.table} in the main text.}
+    \caption{Location of \fnidx{brunch} contrasts for territoriality in the \dtidx{perissodactyla} dataset. Branches in bold show the tips contributing to each contrast. See also the output of \fnidx{caic.table} in the main text.}
     \label{brunchPlot}
   \end{center}
 \end{figure}
@@ -902,11 +902,11 @@ text(0.1, 0.9, "c)", cex=1.2)
 The \fnidx{clade.matrix} function turns a phylogeny into a binary matrix showing the tips (columns) descending from each node (rows) in the tree, along with a vector of the edge lengths leading to that node. Although this is an extremely bulky way to represent a phylogeny, a clade matrix allows calculations on subsets of a phylogeny to be calculated much more rapidly.
 
 <<cladeMatrixExample>>=
-data(perrisodactyla)
-perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
-perrisoCM <- clade.matrix(perriso$phy)
-str(perrisoCM)
-perrisoCM$clade.matrix
+data(perissodactyla)
+perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial)
+perissoCM <- clade.matrix(perisso$phy)
+str(perissoCM)
+perissoCM$clade.matrix
 @
 
 \subsubsection{\fnidx{clade.members} and \fnidx{clade.members.list}}
@@ -914,13 +914,13 @@ perrisoCM$clade.matrix
 These functions return a vector of the tips that descend from a given node (\fnidx{clade.members}) or a list of vectors showing the tips descending from every node (\fnidx{clade.members.list}) in a phylogeny. Options to both functions control whether vectors of internal nodes are also returned (\texttt{include.nodes}) and whether tip labels are used instead of the index of those tip labels (\texttt{tip.labels}). 
 
 <<cladeMembersExample>>=
-data(perrisodactyla)
-perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
-clade.members(15, perriso$phy)
-clade.members(15, perriso$phy, tip.labels=TRUE)
-clade.members(15, perriso$phy, tip.labels=TRUE, include.nodes=TRUE)
-str(clade.members.list(perriso$phy))
-str(clade.members.list(perriso$phy, tip.labels=TRUE))
+data(perissodactyla)
+perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial)
+clade.members(15, perisso$phy)
+clade.members(15, perisso$phy, tip.labels=TRUE)
+clade.members(15, perisso$phy, tip.labels=TRUE, include.nodes=TRUE)
+str(clade.members.list(perisso$phy))
+str(clade.members.list(perisso$phy, tip.labels=TRUE))
 @
 
 \subsubsection{\fnidx{vcv.array}}
@@ -928,10 +928,10 @@ str(clade.members.list(perriso$phy, tip.labels=TRUE))
 This function replaces the \texttt{vcv.phylo} function provided by the ape package. This is primarily to provide covariance structures that retain separate branch lengths in order to support kappa transformations. For standard two dimensional covariance matrices, it is also faster than the \texttt{vcv.phylo} function for trees of more than about 100 tips.
 
 <<vcvArrayExample>>=
-data(perrisodactyla)
-perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
-str(vcv.array(perriso$phy))
-str(vcv.array(perriso$phy, dim=3))
+data(perissodactyla)
+perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial)
+str(vcv.array(perisso$phy))
+str(vcv.array(perisso$phy, dim=3))
 @
 
 \bibliographystyle{plainnat}

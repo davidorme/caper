@@ -29,12 +29,12 @@ A numeric vector of external node (i.e. tip) numbers or a character vector of ti
 
 %\seealso{} %% \code{\link{clade.stats}} }
 \examples{
-data(perrisodactyla)
+data(perissodactyla)
 # use comparative.data to add node labels
-perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial, na.omit=FALSE)
-plot(perriso$phy, show.node.label=TRUE)
-clade.members(22, perriso$phy, tip.labels=TRUE)
-clade.members.list(perriso$phy, tip.labels=FALSE)
+perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit=FALSE)
+plot(perisso$phy, show.node.label=TRUE)
+clade.members(22, perisso$phy, tip.labels=TRUE)
+clade.members.list(perisso$phy, tip.labels=FALSE)
 
 }
 \keyword{ manip }% at least one, from doc/KEYWORDS

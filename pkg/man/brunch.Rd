@@ -49,9 +49,9 @@ Burt, A. (1989). Comparative methods using phylogenetically independent contrast
 \seealso{\code{\link{caic-class}} for 'caic' object structure and methods.}
 
 \examples{
-data(perrisodactyla)
-perriso <- comparative.data(perrisodactyla.tree, perrisodactyla.data, Binomial)
-brunchMod <- brunch(log.female.wt ~ Territoriality, data=perriso)
+data(perissodactyla)
+perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial)
+brunchMod <- brunch(log.female.wt ~ Territoriality, data=perisso)
 summary(brunchMod)
 
 # plot the contrasts

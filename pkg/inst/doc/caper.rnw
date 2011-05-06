@@ -889,7 +889,7 @@ par(usr=c(0,1,0,1))
 text(0.1, 0.9, "c)", cex=1.2)
 
 @
-    \caption{a) Calculation of ED scores. Edge labels show the calculation of ED contributions (below branch) from the branch length and number of descendent species (above branch). Tip labels show species ED scores and the component contribution values are highlighted for two species. b) The distribution of ED scores for a phylogeny of primate species (c). The paths leading to the species with the highest ED values (red arrow) are shown on the phylogeny.
+    \caption{a) Calculation of ED scores. Edge labels show the calculation of ED contributions (below branch) from the branch length and number of descendent species (above branch). Tip labels show species ED scores and the component contribution values are highlighted for two species. b) The distribution of ED scores for a phylogeny of primate species (c). The paths leading to the species with the highest ED values (red arrow) are shown on the phylogeny.}
     \label{edExamplePlots}
   \end{center}
 \end{figure}

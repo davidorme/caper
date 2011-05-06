@@ -10,7 +10,7 @@ These functions calculate various phylogenetic diversity measures for either a g
 \usage{
 pd.calc(cm, tip.subset = NULL, method = "TBL", root.edge=FALSE)
 pd.bootstrap(cm, ntips, reps = 1000, method = "TBL", tip.weights = NULL)
-edge.calc(cm, polytomy.cf=c("isaac","mooers","none"))
+ed.calc(cm, polytomy.cf=c("isaac","mooers","none"))
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -26,7 +26,7 @@ edge.calc(cm, polytomy.cf=c("isaac","mooers","none"))
 }
 \details{
 There are five implemented PD measures:
-\define{
+\describe{
   \item{Total Branch Length (TBL)}{The sum of all the edge lengths in the subtree given by the tip subset. This measure can be partitioned into the two next measures.}
   \item{Shared Branch Length (SBL)}{The sum of all edges in the subtree that are shared by more than one tip.}
   \item{Unique Evolutionary History (UEH)}{The sum of the edge lengths that give rise to only one tip in the subtree.}
@@ -57,7 +57,7 @@ pd.calc(clmat, tip.subset=tips)
 pd.calc(clmat, tip.subset=c(1,3,4,5,7,8))
 pd.calc(clmat, tip.subset=tips, root.edge=TRUE)
 
-pd.bootstrap(clmat, 6, 'TBL')
+pd.bootstrap(clmat, ntips=6, reps=1000, method='TBL')
 
 data(IsaacEtAl)
 primatesCM <- clade.matrix(primates.tree)

@@ -700,7 +700,6 @@ data(shorebird)
 crunchMod <- crunch(lgEgg.Mass ~ lgF.Mass + lgM.Mass, data=shorebird)
 plot(crunchMod)
 @
-
     \caption{Testing the assumptions of a linear model for a contrast plot}
     \label{modelCritPlot}
   \end{center}
@@ -724,6 +723,9 @@ anova(cMod1, cMod2, cMod3)
 AIC(cMod1, cMod2, cMod3)
 @
 
+%% %%%%%%%%%%
+%% %% OTHER FUNCTIONS
+%% %%%%%%%%%%
 
 \subsection{Other comparative functions}
 
@@ -740,9 +742,6 @@ syrphidae <- comparative.data(phy=syrphidaeTree, dat=syrphidaeRich, names.col=ge
 summary(fusco.test(syrphidae, rich=nSpp))
 summary(fusco.test(syrphidae, tipsAsSpecies=TRUE))
 @
-
-\subsection{Phylogeny simulation: \fnidx{growTree}}
-
 
 \subsection{Phylogenetic diversity: \fnidx{pd.calc}, \fnidx{pd.bootstrap} and \fnidx{ed.calc}.}
 
@@ -893,6 +892,309 @@ text(0.1, 0.9, "c)", cex=1.2)
     \label{edExamplePlots}
   \end{center}
 \end{figure}
+
+%% %%%%%%%%%%
+%% %% GROWTREE
+%% %%%%%%%%%%
+
+\subsection{Phylogeny and trait simulation: \fnidx{growTree}}
+\label{cladeProperties}
+A number of other packages provide fast methods for simulating phylogenies and traits along phylogenies under a range of models. The \fnidx{growTree} function is likely to be considerably slower for some common models but provides a flexible environment for simulating more complex scenarios. It bears many similarities to the simulations provided by the program MeSA written by Paul-Michael Agapow (http://www.agapow.net/software/mesa).
+
+A basic \fnidx{growTree} simulation has three components: a speciation rate (\texttt{b}), an extinction rate (\texttt(d)) and a stopping rule  (\texttt(halt)). The default values for these (\texttt{b=1, d=0, halt=20}) therefore simply grow a phylogeny from a single ancestor until there are 20 extant species. The speciation and extinction rates both specify the rate of an exponential function which is used to draw waiting times until the next event. 
+
+However, the power of \fnidx{growTree} is that any of these components can be R expressions using information about the scenario being simulated.  In simple simulations of a phylogeny, the following clade properties can be used: \texttt{clade.age},\texttt{nLin}, \texttt{nTip},\texttt{nExtantTip}, \texttt{nExtinctTip}\label{cladeProperties}. For example, the default \texttt{halt = 20} is actually just a shorthand for \texttt{expression(nExtantTip == 20)} and more examples are shown in the code below and in Fig. \ref{simpleGrowTreePlots}.
+
+There are three important details of these simple simulations: 
+\begin{enumerate}
+	\item Expressions using \texttt{clade.age} \emph{cannot} test for an exact end time (\texttt{clade.age==3}) since the simulation may overstep this end point and run infinitely: \texttt{clade.age>=3} must be used instead. 
+	\item Expressions using numbers of lineages or tips will halt the simulation exactly at a speciation or extinction event. The optional argument \texttt{extend.proportion} can be used to continue to run the simulation until a given proportion of the time to the next speciation has passed. 
+	\item The \texttt{clade.age} includes the length of the root edge.
+\end{enumerate}
+
+The significance of the argument \texttt{grain=Inf} in these examples is discussed below (\ref{grainLabel}).
+<<setSeed, echo=FALSE, print=FALSE>>=
+# reasonable run time and reasonable results (on my Mac, 
+# no idea if this will carry on to R-Forge.)
+set.seed(2345)
+@
+<<simpleGrowTree>>=
+basicTree <- growTree(b=1, d=0, halt=20, grain=Inf)
+extendTree <- growTree(b=1, d=0, halt=20, extend.proportion=1, grain=Inf)
+timeLimit <- growTree(b=1, d=0, halt=expression(clade.age>=3), grain=Inf)
+extinctTree <- growTree(b=1, d=0.1, halt=expression(nExtinctTip>=3), extend.proportion=1, grain=Inf)
+densityDependence <- growTree(b=expression(2/nExtantTip), d=0, halt=50, grain=Inf)
+climateChange <- growTree(b=1, d=expression(0.2 * clade.age), halt=50)
+@
+
+\begin{figure}[htbp]
+  \begin{center}
+<<simpleGrowTreePlots, fig=TRUE, echo=FALSE, print=FALSE, height=6, width=6>>=
+par(mfrow=c(2,3), mar=c(1.5,0.5,0,0.5), tcl=-0.2, mgp=c(1,0.5,0), cex.axis=0.8)
+plot(basicTree  , root.edge=TRUE);   axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"a)")
+plot(extendTree , root.edge=TRUE);  axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"b)")
+plot(timeLimit  , root.edge=TRUE);   axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"c)")
+plot(extinctTree, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"d)")
+plot(densityDependence, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"e)")
+plot(climateChange, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"f)")
+
+@
+   \caption{Simple simulations using \fnidx{growTree}. See the code example for a) \texttt{basicTree}, b) \texttt{extendTree}, c) \texttt{timeLimit}, d) \texttt{extinctTree}, e) \texttt{densityDependence} and f) \texttt{climateChange}.}
+    \label{modelCritPlot}
+  \end{center}
+\end{figure}
+
+\subsubsection{Simulating continuous characters.}
+
+The \fnidx{growTree} function currently only supports Brownian evolution of continuous characters and requires the user to provide a vector containing of starting value for each trait (\texttt{ct.start}). If \texttt{ct.start} is a named vector, then these names will be used to identify each trait within the simulation. If no names are provided then the trait names default to the form \texttt{ct\#}. 
+
+By default, the mean change per unit time in each trait is assumed to be zero --- there is no directional bias in the evolution of each trait. Similarly, the variance of each trait is assumed to be 1 and there is no covariance between traits. Both these defaults can be over-ridden by providing a  vector \texttt{ct.change} of mean changes and a vector \texttt{ct.var} of variances for each trait. Alternatively, \texttt{ct.var} can be a symmetrical square matrix giving the covariances between the traits.
+
+During the simulation, the waiting times between events are used to randomly draw changes in trait values according to the specified model. The code below shows some examples using values for log body mass and log litter size taken from the PanTHERIA database of mammalian life-history traits \cite{Jones.Bielby.ea.2009.a}. The relationship between the two variables for the values at the tips of each simulation are shown in Fig. \ref{contTraitPlots}.
+
+<<setSeed, echo=FALSE, print=FALSE>>=
+# reasonable run time and reasonable results (on my Mac, 
+# no idea if this will carry on to R-Forge.)
+set.seed(421)
+@
+<<>>=
+# > pantheria <- read.delim('PanTHERIA_1-0_WR05_Aug2008.txt', na.string='-999.00')
+# > vars <- log(pantheria[, c(7,21)])
+# > cov(vars, use='complete')
+#                      X5.1_AdultBodyMass_g X15.1_LitterSize
+# X5.1_AdultBodyMass_g           10.0038050       -0.6544125
+# X15.1_LitterSize               -0.6544125        0.4427426
+# > sum(complete.cases(vars))
+# [1] 2325
+# > mean(vars,na.rm=TRUE)
+# X5.1_AdultBodyMass_g     X15.1_LitterSize 
+#            5.4749827            0.6905053 
+mammalMeans <- c(logBodyMass=5.48, logLitterSize=0.69)
+simpleBrownian <- growTree(halt=100, ct.start=mammalMeans, extend.proportion=1, grain=Inf)
+mammalVar <- c(10, 0.44)
+varBrownian <- growTree(halt=100, ct.start=mammalMeans, ct.var=mammalVar, extend.proportion=1, grain=Inf)
+mammalCovar <- matrix(c(10,-0.65, -0.65, 0.44), ncol=2)
+covarBrownian <- growTree(halt=100, ct.start=mammalMeans, ct.var=mammalCovar, extend.proportion=1, grain=Inf)
+@
+
+\setkeys{Gin}{width=0.8\textwidth}
+\begin{figure}[htbp]
+  \begin{center}
+<<contTraitPlots, fig=TRUE, echo=FALSE, print=FALSE, height=3, width=6>>=
+## par(mfrow=c(1,3), mar=c(0,0.5,0,4), tcl=-0.2, mgp=c(1,0.5,0), cex.axis=0.8)
+## 
+## plot(simpleBrownian, show.tip=FALSE)
+## 
+## rightEdge <- rep(par('usr')[2], 25)
+## bm <- with(simpleBrownian, ct.data$logBodyMass[ match(tip.label, ct.data$node)])
+## points(rightEdge, 1:25, cex=bm / 3, xpd=NA)
+## ls <- with(simpleBrownian, ct.data$logLitterSize[ match(tip.label, ct.data$node)])
+## points(rightEdge*1.1, 1:25, cex=ls * 2, xpd=NA)
+## 
+## plot(varBrownian, show.tip=FALSE)
+## 
+## rightEdge <- rep(par('usr')[2], 25)
+## bm <- with(varBrownian, ct.data$logBodyMass[ match(tip.label, ct.data$node)])
+## points(rightEdge, 1:25, cex=bm / 3, xpd=NA)
+## ls <- with(varBrownian, ct.data$logLitterSize[ match(tip.label, ct.data$node)])
+## points(rightEdge*1.1, 1:25, cex=ls * 2, xpd=NA)
+## 
+## 
+## 
+## plot(covarBrownian, show.tip=FALSE)
+## 
+## rightEdge <- rep(par('usr')[2], 25)
+## bm <- with(covarBrownian, ct.data$logBodyMass[ match(tip.label, ct.data$node)])
+## points(rightEdge, 1:25, cex=bm / 3, xpd=NA)
+## ls <- with(covarBrownian, ct.data$logLitterSize[ match(tip.label, ct.data$node)])
+## points(rightEdge*1.1, 1:25, cex=ls *2 , xpd=NA)
+par(mfrow=c(1,3), mar=c(2.5,2.5,0.5,0.5), tcl=-0.2, mgp=c(1.5,0.5,0), cex.axis=0.8)
+
+stips <- with(simpleBrownian, ct.data[ match(tip.label, ct.data$node),])
+vtips <- with(varBrownian, ct.data[ match(tip.label, ct.data$node),])
+cvtips <- with(covarBrownian, ct.data[ match(tip.label, ct.data$node),])
+
+lims <- sapply( rbind(stips, vtips,cvtips), range)
+
+plot(logBodyMass ~ logLitterSize, data=stips, xlim=lims[,3], ylim=lims[,2])
+plot(logBodyMass ~ logLitterSize, data=vtips, xlim=lims[,3], ylim=lims[,2])
+plot(logBodyMass ~ logLitterSize, data=cvtips, xlim=lims[,3], ylim=lims[,2])
+
+@
+   \caption{Simulated values for two continuous traits using a) only starting mean values (\texttt{simpleBrownian}), b) means and variances (\texttt{varBrownian}) and c) means and covariances (\texttt{covarBrownian}).}
+    \label{contTraitPlots}
+  \end{center}
+\end{figure}
+
+
+\subsubsection{Simulating discrete characters}
+
+Simulation of discrete characters uses a transition matrix for each trait. This matrix defines the number of states and the names of those states and also the rates at which lineages move from one state to another. This matrix does not need to be symmetrical but the diagonal values (the rates at which traits change to the same state) should be zero. These discrete trait matrices need to be provided in a list and the names of the list items will be used as trait names. Again, if names are missing than default values are used: \texttt{dt\#} for trait names and \texttt{st\#} for state names. The simulation will start with the traits in the first state in the matrix.
+
+<<discreteTraitExamples>>=
+flight <- matrix(c(0,0.1,0.001,0), ncol=2)
+flightNames <- c('ter','fly')
+dimnames(flight) <- list(flightNames, flightNames)
+
+trophic <- matrix(c(0,0.2,0.01,0.2,0,0.1,0,0.05,0), ncol=3)
+trophNames <- c('herb','omni','carn')
+dimnames(trophic) <- list(trophNames, trophNames)
+
+discTraits <- list(flight=flight, trophic=trophic)
+discreteTree <- growTree(halt=60, dt=discTraits, extend.proportion=1, grain=Inf)
+
+@
+
+Simulating correlated evolution between discrete traits is possible by combining traits into a single larger matrix that contains the rates of transitions between sets of combined states.
+
+\setkeys{Gin}{width=0.8\textwidth}
+\begin{figure}[htbp]
+  \begin{center}
+<<discreteTraitPlot,  fig=TRUE, echo=FALSE, print=FALSE, height=7, width=5>>=
+par(mar=c(0,0,0,0), tcl=-0.2, mgp=c(1,0.5,0), cex.axis=0.8)
+plot(discreteTree, show.tip=FALSE)
+
+lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+
+fl <- with(discreteTree, dt.data$flight[ match(1:199, dt.data$node)])
+with(lastPP, points(xx + 0.06, yy,  pch=21, col=unclass(fl), xpd=NA, cex=0.6))
+
+tr <- with(discreteTree, dt.data$trophic[ match(1:199, dt.data$node)])
+with(lastPP, points(xx + 0.12, yy,  pch=22, col=unclass(tr), xpd=NA, cex=0.6))
+
+@
+   \caption{Simulated values for two discrete traits: \texttt{flight} (circles) and \texttt{trophic} (squares).}
+    \label{discreteTraitPlot}
+  \end{center}
+\end{figure}
+
+
+\subsubsection{Lineage properties and simulation grain} \label{grainLabel}
+
+In addition to the clade properties (\ref{cladeProperties}), expressions for speciation and extinction rates and halting the simulation can all use properties of the lineages. The basic lineage properties are less likely to be useful (\texttt{parent.id, id, lin.age, birth.time, death.time, extinct, tip}) but any simulated trait is also available using the trait name. Rates are calculated for every extant lineage and then the competing events (speciation, extinction and changes in discrete traits) draw waiting times given their rates and the event with the shortest waiting time occurs.
+
+These events occur at the discrete points identified by the winning event. However, change in continuous traits is handled differently: once one of those events has occurred, that waiting time is used to scale simulated change in the continuous traits and all of this change is added on to the trait values at the event. Similarly, clade age advances in chunks: the waiting time is added on to the age of all extant tips as each event occurs.
+
+If continuous trait values or clade age are used to control rates within the simulation then this can be problematic: smooth changes in rates may be badly simulated if there are relatively  large step changes in continuous character values or clade age at events. The solution in \fnidx{growTree} is to set the \texttt{grain} of the simulation: this is the maximum amount of time that can pass in a simulation without recalculating clade ages and continuous trait values. Essentially, this scales the relative size of step changes in these continuous values to more closely approximate a smooth function.
+
+By default, \fnidx{growTree} uses a grain value of 0.1. If a particular simulation does not contain rates base on trait or age values then the grain can be set to infinity (\texttt{grain=Inf}). This may substantially speed up some simulations.
+
+In the examples below, the age of each lineage is being used to control the rates of speciation and extinction (Fig. \ref{patencyPlot}). Speciation follows an asymptotic latency model: young species have lower rates of speciation but eventually reach a constant maximum speciation rate. Extinction follows a simple linear relationship of senescence: increasing extinction rate with lineage age. The second simulation incorporates an influence of body size: the asympotic speciation rate for species is proportional to a simulated trait
+<<setseed, echo=FALSE, print=FALSE>>=
+set.seed(95432)
+@
+
+<<patencyModel>>=
+bPatency <- expression((0.2 *lin.age)/(0.1 + lin.age))
+dSenesce <- expression(lin.age * 0.02)
+halt <- expression(clade.age >= 20)
+latencyTree <- growTree(b=bPatency, d=dSenesce, halt=halt, grain=0.01)
+
+traitMean <- c(logBodyMass=5.48)
+traitVar <- c(logBodyMass=10)
+bLatTrait <- expression(((0.2 + ((5.48 - logBodyMass)/25))*lin.age)/(0.1 + lin.age))
+
+latTraitTree <- growTree(b=bLatTrait, halt=halt, ct.start=traitMean, ct.var=traitVar, grain=0.01)
+
+@
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[htbp]
+  \begin{center}
+<<patencyPlot,  fig=TRUE, echo=FALSE, print=FALSE, height=4, width=8>>=
+par(mfrow=c(1,3), mar=c(2.5,2.5,1,1), tcl=-0.2, mgp=c(1.5,0.5,0), cex.axis=0.8)
+
+curve(0.02*x, xlim=c(0,20), ylab='Rate', xlab="Lineage age")
+curve(((0.2 + ((5.48 - 5.48)/25))*x)/(0.1 + x), add=TRUE, col='red')
+curve(((0.2 + ((5.48 - 2.48)/25))*x)/(0.1 + x), add=TRUE, col='red', lty=2)
+curve(((0.2 + ((5.48 - 8.48)/25))*x)/(0.1 + x), add=TRUE, col='red', lty=2)
+
+plot(latencyTree, no.margin=TRUE, cex=0.8)
+
+plot(latTraitTree, no.margin=TRUE, cex=0.8, show.tip=FALSE)
+
+rightEdge <- par('usr')[2] - 0.75
+tips <- seq_along(latTraitTree$tip.label)
+bm <- with(latTraitTree, ct.data$logBodyMass[ match(tips, ct.data$node)])
+
+rect(rightEdge - 5.48/20, 0 , rightEdge + 5.48/20, max(tips)+1, col='grey80', border=NA)
+
+arrows(rightEdge-bm/20, tips, rightEdge+bm/20, tips, code=0, col='red', xpd=NA, lwd=2, lend=2)
+
+@
+   \caption{Simulations using expressions. a) Simulated extinction and speciation rates. Extinction (black) shows senescence and speciation shows latency. For the first simulation (b: \texttt{latencyTree}), speciation is determined entirely by lineage age and there are relatively few extant basal species and few rapid sequences of speciation along branches. For the second (c: \texttt{latTraitTree}), there are again few rapid sequence of speciation and simulated body size (red bars) is predominantly smaller than the ancestral average (width of the grey bar).}
+    \label{patencyPlot}
+  \end{center}
+\end{figure}
+
+\subsubsection{Inheritance rules.}
+
+Another way of controlling simulations is through the use of inheritance rules. At each speciation event, two new lineages replace the parent lineage and inherit exact copies of any traits. Although the traits of these new species will then evolve independently, it is also possible to immediately alter the trait values using expressions. Each rule should generate two values, one for each daughter, and needs to be provided as a list with the name of the list showing the trait affected.
+
+In the first example below, the two daughter lineages inherit divergent body size from their parent (Fig. \ref{inheritancePlots}). 
+
+<<inheritanceExample1>>=
+traitMean <- c(logBodyMass=5.48)
+traitVar <- c(logBodyMass=10)
+inherit <- list(logBodyMass=expression(logBodyMass * c(0.8, 1.2)))
+inheritTree <- growTree(b=1, halt=40, ct.start=traitMean, ct.var=traitVar, inheritance=inherit, grain=Inf, extend.proportion=1)
+@
+
+The second example is a more complex biogeographic simulation (Fig. \ref{inheritancePlots}). The tree has a single discrete trait representing presence in two regions --- a species can be present in either or both regions and the matrix shows the rates of transition between these states. The extinction rule  gives different extinction rates for species occurring in single regions and species in both regions. Speciation occurs at different rates in the two regions and species present in both regions can speciate in either region. This needs two speciation rules, provided as a list, that compete with each other and among species. Finally the inheritance rules differentiate between speciation of a species in a single region (where both species stay in sympatry)  and speciation in a lineage that occurs in both regions (where the species diverge in allopatry). These inheritance rules make use of the simulation property \texttt{winnerName} which shows which event has happened at an event.
+
+<<inheritanceExamples2>>=
+rNames <- c("AB", "A", "B")
+regions <- list(region = matrix(c(0, 0.05, 0.05, 0.1, 0,0,0.1,0,0), ncol=3,
+	             dimnames=list(rNames,rNames)))
+	
+extinct <- expression(ifelse(region == "AB", 0.0001, 0.01))
+
+spec <- list(regA_spec = expression(ifelse(region == "AB" | region == "A", 1, 0)),
+             regB_spec = expression(ifelse(region == "AB" | region == "B", 0.5, 0)))
+
+inherit <- list(region = expression(if(winnerName=="regB_spec" && region[1] == "AB") c("B","A") else region),
+                region = expression(if(winnerName=="regA_spec" && region[1] == "AB") c("A","B") else region))
+
+biogeogTree <- growTree(b=spec, d=extinct, halt=80, inherit=inherit, dt.rates=regions, inf.rates="quiet", grain=Inf)
+@ 
+
+\subsubsection{Epochs: linking simulations.}
+
+The final way of controlling simulations is through the use of linked sets of simulations, each representing a different epoch. By default, the \fnidx{growTree} function returns a comparative data object but can also return a simulation as a raw table of lineages. These lineage tables can be used as a starting object for a simulation, allowing the output of one simulation to be passed into the next. Unless explicitly altered, all rules are inherited between epochs. The example below simulates a mass extinction event (Fig. \ref{inheritancePlots}).
+
+<<epochExample>>=
+epochTree <- growTree(halt=100, output.lineages=TRUE, grain=Inf)
+epochTree2 <- growTree(d=5, halt=expression(nExtantTip==20), linObj=epochTree, output.lineages=TRUE, grain=Inf)
+epochTree3 <- growTree(linObj=epochTree2, halt=100, grain=Inf)
+@
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[htbp]
+  \begin{center}
+<<inheritancePlots,  fig=TRUE, echo=FALSE, print=FALSE, height=4, width=8>>=
+par(mfrow=c(1,3), mar=c(1,1,1,1))
+
+depth <- vcv.array(inheritTree)[1,1]
+
+plot(inheritTree, no.margin=TRUE, cex=0.8, show.tip=FALSE, root.edge=TRUE, x.lim=c(0,depth*1.1))
+
+rightEdge <- depth*1.05
+tips <- seq_along(inheritTree$tip.label)
+bm <- with(inheritTree, ct.data$logBodyMass[ match(tips, ct.data$node)])
+sc <- max(bm) / (depth*0.04)
+
+rect(rightEdge - 5.48/sc, 0 , rightEdge + 5.48/sc, max(tips)+1, col='grey80', border=NA)
+
+arrows(rightEdge-bm/sc, tips, rightEdge+bm/sc, tips, code=0, col='red', xpd=NA, lwd=2, lend=2)
+
+plot(biogeogTree, edge.col= unclass(biogeogTree$dt.data$region), show.tip.label=FALSE, root.edge=TRUE)
+plot(epochTree3, show.tip.label=FALSE, )
+@
+   \caption{Inheritance rules and epochs. a)  Simulation showing divergent evolution of a continuous trait at speciation. b) A biogeographic simulation with sympatric speciation within single regions (red, green) and allopatric speciation of species occurring in both regions (black). Colours show the region at daughter node of an edge and do not show transitions along the edge. c) Use of epochs to simulate a mass extinction event.}
+    \label{inheritancePlots}
+  \end{center}
+\end{figure}
+
 
 \clearpage
 \subsection{Utility functions}

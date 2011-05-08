@@ -1,6 +1,6 @@
 \name{growTree}
 \alias{growTree}
-\alias{linToApe}
+\alias{as.comparative.data.growTree}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{ Tree simulation with traits.  }
 \description{
@@ -8,7 +8,7 @@ This function provides a very general environment in which to simulate trees. Th
 
 \usage{
 growTree(b = 1, d = 0, halt = 20, grain = 0.1, linObj = NULL, ct.start = NULL, ct.change = NULL, ct.var = NULL, dt.rates = NULL, inheritance = NULL, trace.events = FALSE, trace.cladesize = FALSE, output.lineages = FALSE, neg.rates = "abort", inf.rates = "abort", stall.time = 10, extend.proportion=0)
-linToApe(linObj)
+\method{as.comparative.data}{growTree}(x, ...)
 }
 
 \arguments{
@@ -29,6 +29,8 @@ linToApe(linObj)
   \item{inf.rates}{One of 'abort', 'warn' or 'quiet', as for\code{neg.rates}. With 'warn' or 'quiet', infinite rates are left in place, resulting in events happening instantly. This may, in some cases, be desirable!}
   \item{stall.time}{If the all rates within the simulation are zero then only this length of time is allowed to pass before the simulation exits with a 'stalled' status. If \code{grain} is infinite, then the simulation stalls immediately when all rates are zero.}
   \item{extend.proportion}{This option allows the simulation to continue running for a given proportion of the time to the next speciation. This makes sense when growing a clade to a given number of extant taxa; with the default setting of zero, the resulting tree ends at a bifurcation with zero branch lengths and this option allows the tree to grow (and taxa to go extinct and traits to evolve).}
+  \item{x}{A lineage table output from growTree}
+  \item{...}{Further arguments to as.}
 }
 \details{
 The main idea behind this function (which is still in development) is to provide a flexible framework for simulating tree growth and trait evolution. The user provides expressions for the main arguments (\code{b}, \code{d} and \code{halt}) which act as rules defining speciation and extinction and the ending of the simulation. These can be simple constants, but can also make use of the properties of the environment of the evolving tree. This includes both lineage specific properties (as described in the \code{lineages} section of the returned value) or properties of the clade as a whole (as described in the \code{clade} section of the returned value). For example, a extinction rate might increase with lineage age (\code{d=0.01*lin.age}) or a speciation rate might decrease according to a density dependent process (\code{b=1 - (nExtantTip/500)}). Halt expressions will typically use clade properties (\code{halt=clade.age >= 5} or \code{nTips >= 50}) but could use lineage properties, for example stopping when a trait value hits a certain value (\code{halt=any(ct1 >= 10)}). It is not permitted to use '==' in a halt function of clade.age because it will allow the simulation to run away if the actual value steps over the test value.
@@ -53,13 +55,13 @@ Depending on the value of \code{output.phylo}, either an object of class 'phylo'
 
 ## see the package vignette for a much fuller discussion of examples.
 
-# A basic 200 tip tree, output as a 'phylo' object
+# A basic 200 tip tree, output as a 'comparative.data' object
     tree <- growTree(halt=200, grain=Inf)
-    plot(tree)
+    plot(tree$phy)
 
-# A basic tree of age 4 time units, output as a 'phylo' object
+# A basic tree of age 4 time units, output as a 'comparative.data' object
     tree <- growTree(halt=expression(clade.age >= 4), grain=Inf)
-    plot(tree)
+    plot(tree$phy)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

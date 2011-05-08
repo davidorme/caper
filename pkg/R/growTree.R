@@ -442,17 +442,28 @@ growTree <- function(b=1,d=0,halt=20, grain=0.1, linObj=NULL,
         
     }
     
-    
-	if(! output.lineages) RET <- linToApe(RET)
+    class(RET) <- 'growTree'
+	if(! output.lineages) RET <- as.comparative.data(RET)
 
 	return(RET)
 }
 
-linToApe <- function(linObj){
+as.comparative.data <- function(x, ...){
     
-    lineages <- linObj$lineages
-    clade <- linObj$clade
+	if(inherits(x, 'comparative.data')){
+		return(x)
+	} else {
+		UseMethod('as.comparative.data')
+	}
+}
+
+as.comparative.data.growTree <- function(x, ...){
+	
+    lineages <- x$lineages
+    clade <- x$clade
     
+	# get a phylo object
+	
     if(dim(lineages)[1] > 1){
         # extract information (excluding root node)
         linNoR <- lineages[-1,]
@@ -477,31 +488,26 @@ linToApe <- function(linObj){
                     Nnode=with(clade, nLin-nTip), root.edge=lineages$lin.age[1])              
         class(phy) <- "phylo"
         
-        lastRules <- linObj$epochRules[[length(linObj$epochRules)]]
-        
-        if(! is.null(lastRules$ct.set)){
-            phy$ct.data <- subset(linNoR, select=c("node", names(lastRules$ct.set$ct.start)))[ord,]
-        }
-        
-        if(! is.null(lastRules$dt.rates)){
-            phy$dt.data <- subset(linNoR, select=c("node", names(lastRules$dt.rates)))[ord,]
-        }
-
     } else {
-        # have an unspeciated root so put in slightly differently as a single tip
-        phy <- list(edge=matrix(c(1,2), ncol=2), edge.length=lineages$lin.age[1], tip.label=1)
+        # have an unspeciated root so put in slightly  as a single tip with a root edge of zero
+        phy <- list(edge=matrix(c(1,2), ncol=2), edge.length=lineages$lin.age[1], 
+                    tip.label=1, root.edge=0, Nnode=1)
         class(phy) <- "phylo"
-        if(! is.null(linObj$ct.set)){
-            phy$ct.data <- subset(lineages, select=c(node="id", names(linObj$ct.set$ct.start)))
-            phy$ct.set <- linObj$ct.set
-        }
-        if(! is.null(linObj$dt.rates)){
-            phy$dt.data <- subset(lineages, select=c("node", names(linObj$dt.rates)))
-            phy$dt.rates <- linObj$dt.rates
-        }
-   }
-     
-    phy$epochRules <- linObj$epochRules
+    }
     
-    return(phy)
+	# sort out comparative data
+	lastRules <- x$epochRules[[length(x$epochRules)]]
+	datCol <- c('node', 'lin.age', 'birth.time', 'death.time', 'extinct', 'tip',
+				names(lastRules$ct.set$ct.start), names(lastRules$dt.rates))
+	dat <- linNoR[,datCol]
+    
+	# get tip data set without tips flag
+	tipData <- dat[dat$tip, -6]
+	nodeData <- dat[! dat$tip, -5:-6]
+ 	com <- comparative.data(phy, tipData, 'node', na.omit=FALSE)
+	com$node.data <- nodeData
+    com$epochRules <- x$epochRules
+    attr(com, 'growTree') <- TRUE
+
+    return(com)
 }

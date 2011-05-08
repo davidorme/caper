@@ -5,6 +5,7 @@
 \alias{subset.comparative.data}
 \alias{reorder.comparative.data}
 \alias{[.comparative.data}
+\alias{as.comparative.data}
 \alias{caicStyleArgs}
 
 \title{
@@ -20,6 +21,7 @@ comparative.data(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE, force
 \method{subset}{comparative.data}(x, subset, select, ...)
 \method{reorder}{comparative.data}(x, order, ...)
 \method{[}{comparative.data}(x, i, j)
+as.comparative.data(x, ...)
 caicStyleArgs(phy, data, names.col, warn.dropped=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.

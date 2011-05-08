@@ -113,6 +113,7 @@ print.comparative.data <- function(x, ...){
 
     # basic summary data
     cat("Comparative dataset of", nrow(x$data), "taxa:\n")
+	if(! is.null(attr(x, 'growTree')))     cat("Simulated using growTree: object contains node data and simulation details\n")
     cat("Phylogeny:", x$phy.name, "\n")
     cat("   ", length(x$phy$tip.label), " tips, ", x$phy$Nnode, " internal nodes\n  ", sep='')
     # this is a bit of a hack - can't get str for a vector to take an indent

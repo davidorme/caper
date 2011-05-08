@@ -921,7 +921,7 @@ set.seed(2345)
 <<simpleGrowTree>>=
 basicTree <- growTree(b=1, d=0, halt=20, grain=Inf)
 extendTree <- growTree(b=1, d=0, halt=20, extend.proportion=1, grain=Inf)
-timeLimit <- growTree(b=1, d=0, halt=expression(clade.age>=3), grain=Inf)
+timeLimit <- growTree(b=1, d=0, halt=expression(clade.age>=3), grain=0.01)
 extinctTree <- growTree(b=1, d=0.1, halt=expression(nExtinctTip>=3), extend.proportion=1, grain=Inf)
 densityDependence <- growTree(b=expression(2/nExtantTip), d=0, halt=50, grain=Inf)
 climateChange <- growTree(b=1, d=expression(0.2 * clade.age), halt=50)
@@ -931,12 +931,12 @@ climateChange <- growTree(b=1, d=expression(0.2 * clade.age), halt=50)
   \begin{center}
 <<simpleGrowTreePlots, fig=TRUE, echo=FALSE, print=FALSE, height=6, width=6>>=
 par(mfrow=c(2,3), mar=c(1.5,0.5,0,0.5), tcl=-0.2, mgp=c(1,0.5,0), cex.axis=0.8)
-plot(basicTree  , root.edge=TRUE);   axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"a)")
-plot(extendTree , root.edge=TRUE);  axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"b)")
-plot(timeLimit  , root.edge=TRUE);   axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"c)")
-plot(extinctTree, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"d)")
-plot(densityDependence, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"e)")
-plot(climateChange, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"f)")
+plot(basicTree$phy  , root.edge=TRUE);   axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"a)")
+plot(extendTree$phy , root.edge=TRUE);  axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"b)")
+plot(timeLimit$phy  , root.edge=TRUE);   axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"c)")
+plot(extinctTree$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"d)")
+plot(densityDependence$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"e)")
+plot(climateChange$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"f)")
 
 @
    \caption{Simple simulations using \fnidx{growTree}. See the code example for a) \texttt{basicTree}, b) \texttt{extendTree}, c) \texttt{timeLimit}, d) \texttt{extinctTree}, e) \texttt{densityDependence} and f) \texttt{climateChange}.}
@@ -1010,15 +1010,15 @@ covarBrownian <- growTree(halt=100, ct.start=mammalMeans, ct.var=mammalCovar, ex
 ## points(rightEdge*1.1, 1:25, cex=ls *2 , xpd=NA)
 par(mfrow=c(1,3), mar=c(2.5,2.5,0.5,0.5), tcl=-0.2, mgp=c(1.5,0.5,0), cex.axis=0.8)
 
-stips <- with(simpleBrownian, ct.data[ match(tip.label, ct.data$node),])
-vtips <- with(varBrownian, ct.data[ match(tip.label, ct.data$node),])
-cvtips <- with(covarBrownian, ct.data[ match(tip.label, ct.data$node),])
+stips <- simpleBrownian$data
+vtips <- varBrownian$data
+cvtips <- covarBrownian$data
 
-lims <- sapply( rbind(stips, vtips,cvtips), range)
+lims <- sapply( rbind(stips, vtips,cvtips)[, c('logBodyMass','logLitterSize')], range)
 
-plot(logBodyMass ~ logLitterSize, data=stips, xlim=lims[,3], ylim=lims[,2])
-plot(logBodyMass ~ logLitterSize, data=vtips, xlim=lims[,3], ylim=lims[,2])
-plot(logBodyMass ~ logLitterSize, data=cvtips, xlim=lims[,3], ylim=lims[,2])
+plot(logBodyMass ~ logLitterSize, data=stips, xlim=lims[,2], ylim=lims[,1])
+plot(logBodyMass ~ logLitterSize, data=vtips, xlim=lims[,2], ylim=lims[,1])
+plot(logBodyMass ~ logLitterSize, data=cvtips, xlim=lims[,2], ylim=lims[,1])
 
 @
    \caption{Simulated values for two continuous traits using a) only starting mean values (\texttt{simpleBrownian}), b) means and variances (\texttt{varBrownian}) and c) means and covariances (\texttt{covarBrownian}).}
@@ -1052,15 +1052,14 @@ Simulating correlated evolution between discrete traits is possible by combining
   \begin{center}
 <<discreteTraitPlot,  fig=TRUE, echo=FALSE, print=FALSE, height=7, width=5>>=
 par(mar=c(0,0,0,0), tcl=-0.2, mgp=c(1,0.5,0), cex.axis=0.8)
-plot(discreteTree, show.tip=FALSE)
+plot(discreteTree$phy, show.tip=FALSE)
 
 lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+traitsByNode <- with(discreteTree,  rbind( cbind(node=phy$tip.label, data[, c('flight','trophic')]), node.data[, c('node','flight','trophic')]))
+traitsByNode <- traitsByNode[match(1:199, traitsByNode$node), ]
 
-fl <- with(discreteTree, dt.data$flight[ match(1:199, dt.data$node)])
-with(lastPP, points(xx + 0.06, yy,  pch=21, col=unclass(fl), xpd=NA, cex=0.6))
-
-tr <- with(discreteTree, dt.data$trophic[ match(1:199, dt.data$node)])
-with(lastPP, points(xx + 0.12, yy,  pch=22, col=unclass(tr), xpd=NA, cex=0.6))
+with(lastPP, points(xx + 0.06, yy,  pch=21, col=unclass(traitsByNode$flight), xpd=NA, cex=0.6))
+with(lastPP, points(xx + 0.12, yy,  pch=22, col=unclass(traitsByNode$trophic), xpd=NA, cex=0.6))
 
 @
    \caption{Simulated values for two discrete traits: \texttt{flight} (circles) and \texttt{trophic} (squares).}
@@ -1079,22 +1078,22 @@ If continuous trait values or clade age are used to control rates within the sim
 
 By default, \fnidx{growTree} uses a grain value of 0.1. If a particular simulation does not contain rates base on trait or age values then the grain can be set to infinity (\texttt{grain=Inf}). This may substantially speed up some simulations.
 
-In the examples below, the age of each lineage is being used to control the rates of speciation and extinction (Fig. \ref{patencyPlot}). Speciation follows an asymptotic latency model: young species have lower rates of speciation but eventually reach a constant maximum speciation rate. Extinction follows a simple linear relationship of senescence: increasing extinction rate with lineage age. The second simulation incorporates an influence of body size: the asympotic speciation rate for species is proportional to a simulated trait
+In the examples below, the age of each lineage is being used to control the rates of speciation and extinction (Fig. \ref{patencyPlot}). Speciation follows an asymptotic latency model: young species have lower rates of speciation but eventually reach a constant maximum speciation rate. Extinction follows a simple linear relationship of senescence: increasing extinction rate with lineage age. The second simulation incorporates an influence of body size: the asymptotic speciation rate for species is proportional to a simulated trait.
 <<setseed, echo=FALSE, print=FALSE>>=
-set.seed(95432)
+set.seed(95132)
 @
 
 <<patencyModel>>=
-bPatency <- expression((0.2 *lin.age)/(0.1 + lin.age))
+bLatency <- expression((0.2 *lin.age)/(0.1 + lin.age))
 dSenesce <- expression(lin.age * 0.02)
-halt <- expression(clade.age >= 20)
-latencyTree <- growTree(b=bPatency, d=dSenesce, halt=halt, grain=0.01)
+halt <- expression(nExtantTip >= 60)
+latencyTree <- growTree(b=bLatency, d=dSenesce, halt=halt, grain=0.01)
 
 traitMean <- c(logBodyMass=5.48)
 traitVar <- c(logBodyMass=10)
 bLatTrait <- expression(((0.2 + ((5.48 - logBodyMass)/25))*lin.age)/(0.1 + lin.age))
 
-latTraitTree <- growTree(b=bLatTrait, halt=halt, ct.start=traitMean, ct.var=traitVar, grain=0.01)
+latTraitTree <- growTree(b=bLatTrait, d=dSenesce, halt=halt, ct.start=traitMean, ct.var=traitVar, grain=0.01)
 
 @
 
@@ -1102,27 +1101,27 @@ latTraitTree <- growTree(b=bLatTrait, halt=halt, ct.start=traitMean, ct.var=trai
 \begin{figure}[htbp]
   \begin{center}
 <<patencyPlot,  fig=TRUE, echo=FALSE, print=FALSE, height=4, width=8>>=
-par(mfrow=c(1,3), mar=c(2.5,2.5,1,1), tcl=-0.2, mgp=c(1.5,0.5,0), cex.axis=0.8)
+par(mfrow=c(2,2), mar=c(2.5,2.5,1,1), tcl=-0.2, mgp=c(1.5,0.5,0), cex.axis=0.8)
 
 curve(0.02*x, xlim=c(0,20), ylab='Rate', xlab="Lineage age")
 curve(((0.2 + ((5.48 - 5.48)/25))*x)/(0.1 + x), add=TRUE, col='red')
-curve(((0.2 + ((5.48 - 2.48)/25))*x)/(0.1 + x), add=TRUE, col='red', lty=2)
-curve(((0.2 + ((5.48 - 8.48)/25))*x)/(0.1 + x), add=TRUE, col='red', lty=2)
+curve(((0.2 + ((5.48 - 3.48)/25))*x)/(0.1 + x), add=TRUE, col='red', lty=2)
+curve(((0.2 + ((5.48 - 7.48)/25))*x)/(0.1 + x), add=TRUE, col='red', lty=2)
 
-plot(latencyTree, no.margin=TRUE, cex=0.8)
+plot(latencyTree$phy, no.margin=TRUE, cex=0.8)
 
-plot(latTraitTree, no.margin=TRUE, cex=0.8, show.tip=FALSE)
+plot(latTraitTree$phy, no.margin=TRUE, cex=0.8, show.tip=FALSE)
 
-rightEdge <- par('usr')[2] - 0.75
-tips <- seq_along(latTraitTree$tip.label)
-bm <- with(latTraitTree, ct.data$logBodyMass[ match(tips, ct.data$node)])
-
-rect(rightEdge - 5.48/20, 0 , rightEdge + 5.48/20, max(tips)+1, col='grey80', border=NA)
-
-arrows(rightEdge-bm/20, tips, rightEdge+bm/20, tips, code=0, col='red', xpd=NA, lwd=2, lend=2)
+# rightEdge <- par('usr')[2] - 0.75
+# tips <- seq_along(latTraitTree$tip.label)
+# bm <- with(latTraitTree, ct.data$logBodyMass[ match(tips, ct.data$node)])
+# 
+# rect(rightEdge - 5.48/20, 0 , rightEdge + 5.48/20, max(tips)+1, col='grey80', border=NA)
+# 
+# arrows(rightEdge-bm/20, tips, rightEdge+bm/20, tips, code=0, col='red', xpd=NA, lwd=2, lend=2)
 
 @
-   \caption{Simulations using expressions. a) Simulated extinction and speciation rates. Extinction (black) shows senescence and speciation shows latency. For the first simulation (b: \texttt{latencyTree}), speciation is determined entirely by lineage age and there are relatively few extant basal species and few rapid sequences of speciation along branches. For the second (c: \texttt{latTraitTree}), there are again few rapid sequence of speciation and simulated body size (red bars) is predominantly smaller than the ancestral average (width of the grey bar).}
+   \caption{Simulations using expressions. a) Simulated extinction and speciation rates. Extinction (black) shows senescence and speciation shows latency. For the first simulation (b: \texttt{latencyTree}), speciation is determined entirely by lineage age and there are relatively few extant basal species and few rapid sequences of speciation along branches. For the second (c: \texttt{latTraitTree}), there are again few rapid sequence of speciation and simulated body mass (red bars) is predominantly smaller than the ancestral average (width of the grey bar). The dashed red lines in a) show the speciation rate for species with simulated log body mass 2 units higher and lower than the ancestral mean.}
     \label{patencyPlot}
   \end{center}
 \end{figure}
@@ -1174,21 +1173,21 @@ epochTree3 <- growTree(linObj=epochTree2, halt=100, grain=Inf)
 <<inheritancePlots,  fig=TRUE, echo=FALSE, print=FALSE, height=4, width=8>>=
 par(mfrow=c(1,3), mar=c(1,1,1,1))
 
-depth <- vcv.array(inheritTree)[1,1]
+depth <- vcv.array(inheritTree$phy)[1,1]
 
-plot(inheritTree, no.margin=TRUE, cex=0.8, show.tip=FALSE, root.edge=TRUE, x.lim=c(0,depth*1.1))
+plot(inheritTree$phy, no.margin=TRUE, cex=0.8, show.tip=FALSE, root.edge=TRUE, x.lim=c(0,depth*1.1))
 
 rightEdge <- depth*1.05
-tips <- seq_along(inheritTree$tip.label)
-bm <- with(inheritTree, ct.data$logBodyMass[ match(tips, ct.data$node)])
+tips <- seq_along(inheritTree$phy$tip.label)
+bm <- inheritTree$data$logBodyMass
 sc <- max(bm) / (depth*0.04)
 
 rect(rightEdge - 5.48/sc, 0 , rightEdge + 5.48/sc, max(tips)+1, col='grey80', border=NA)
 
 arrows(rightEdge-bm/sc, tips, rightEdge+bm/sc, tips, code=0, col='red', xpd=NA, lwd=2, lend=2)
 
-plot(biogeogTree, edge.col= unclass(biogeogTree$dt.data$region), show.tip.label=FALSE, root.edge=TRUE)
-plot(epochTree3, show.tip.label=FALSE, )
+plot(biogeogTree$phy, edge.col= unclass(biogeogTree$data$region), show.tip.label=FALSE, root.edge=TRUE)
+plot(epochTree3$phy, show.tip.label=FALSE)
 @
    \caption{Inheritance rules and epochs. a)  Simulation showing divergent evolution of a continuous trait at speciation. b) A biogeographic simulation with sympatric speciation within single regions (red, green) and allopatric speciation of species occurring in both regions (black). Colours show the region at daughter node of an edge and do not show transitions along the edge. c) Use of epochs to simulate a mass extinction event.}
     \label{inheritancePlots}

@@ -161,17 +161,33 @@ In order to make it easier to use contrast methods, where values are estimated a
 data(perissodactyla)
 (perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial))
 # but this can be turned off
-(perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit=FALSE))
+(perissoFull <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit=FALSE))
 na.omit(perisso)
+@
+
+The \texttt{scope} argument uses a model formula to indicate which variables to consider when reducing a comparative data object to complete rows and can be used directly by \fnidx{na.omit} or indirectly through \fnidx{comparative.data}.
+
+<<na.omit2>>=
+comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, scope= log.female.wt ~ log.gestation.length)
+na.omit(perissoFull, scope=log.female.wt ~ log.gestation.length + Territoriality)
 @
 
 \subsubsection{\texttt{subset}\index{Functions!comparative.data!subset}}
  This method functions like the \texttt{subset} function for data frames: the \texttt{subset} argument is used to specify a logical subset of rows using one or more of the data columns; the \texttt{select} argument can be used to choose which variables to include in the subset.
 
+<<subset>>=
+subset(perissoFull, subset=! is.na(Territoriality))
+subset(perissoFull, subset=log.female.wt > 5.5, select=c(log.female.wt, log.gestation.length))
+@
 
 \subsubsection{\texttt{\char91}\index{Functions!comparative.data!\texttt{\char91}}}
  This method treats the dataset as the rows (taxa) and columns (variables) of a matrix. The first index allows taxa to be specified by name or by their position in the sequence of tip labels for the phylogeny. The second index selects variables in the same way as in the extract method (\texttt{\char91}.data.frame) for a data frame.
 
+<<squarebracket>>=
+horses <- grep('Equus', perissoFull$phy$tip.label)
+perissoFull[horses,]
+perissoFull[horses, 2:3]
+@
 
 Far more functionality for creating and manipulating comparative datasets is provided by the \pkgidx{phylobase} package. It is intended to incorporate this functionality into \pkgidx{caper}.
 

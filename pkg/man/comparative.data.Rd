@@ -15,9 +15,9 @@ Comparative dataset creation
 A simple tool to combine phylogenies with datasets and ensure consistent structure and ordering for use in functions. 
 }
 \usage{
-comparative.data(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE, force.root=FALSE, warn.dropped=FALSE)
+comparative.data(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE, force.root=FALSE, warn.dropped=FALSE, scope=NULL)
 \method{print}{comparative.data}(x, ...)
-\method{na.omit}{comparative.data}(object, ...)
+\method{na.omit}{comparative.data}(object, scope=NULL, ...)
 \method{subset}{comparative.data}(x, subset, select, ...)
 \method{reorder}{comparative.data}(x, order, ...)
 \method{[}{comparative.data}(x, i, j)
@@ -33,7 +33,8 @@ caicStyleArgs(phy, data, names.col, warn.dropped=FALSE)
   \item{vcv.dim}{Either 2 (a standard VCV matrix) or 3 (an array retaining the individual branches contributing to the standard values). The array form is of use for optimising some branch length transformations.}
   \item{na.omit}{A logical value indicating whether to reduce the comparative dataset to those tips for which all selected variables are complete. Note that some functions cannot handle missing data and will return an error.}
   \item{force.root}{Many functions consider a basal polytomy to indicate an unrooted tree. Using force.root=TRUE will set an arbitrary root edge below this polytomy.}
-\item{warn.dropped}{A logical value indicating whether to warn the user when data or tips are dropped in creating the comparative data object.}
+  \item{warn.dropped}{A logical value indicating whether to warn the user when data or tips are dropped in creating the comparative data object.}
+  \item{scope}{A model formula, used to indicate which variables to consider when omitting row containing NA values.}
   \item{x}{An object of class 'comparative.data'.}
   \item{object}{An object of class 'comparative.data'.}
   \item{subset}{A logical expression indicating rows of data to keep: missing values are taken as false.}

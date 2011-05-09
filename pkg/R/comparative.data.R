@@ -1,5 +1,5 @@
 
-comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE, force.root=FALSE, warn.dropped=FALSE){
+comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE, force.root=FALSE, warn.dropped=FALSE, scope=NULL){
 
     # TODO - is something odd happening with missing arguments?
     
@@ -98,7 +98,7 @@ comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit
     
     # NA handling
     if(na.omit){
-        RET <- na.omit(RET) 
+        RET <- na.omit(RET, scope) 
     }
     
 	if(warn.dropped){
@@ -132,13 +132,24 @@ print.comparative.data <- function(x, ...){
 	    cat('   ', x$phy.name , ' { ', dropCount[1], ' ( ',nrow(x$data), 
 	        ' } ', dropCount[2], ' ) ', x$data.name, sep='')
     }
+	if(! is.null(attr(x, 'na.omit.scope'))){
+		cat('\nScope of complete data:\n', deparse(attr(x, 'na.omit.scope')))
+	}
 }
 
-na.omit.comparative.data <- function(object, ...){
+na.omit.comparative.data <- function(object, scope=NULL, ...){
 
     # strips data rows, tips and vcv row/columns for a comparative.data object
-    to.drop <- which(! complete.cases(object$data))
-    
+	if(! is.null(scope)){
+		if(! is.null(attr(object, 'na.omit.scope'))) stop('Scope of comparative data set already set.')
+		if(! inherits(scope, 'formula')) stop('scope must be a model formula.')
+		vars <- all.vars(scope)
+		if(any(is.na(match(vars, names(object$data))))) stop('Variables in scope not in data.')
+		to.drop <- which(! complete.cases(object$data[, vars]))
+		attr(object, 'na.omit.scope') <- scope
+	} else {
+    	to.drop <- which(! complete.cases(object$data))
+	}
 	# test for completely empty dataset
 	if(length(to.drop) == nrow(object$data)) warning('No complete rows present in data.')
 	
@@ -163,6 +174,7 @@ na.omit.comparative.data <- function(object, ...){
 		object$dropped$tips <- c(object$dropped$tips, to.drop)
 	}
     
+	if(! is.null(attr(x, 'growTree'))) cat("Warning: subsetting of node data not implemented.\n")
     return(object)
 }
 
@@ -204,8 +216,13 @@ subset.comparative.data <- function(x, subset, select,  ...){
 				x$vcv <- x$vcv[r, r, ] 
 			}
 		}
+		
+		# add to dropped list
+		x$dropped$tips <- c(x$dropped$tips, to.drop)
     }
-    
+
+	if(! is.null(attr(x, 'growTree'))) cat("Warning: subsetting of node data not implemented.\n")
+
     return(x)
 }
 
@@ -264,6 +281,10 @@ subset.comparative.data <- function(x, subset, select,  ...){
 		toDrop    <- setdiff(rownames, toKeep)
 		# this assumes that drop.tip preserves the remaining order - testing suggests ok
 		x$phy <- drop.tip(x$phy, toDrop)
+		
+		# add to dropped list
+		x$dropped$tips <- c(x$dropped$tips, toDrop)
+		
         # lose VCV elements if needed
         if(! is.null(x$vcv)){ 
 			if((x$vcv.dim == 2)){
@@ -274,6 +295,8 @@ subset.comparative.data <- function(x, subset, select,  ...){
 		}
         x$data <- x$data[rowToKeep,, drop=FALSE]
 	}
+	
+	if(! is.null(attr(x, 'growTree'))) cat("Warning: subsetting of node data not implemented.\n")
 	return(x)
 }
 

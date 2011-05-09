@@ -26,26 +26,35 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <!-- R-Forge Logo -->
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr><td>
-<a href="http://r-forge.r-project.org/"><img src="http://<?php echo $themeroot; ?>/images/logo.png" border="0" alt="R-Forge Logo" /> </a> </td> </tr>
+<a href="http://r-forge.r-project.org/"><img src="http://<?php echo $themeroot; ?>images/logo.png" border="0" alt="R-Forge Logo" /> </a> </td> </tr>
 </table>
-
 
 <!-- get project title  -->
 <!-- own website starts here, the following may be changed as you like -->
 
-<?php if ($handle=fopen('http://'.$domain.'/export/projtitl.php?group_name='.$group_name,'r')){
-$contents = '';
-while (!feof($handle)) {
-	$contents .= fread($handle, 8192);
-}
-fclose($handle);
-echo $contents; } ?>
-
+<center>
+<font size=8 color="darkgreen">caper</font>
+<br>
+<br>
+<font size=5>
+<font color="darkgreen">c</font>omparative <font color="darkgreen">a</font>nalyses of <font color="darkgreen">p</font>hylogenetics and <font color="darkgreen">e</font>volution in <font color="darkgreen">R</font>
+</font>
+</center>
 <!-- end of project description -->
 
-<p> No content added. </p>
+<p> The caper package provides a set of tools for conducting phylogenetic comparative analyses in R. The main methods are phylogenetic independent contrasts and phylogenetic generalised least squares methods but the package also provides tools for calculating phylogenetic diversity, examining phylogenetic imbalance and for simulating phylogenies.</p>
 
-<p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
+<p>
+The most recent version of the package can be downloaded from the following <a href="http://r-forge.r-project.org/R/?group_id=983">link</a>. At present, the caper package is only present on R-Forge and is only available for the most recent versions of R. However, the package currently only uses R code and so the following code should install caper on older versions of R:
+</p>
+
+<font size=2><tt>install.packages('caper', repos='http://r-forge.r-project.org', type='source', dependencies=TRUE)</tt></font>
+
+<p>The caper package requires the packages 'ape', 'MASS' and 'mvtnorm'. Once caper has been installed, please look at the package vignette for further details:</p>
+
+<font size=2><tt>vignette('caper')</tt></font>
+
+<p>The project development page for the package can be found <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. The package is maintained by David Orme.</p>
 
 </body>
 </html>

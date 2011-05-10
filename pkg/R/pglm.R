@@ -40,9 +40,10 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	namey <- names(m)[1]
 
 	## if the comparative data doesn't contain a VCV,
-	## then add one.
+	## then get one and put it in the data object too. Bit wasteful
 	if(is.null(data$vcv)){
-		V <- vcv.array(data$phy)
+		V <- if(kappa == 1) {vcv.array(data$phy)} else {vcv.array(data$phy, dim=3)}
+		data$vcv <- V
 	} else {
 		V <- data$vcv
 	}
@@ -169,10 +170,6 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	## fitted model
 	fm <- list(coef = coeffs, aic = aic, log.lik = log.lik)
 	
-	## log likelihood of the data given the transformed vcv matrix
-	logDetV <- determinant(Vt, logarithm = TRUE)$modulus[1]
-	logLikY <- -n / 2.0 * log( 2 * pi) - n / 2.0 * log( (n - k) * ll$s2 / n) - logDetV / 2.0  - n / 2.0
-	
 	## various variances
 	RMS <- ll$s2
 	RSSQ <- ll$s2 * (n - k)
@@ -190,7 +187,7 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	sterr <- sqrt(sterr)
 	
 	
-	RET <- list(model = fm, formula = formula, call=call, logLikY = logLikY, RMS = RMS, NMS = NMS,
+	RET <- list(model = fm, formula = formula, call=call, RMS = RMS, NMS = NMS,
 	            NSSQ = NSSQ[1], RSSQ = RSSQ[1], aic = aic, aicc = aicc, n = n, k = k,
 	            sterr = sterr, fitted = pred, residuals = res, phyres = pres,
 	            x = x, data = data,  varNames = varNames, y = y, param = fixedPar, mlVals=mlVals,
@@ -373,10 +370,12 @@ pglm.likelihood <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, name
 	
 	mu <- get.coeffs(y, iV, x)
 	s2 <- est.var(y, iV, x, mu)
-	n <- length(x[,1])
+	n <- nrow(x)
+	k <- ncol(x)
 	logDetV <- determinant(V, logarithm = TRUE)$modulus[1]
-	ll <- -n / 2.0 * log( 2 * pi) - n / 2.0 * log(s2) - logDetV / 2.0 - (n - 1)/2.0
-
+	# originally: ll <- -n / 2.0 * log( 2 * pi) - n / 2.0 * log(s2) - logDetV / 2.0 - (n - 1)/2.0
+	ll <- -n / 2.0 * log( 2 * pi) - n / 2.0 * log( (n - k) * s2 / n) - logDetV / 2.0  - n / 2.0
+	
 	# if being used for optimization, only return the log likelihood
 	if(optim.output) return(ll)  else return( list(ll = ll, mu = mu, s2 = s2) )
 }
@@ -545,7 +544,7 @@ predict.pglm <- function(object, pred.x, ...) {
 ## enables the generic AIC methods for objects and lists of objects 
 logLik.pglm <- function(object, REML = FALSE, ...){
 	
-	val <- object$logLikY
+	val <- object$model$log.lik
 	
 	attr(val, "nall") <- object$n
     attr(val, "nobs") <- object$n

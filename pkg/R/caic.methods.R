@@ -6,9 +6,9 @@ summary.caic <- function(object, ...){
 
 print.caic <- function(x, ...){
 
-    cat("Phylogenetic Independent Contrasts analysis using ",  attr(x, "contr.method"), ".\n\n", sep="")
-
-    cat("Phylogeny: ", attr(x, "phyName"), " (",  length(x$data$phy$tip.label)  ," tips)\n", sep="")
+    cat("Phylogenetic Independent Contrasts analysis using:",  attr(x, "contr.method"), ".\n", sep="")
+	if(! is.null(attr(x, "macro.method"))) cat("Response values are species rich contrasts using: ", attr(x, "macro.method"), '\n')
+    cat("\nPhylogeny: ", attr(x, "phyName"), " (",  length(x$data$phy$tip.label)  ," tips)\n", sep="")
     cat("Data: ",  attr(x, "dataName"), " (",  nrow(x$data$data)  ," rows)\n", sep="")
     cat("Number of valid contrasts: ", sum(x$contrast.data$validNodes), "\n", sep="")
 	
@@ -89,6 +89,12 @@ plot.caic <- function(x, ...){
 residuals.caic <- function(object, ...){
 	
 	residuals(object$mod, ...)
+	
+}
+
+coef.caic <- function(object, ...){
+	
+	coef(object$mod, ...)
 	
 }
 

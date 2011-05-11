@@ -5,6 +5,7 @@
 \alias{plot.caic}
 \alias{predict.caic}
 \alias{residuals.caic}
+\alias{coef.caic}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Anova and model checking methods for independent contrast models.
@@ -16,9 +17,10 @@ These functions provide ANOVA tables and model comparison using ANOVA and AIC, a
 \method{anova}{caic}(object, ...)
 \method{anova}{caiclist}(object, ..., scale=0, test='F')
 \method{logLik}{caic}(object, ...)
-\method{plot}{caic}(x, ...)
 \method{predict}{caic}(object, ...)
 \method{residuals}{caic}(object, ...)
+\method{coef}{caic}(object, ...)
+\method{plot}{caic}(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

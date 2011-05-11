@@ -373,8 +373,18 @@ pglm.likelihood <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, name
 	n <- nrow(x)
 	k <- ncol(x)
 	logDetV <- determinant(V, logarithm = TRUE)$modulus[1]
-	# originally: ll <- -n / 2.0 * log( 2 * pi) - n / 2.0 * log(s2) - logDetV / 2.0 - (n - 1)/2.0
+	
+	## Likelihood calculation
+	## original pglm3.2: ll <- -n / 2.0 * log( 2 * pi) - n / 2.0 * log(s2) - logDetV / 2.0 - (n - 1)/2.0
+	## Richard Duncan's implementation: log.lkhood.y <- log((1/((2*pi*sigma.sqr)^(ntax/2))) * det(VCV)^-0.5
+	##  * exp(-(1 / (2 * sigma.sqr)) * t(response - design.matrix %*% alpha)
+	##  %*% solve(VCV) %*% (response - design.matrix %*% alpha)))
+	## ll <- log((1/((2*pi*s2)^(n/2))) * det(V) ^-0.5 
+	##       * exp(-(1 / (2 * s2)) * t(y - x %*% mu)
+	##       %*% solve(V) %*% (y - x %*% mu)))
 	ll <- -n / 2.0 * log( 2 * pi) - n / 2.0 * log( (n - k) * s2 / n) - logDetV / 2.0  - n / 2.0
+	
+	#
 	
 	# if being used for optimization, only return the log likelihood
 	if(optim.output) return(ll)  else return( list(ll = ll, mu = mu, s2 = s2) )

@@ -15,24 +15,19 @@ The data frame contains 26 variables:
 
 binomial    
 common_name 
-
 Red_list    
 Amber_list  
 Green_list  
 Red_amber_list
 IUCN
-
 Red_HD
 Amber_HD 
 Red_amber_HD  
-
 Red_list_BDp
 amb_BDp 
 Red_amb_BDp 
-
 Red_list_BDr
 Red_list_WDp
-     
 amb_BDr     
 amb_WDMp    
 amb_spec    
@@ -41,13 +36,9 @@ amb_BL
 amb_WL      
 amb_BI      
 amb_WI      
-
-
-
 Red_amb_BDr 
 pop_size    
 range_size  
-
 }
 \references{
 Thomas, G. H. (2008). Phylogenetic distributions of british birds of conservation concern. Proceedings of the Royal Society B-Biological Sciences, 275(1647):2077-2083.

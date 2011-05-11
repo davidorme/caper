@@ -4,7 +4,7 @@
 % \VignetteIndexEntry{Comparative analysis of phylogenetics and evolution in R} 
 % \VignetteDepends{ape} 
 % \VignetteKeyword{stats} 
-% \VignetteKeyword{kwd2} 
+
 
 \usepackage{geometry}
 \usepackage[utf8]{inputenc} % for fancy quotes
@@ -42,11 +42,8 @@
 \begin{document}
 
 <<setup, print=FALSE, echo=FALSE>>=
-	## THESE WILL EVENTUALLY BE REPLACED BY A SINGLE CALL TO library(caper) 
-	## AND HENCE ACTUALLY WORKS TO TRACK DEPENDENCIES A BIT!
 	library(caper)
-	library(ape)
-	library(mvtnorm) 
+	## whilst code is being tested, load most recent versions from the pkg repository
 	for(f in dir('../../R', full=TRUE)) (source(f))
 @
 
@@ -217,7 +214,7 @@ The examples in this vignette make use of the following datasets:
 %% METHODS
 %%%%%%%%%%
 
-The \caper{} package provides two broad sets of methods of accounting for phylogenetic autocorrelation in analyses. One is the use of phylogenetic independent contrasts \citep{Felsenstein.1985.a}, the other is the use of a phylogenetic variance-covariance matrix within a standard linear model \cite{Freckleton.Harvey.ea.2002.a} [other refs]. These two approaches are basically equivalent, although small differences may arise from the way in which polytomies are handled.
+The \caper{} package provides two broad sets of methods of accounting for phylogenetic autocorrelation in analyses. One is the use of phylogenetic independent contrasts \citep{Felsenstein.1985.a}, the other is the use of a phylogenetic variance-covariance matrix within a standard linear model \citep{Freckleton.Harvey.ea.2002.a} [other refs]. These two approaches are basically equivalent, although small differences may arise from the way in which polytomies are handled.
 
 <<pglmSetup, echo=FALSE>>=
 ## demo tree
@@ -845,7 +842,7 @@ abline(v=obs, col='red')
   \end{center}
 \end{figure}
 
-The \fnidx{ed.calc} function takes a phylogeny, again ideally converted using \fnidx{clade.matrix}, and calculates evolutionary distinctness (ED) scores for each tip \cite{Isaac.Turvey.ea.2007.a}. The length of each branch on the phylogeny is shared equally among all the tips descending from it and the sum of the per-tip contributions along the paths to each tip provides the ED measure of the distinctness of each tip (Fig \ref{edExamplePlots}a). In the example code below, two species (\textit{Allocebus trichotis} and \textit{Phaner furcifer}) share long branches and belong to species poor clades, resulting in high evolutionary distinctiveness (Fig \ref{edExamplePlots}b,c)
+The \fnidx{ed.calc} function takes a phylogeny, again ideally converted using \fnidx{clade.matrix}, and calculates evolutionary distinctness (ED) scores for each tip \citep{Isaac.Turvey.ea.2007.a}. The length of each branch on the phylogeny is shared equally among all the tips descending from it and the sum of the per-tip contributions along the paths to each tip provides the ED measure of the distinctness of each tip (Fig \ref{edExamplePlots}a). In the example code below, two species (\textit{Allocebus trichotis} and \textit{Phaner furcifer}) share long branches and belong to species poor clades, resulting in high evolutionary distinctiveness (Fig \ref{edExamplePlots}b,c)
 
 <<edExample>>=
 data(IsaacEtAl)
@@ -966,7 +963,7 @@ The \fnidx{growTree} function currently only supports Brownian evolution of cont
 
 By default, the mean change per unit time in each trait is assumed to be zero --- there is no directional bias in the evolution of each trait. Similarly, the variance of each trait is assumed to be 1 and there is no covariance between traits. Both these defaults can be over-ridden by providing a  vector \texttt{ct.change} of mean changes and a vector \texttt{ct.var} of variances for each trait. Alternatively, \texttt{ct.var} can be a symmetrical square matrix giving the covariances between the traits.
 
-During the simulation, the waiting times between events are used to randomly draw changes in trait values according to the specified model. The code below shows some examples using values for log body mass and log litter size taken from the PanTHERIA database of mammalian life-history traits \cite{Jones.Bielby.ea.2009.a}. The relationship between the two variables for the values at the tips of each simulation are shown in Fig. \ref{contTraitPlots}.
+During the simulation, the waiting times between events are used to randomly draw changes in trait values according to the specified model. The code below shows some examples using values for log body mass and log litter size taken from the PanTHERIA database of mammalian life-history traits \citep{Jones.Bielby.ea.2009.a}. The relationship between the two variables for the values at the tips of each simulation are shown in Fig. \ref{contTraitPlots}.
 
 <<setSeed, echo=FALSE, print=FALSE>>=
 # reasonable run time and reasonable results (on my Mac, 

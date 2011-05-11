@@ -174,7 +174,7 @@ na.omit.comparative.data <- function(object, scope=NULL, ...){
 		object$dropped$tips <- c(object$dropped$tips, to.drop)
 	}
     
-	if(! is.null(attr(x, 'growTree'))) cat("Warning: subsetting of node data not implemented.\n")
+	if(! is.null(attr(object, 'growTree'))) cat("Warning: subsetting of node data not implemented.\n")
     return(object)
 }
 

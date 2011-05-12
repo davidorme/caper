@@ -6,4 +6,6 @@ Fixed as a tagged version 0.1 (rev 31) and sent out to a small set of users for 
 
 Version 0.2
 
-Added in PD and ED calculations and documentation.
+Added in PD and ED calculations and documentation. Added in benchmark data and vignette.
+
+Fixed as a tagged version 0.2 (rev 56).

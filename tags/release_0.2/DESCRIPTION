@@ -1,0 +1,11 @@
+Package: caper
+Type: Package
+Title: Comparative Analyses of Phylogenetics and Evolution in R
+Version: 0.2
+Date: 2011-04-14
+Author: David Orme, Rob Freckleton, Gavin Thomas, Thomas Petzoldt, Susanne Fritz, Nick Isaac
+Maintainer: David Orme <d.orme@imperial.ac.uk>
+Depends: R (>= 2.6.0), ape, MASS, mvtnorm
+Description: Functions for performing phylogenetic comparative analyses.
+License: GPL version 2 or newer 
+

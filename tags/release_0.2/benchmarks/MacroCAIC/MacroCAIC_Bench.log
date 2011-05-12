@@ -1,0 +1,119 @@
+
++ MacroCAIC 1.1 started.
++ Input: "  How many columns in BenchCAIC.dat? [1-99]" : 11
++ Input: "  Are clade names in 1 or 2 columns? [1-2]" : 1
++ Input: "  Does the file contain column names? [y/n]" : y
++ Input: "What is the name of the phylogeny? [1-28 letters]" : BenchTreeDi.Phyl
++ Input: "  Do you have a branchlength file? [y/n]" : y
++ Input: "  Is there a clade richness file? [y/n]" : n
++ Input: "Manual choice of columns for analysis, or automate? [m/a]" : m
++ Input: "Edit analysis settings? [y/n]" : n
+
+Progress: 200 clades were extracted from BenchCAIC.dat ...
+Finished: 200 records have been matched.
+
++ Input: "Which is the main predictor column? [1-11]" : 2
++ Input: "Number of next column (0 to stop)? [0-11]" : 3
++ Input: "Number of next column (0 to stop)? [0-11]" : 0
++ Input: "Is this correct? [y/n]" : y
++ Input: "How should this analysis be named? [4-15 letters]" : DiSpp23
+Finished: 200 clades to be used. The results file is "BenchCAIC.dat_DiSpp23 1".
+Finished: 132 sets of contrasts written to BenchCAIC.dat_DiSpp23 1.
+
++ Input: "Which is the main predictor column? [1-11]" : 6
++ Input: "Number of next column (0 to stop)? [0-11]" : 7
++ Input: "Number of next column (0 to stop)? [0-11]" : 0
++ Input: "Is this correct? [y/n]" : y
++ Input: "How should this analysis be named? [4-15 letters]" : DiSpp67
+Finished: 179 clades to be used. The results file is "BenchCAIC.dat_DiSpp67 1".
+Finished: 125 sets of contrasts written to BenchCAIC.dat_DiSpp67 1.
+
++ MacroCAIC 1.1 started.
++ Input: "  How many columns in BenchCAIC.dat? [1-99]" : 11
++ Input: "  Are clade names in 1 or 2 columns? [1-2]" : 1
++ Input: "  Does the file contain column names? [y/n]" : y
+- Warning: the file name supplied by the user (Bench.Phyl) does not exist or cannot be opened
++ Input: "Enter the filename or hit RETURN to quit [1-28 letters]" : BenchTreeDi.Phyl
++ Input: "  Do you have a branchlength file? [y/n]" : y
++ Input: "  Is there a clade richness file? [y/n]" : y
++ Input: "  Does it include the clade names? [y/n]" : y
++ Input: "Manual choice of columns for analysis, or automate? [m/a]" : m
++ Input: "Edit analysis settings? [y/n]" : n
+
+Progress: 200 clades were extracted from BenchCAIC.dat ...
+Finished: 200 records have been matched.
+
++ Input: "Which is the main predictor column? [1-11]" : 2
++ Input: "Number of next column (0 to stop)? [0-11]" : 3
++ Input: "Number of next column (0 to stop)? [0-11]" : 0
++ Input: "Is this correct? [y/n]" : y
++ Input: "How should this analysis be named? [4-15 letters]" : DiTax23
+Finished: 200 clades to be used. The results file is "BenchCAIC.dat_DiTax23 2".
+Finished: 199 sets of contrasts written to BenchCAIC.dat_DiTax23 2.
+
++ Input: "Which is the main predictor column? [1-11]" : 6
++ Input: "Number of next column (0 to stop)? [0-11]" : 7
++ Input: "Number of next column (0 to stop)? [0-11]" : 0
++ Input: "Is this correct? [y/n]" : y
++ Input: "How should this analysis be named? [4-15 letters]" : DiTax67
+Finished: 179 clades to be used. The results file is "BenchCAIC.dat_DiTax67 2".
+Finished: 178 sets of contrasts written to BenchCAIC.dat_DiTax67 2.
+
++ MacroCAIC 1.1 started.
++ Input: "  How many columns in BenchCAIC.dat? [1-99]" : 11
++ Input: "  Are clade names in 1 or 2 columns? [1-2]" : 1
++ Input: "  Does the file contain column names? [y/n]" : y
++ Input: "What is the name of the phylogeny? [1-28 letters]" : BenchTreePoly.Phyl
++ Input: "  Do you have a branchlength file? [y/n]" : y
++ Input: "  Is there a clade richness file? [y/n]" : n
++ Input: "Manual choice of columns for analysis, or automate? [m/a]" : m
++ Input: "Edit analysis settings? [y/n]" : n
+
+Progress: 200 clades were extracted from BenchCAIC.dat ...
+Finished: 200 records have been matched.
+
++ Input: "Which is the main predictor column? [1-11]" : 2
++ Input: "Number of next column (0 to stop)? [0-11]" : 3
++ Input: "Number of next column (0 to stop)? [0-11]" : 0
++ Input: "Is this correct? [y/n]" : y
++ Input: "How should this analysis be named? [4-15 letters]" : PolySpp23
+Finished: 200 clades to be used. The results file is "BenchCAIC.dat_PolySpp23 3".
+Finished: 125 sets of contrasts written to BenchCAIC.dat_PolySpp23 3.
+
++ Input: "Which is the main predictor column? [1-11]" : 6
++ Input: "Number of next column (0 to stop)? [0-11]" : 7
++ Input: "Number of next column (0 to stop)? [0-11]" : 0
++ Input: "Is this correct? [y/n]" : y
++ Input: "How should this analysis be named? [4-15 letters]" : PolySpp67
+Finished: 179 clades to be used. The results file is "BenchCAIC.dat_PolySpp67 3".
+Finished: 119 sets of contrasts written to BenchCAIC.dat_PolySpp67 3.
+
++ MacroCAIC 1.1 started.
++ Input: "  How many columns in BenchCAIC.dat? [1-99]" : 11
++ Input: "  Are clade names in 1 or 2 columns? [1-2]" : 1
++ Input: "  Does the file contain column names? [y/n]" : y
++ Input: "What is the name of the phylogeny? [1-28 letters]" : BenchTreePoly.Phyl
++ Input: "  Do you have a branchlength file? [y/n]" : y
++ Input: "  Is there a clade richness file? [y/n]" : y
++ Input: "  Does it include the clade names? [y/n]" : y
++ Input: "Manual choice of columns for analysis, or automate? [m/a]" : m
++ Input: "Edit analysis settings? [y/n]" : n
+
+Progress: 200 clades were extracted from BenchCAIC.dat ...
+Finished: 200 records have been matched.
+
++ Input: "Which is the main predictor column? [1-11]" : 2
++ Input: "Number of next column (0 to stop)? [0-11]" : 3
++ Input: "Number of next column (0 to stop)? [0-11]" : 0
++ Input: "Is this correct? [y/n]" : y
++ Input: "How should this analysis be named? [4-15 letters]" : PolyTax23
+Finished: 200 clades to be used. The results file is "BenchCAIC.dat_PolyTax23 4".
+Finished: 188 sets of contrasts written to BenchCAIC.dat_PolyTax23 4.
+
++ Input: "Which is the main predictor column? [1-11]" : 6
++ Input: "Number of next column (0 to stop)? [0-11]" : 7
++ Input: "Number of next column (0 to stop)? [0-11]" : 0
++ Input: "Is this correct? [y/n]" : y
++ Input: "How should this analysis be named? [4-15 letters]" : PolyTax67
+Finished: 179 clades to be used. The results file is "BenchCAIC.dat_PolyTax67 4".
+Finished: 168 sets of contrasts written to BenchCAIC.dat_PolyTax67 4.

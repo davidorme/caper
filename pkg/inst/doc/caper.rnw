@@ -29,7 +29,7 @@
 %%
 
 % common representation of package name
-\newcommand{\caper}{\textit{caper}}
+\newcommand{\caper}{\texttt{caper}}
 \newcommand{\fnidx}[1]{\texttt{#1}\index{Functions!#1}}
 \newcommand{\dtidx}[1]{\texttt{#1}\index{Data!#1}}
 \newcommand{\pkgidx}[1]{\texttt{#1}\index{Packages!#1}}
@@ -47,11 +47,12 @@
 	for(f in dir('../../R', full=TRUE)) (source(f))
 @
 
-\maketitle
+This vignette documents the use of the \caper{} package for R \citep{R-Development-Core-Team.2011.a} in carrying out a range of comparative analysis methods for phylogenetic data. The \caper{} package, and the code in this vignette, requires the \texttt{ape} package \citep{Paradis.Claude.ea.2004.a} along with the packages \texttt{mvtnorm} and \texttt{MASS}.
 
-This vignette documents the use of the \caper{} package for R \citep{R-Development-Core-Team.2010.a} in carrying out a range of comparative analysis methods for phylogenetic data. 
-
+%% compressed ToC slightly to avoid spilling over page
+\linespread{0.95}
 \tableofcontents
+\linespread{1}
 
 %% add more space between paragraphs at this point
 \addtolength{\parskip}{\baselineskip}
@@ -162,7 +163,7 @@ data(perissodactyla)
 na.omit(perisso)
 @
 
-The \texttt{scope} argument uses a model formula to indicate which variables to consider when reducing a comparative data object to complete rows and can be used directly by \fnidx{na.omit} or indirectly through \fnidx{comparative.data}.
+The \texttt{scope} argument uses a model formula to indicate which variables to consider when reducing a comparative data object to complete rows and can be used directly by \texttt{na.omit}\index{Functions!comparative.data!na.omit} or indirectly through \fnidx{comparative.data}.
 
 <<na.omit2>>=
 comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, scope= log.female.wt ~ log.gestation.length)
@@ -186,7 +187,7 @@ perissoFull[horses,]
 perissoFull[horses, 2:3]
 @
 
-Far more functionality for creating and manipulating comparative datasets is provided by the \pkgidx{phylobase} package. It is intended to incorporate this functionality into \pkgidx{caper}.
+Far more functionality for creating and manipulating comparative datasets is provided by the \texttt{phylobase} package. It is intended to incorporate this functionality into \caper{}.
 
 %%
 %% EXAMPLE DATASETS
@@ -351,7 +352,7 @@ ec <- ifelse(internal,'red', 'grey30')
 
 zz$edge.length <- z$edge.length^pvals[1]
 plot(zz, edge.col = 'red', x.lim=xl, label.offset=0.2)
-mtext(bquote(kappa == .(pvals[2])), side=3, cex=cx, line=ln)
+mtext(bquote(kappa == .(pvals[1])), side=3, cex=cx, line=ln)
 abline(v=vlines, lty=2, col='grey')
 
 plot(z,  edge.col='red', x.lim=xl, label.offset=0.2)
@@ -373,7 +374,7 @@ abline(v=vlines, lty=2, col='grey')
 
 The \fnidx{pglm} function implements GLS models accounting for phylogeny. It also includes the three branch length transformations ($\lambda, \kappa, \delta$) described above. The values of these  may be fixed at values provided by the user or optimised within bounds to find the maximum likelihood transformation. Multiple transformations can be optimised simultaneously, although the underlying evolutionary model may be hard to interpret.
 
-The function uses a formula interface to describe the model and uses data provided as a comparative data object. Because the model fitting uses a covariance matrix, which can be computationally expensive to extract from a phylogeny, it is useful to include this when creating the comparative data object at the start of an analysis using \texttt{vcv=TRUE}. The resulting \texttt{pglm} model object has standard \fnidx{print} and \fnidx{summary} methods.
+The function uses a formula interface to describe the model and uses data provided as a comparative data object. Because the model fitting uses a covariance matrix, which can be computationally expensive to extract from a phylogeny, it is useful to include this when creating the comparative data object at the start of an analysis using \texttt{vcv=TRUE}. The resulting \texttt{pglm} model object has standard \texttt{print}\index{Functions!pglm!print} and \texttt{summary}\index{Functions!pglm!summary} methods.
 
 <<basicPGLS>>=
 data(shorebird)
@@ -389,7 +390,7 @@ The \fnidx{pglm} function has three arguments to specify parameter values for th
 
 Because calculating likelihood under a $\kappa$ transformation requires a transformation of the individual branch lengths, it is not possible with a simple $\mathbf{V}$ matrix. This is because $\mathbf{V}$ only holds the sums of those branch lengths. Any variation of $\kappa$, whether for optimization or for profiling likelihood values, therefore needs a 3 dimensional $\mathbf{V}$ array, in which the branch lengths are held separately. The \texttt{vcv.dim} argument to the \fnidx{comparative.data} function creates this.
 
-By default, \fnidx{pglm} will use likelihood ratio tests to establish confidence bounds on optimised parameters. The likelihood value at the ML estimate is tested against the values at the parameter bounds and confidence intervals of the ML estimate are also calculated. The \fnidx{profile.glm} function allows the likelihood surface of a parameter for a model to be displayed. If the ML estimate of the parameter is known then then the profile will show this along with confidence limits (Fig. \ref{lambdaOptPlot}). The likelihood profile is taken for a single parameter at a time, with the other two parameters held at their fixed or optimum values.
+By default, \fnidx{pglm} will use likelihood ratio tests to establish confidence bounds on optimised parameters. The likelihood value at the ML estimate is tested against the values at the parameter bounds and confidence intervals of the ML estimate are also calculated. The \fnidx{profile.pglm} function allows the likelihood surface of a parameter for a model to be displayed. If the ML estimate of the parameter is known then then the profile will show this along with confidence limits (Fig. \ref{lambdaOptPlot}). The likelihood profile is taken for a single parameter at a time, with the other two parameters held at their fixed or optimum values.
 
 <<lambdaOpt>>=
 data(shorebird)
@@ -413,9 +414,9 @@ plot(mod.l); plot(mod.d); plot(mod.k)
   \end{center}
 \end{figure}
 
-\subsubsection{Criticism and simplification of\fnidx{pglm} models: \fnidx{plot}, \fnidx{anova} and \fnidx{AIC}.}
+\subsubsection{Criticism and simplification of\fnidx{pglm} models: \texttt{plot}\index{Functions!pglm!plot}, \texttt{anova}\index{Functions!pglm!anova} and \texttt{AIC}\index{Functions!pglm!AIC}.}
 
-The \caper{} package provides standard generic methods for examining \texttt{pglm} models. The first is the \fnidx{plot} methods, which produces four diagnostic plots. The first two show the fit of the residuals to a normal distribution: a density plot of the distribution of the residuals and a normal Q-Q plot the distribution of the residuals against their expected distribution under a normal distribution. The second two show the fitted values against both the residuals and the observed value to look for pattern in the residuals within the model. Figure \ref{pglmPlotCmd} shows these plots for the model above using the command \texttt{plot(mod)}.
+The \caper{} package provides standard generic methods for examining \texttt{pglm} models. The first is the \texttt{plot}\index{Functions!pglm!plot} methods, which produces four diagnostic plots. The first two show the fit of the residuals to a normal distribution: a density plot of the distribution of the residuals and a normal Q-Q plot the distribution of the residuals against their expected distribution under a normal distribution. The second two show the fitted values against both the residuals and the observed value to look for pattern in the residuals within the model. Figure \ref{pglmPlotCmd} shows these plots for the model above using the command \texttt{plot(mod)}.
 
 \begin{figure}[htbp]
   \begin{center}
@@ -428,7 +429,7 @@ plot(mod)
   \end{center}
 \end{figure}
 
-The package also provides \fnidx{anova} and \fnidx{logLik} methods that allow model comparison. The \fnidx{logLik} method allows the generic \fnidx{AIC} methods to be used with \texttt{pglm} models. Analysis of variance tables for a \texttt{pglm} model uses sequential sums of squares: each F value is the marginal improvement in the model given the combined effects of the terms above. The \fnidx{anova} command can also be used to compare a set of models.
+The package also provides \texttt{anova}\index{Functions!pglm!anova} and \texttt{logLik}\index{Functions!pglm!logLik} methods that allow model comparison. The \texttt{logLik}\index{Functions!pglm!logLik} method allows the generic \texttt{AIC}\index{Functions!pglm!AIC} methods to be used with \fnidx{pglm} models. Analysis of variance tables for a \fnidx{pglm} model uses sequential sums of squares: each F value is the marginal improvement in the model given the combined effects of the terms above. The \texttt{anova}\index{Functions!pglm!anova} command can also be used to compare a set of models.
 
 <<pglmCrit>>=
 mod1 <- pglm(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird) 
@@ -483,7 +484,7 @@ summary(crunchMod)
 %% BRUNCH
 %%%%%%%%%%
 
-\subsubsection{Categorical variables: \fnidx{brunch}}
+\subsubsection{Categorical variables: \texttt{brunch}\index{Functions!brunch|seealso{crunch}}}
 \label{brunchSection}
 The inclusion of categorical variables in phylogenetic independent contrast models is problematic. Continuous variables are assumed to evolve under a Brownian process, which permits estimates of nodal values and hence allows nested contrasts to be drawn.  There is no sensible model for reconstructing the nodal values of a categorical variable, except where all daughters share the same categorical value. However, identifying nodes with daughter variables that differ in the value of the categorical variable permit independent contrasts to be identified \citep{Burt.1989.a}. While nodal estimates of continuous variables can be made below at nodes below a \fnidx{brunch} contrast, to do so would assume independent evolution of these variables at the nodes of any deeper contrasts \citep{Burt.1989.a}. As a result, the \fnidx{brunch} algorithm only uses the data from any single tip in the calculation of a single contrast. 
 
@@ -513,7 +514,7 @@ text(rep(8.5,9), 1:9, perisso$phy$tip.label, font=3, adj=0)
 %% MACROCAIC
 %%%%%%%%%%
 
-\subsubsection{Species richness contrasts: \fnidx{macrocaic}}
+\subsubsection{Species richness contrasts: \texttt{macrocaic}\index{Functions!macrocaic|seealso{crunch}}}
 
 One common approach in macroevolution is to investigate the links between the traits of taxa and their species richness. It is inappropriate to calculate \fnidx{crunch} contrasts in species richness, particularly for nested nodes, where \fnidx{crunch} contrasts would estimate nodal values as a weighted average of species richness for the daughter taxa, rather than tracking total species richness. For this reason, \citet{Agapow.Isaac.2002.a} developed the program MacroCAIC, which implemented the calculation of species richness contrasts.
 
@@ -594,7 +595,7 @@ print(redPhyloD)
 
 \subsection{Checking and comparing contrast models.}
 
-The three contrast model functions (\fnidx{crunch}, \fnidx{brunch} and \fnidx{macrocaic}) all return an object of class \texttt{caic} for which a number of common functions and methods are provided. These are useful for assessing the robustness of contrast models. The simplest function is \fnidx{caic.table}, which returns a table of contrasts and nodal values that is very like the original contrast files provided by CAIC and MacroCAIC. This data frame (see the example in the \fnidx{brunch} section, page \pageref{brunch}) provides all the information needed to assess model suitability but some convenience functions are provided for standard checks. 
+The three contrast model functions (\fnidx{crunch}, \fnidx{brunch} and \fnidx{macrocaic}) all return an object of class \texttt{caic} for which a number of common functions and methods are provided, including  \texttt{print}\index{Functions!crunch!print} and \texttt{summary}\index{Functions!crunch!summary} methods. These are useful for assessing the robustness of contrast models. The simplest function is \fnidx{caic.table}, which returns a table of contrasts and nodal values that is very like the original contrast files provided by CAIC and MacroCAIC. This data frame (see the example in the \fnidx{brunch} section, page \pageref{brunchSection}) provides all the information needed to assess model suitability but some convenience functions are provided for standard checks. 
 
 \subsubsection{Testing evolutionary assumptions: \fnidx{caic.diagnostics}.}
 
@@ -686,7 +687,7 @@ x <-caic.diagnostics(crunchModRobust, outlier=2)
   \end{center}
 \end{figure}
 
-\subsubsection{Model criticism: \fnidx{plot}}
+\subsubsection{Model criticism: \texttt{plot}\index{Functions!crunch!plot}}
 
 The preceding tools are broadly useful for assessing whether the evolutionary assumptions of contrast modelling have been met and for excluding problematic nodes. However it is still wise to check whether the statistical assumptions of the linear model on the contrasts are met. The  \caper{} package provides a simple wrapper to allow the standard model criticism plots to be generated for a \texttt{caic} object (Fig \ref{modelCritPlot}). 
 
@@ -718,9 +719,9 @@ plot(crunchMod)
   \end{center}
 \end{figure}
 
-\subsubsection{Model comparison: \fnidx{anova} \& \fnidx{AIC}}
+\subsubsection{Model comparison: \texttt{anova}\index{Functions!crunch!anova} \& \texttt{AIC}\index{Functions!crunch!AIC}}
 
-In a similar fashion, the \caper{} package provides simple wrappers to standard \texttt{anova} and \texttt{AIC} methods to allow contrast models to be compared.
+In a similar fashion, the \caper{} package provides simple wrappers to standard \texttt{anova}\index{Functions!crunch!anova} and \texttt{AIC}\index{Functions!crunch!AIC} methods to allow contrast models to be compared.
 
 <<modelComparison>>=
 shorebird.data$lgEgg.Mass <- log(shorebird.data$Egg.Mass)
@@ -735,6 +736,9 @@ cMod3 <- crunch(lgEgg.Mass ~ lgM.Mass , data=shorebird)
 anova(cMod1, cMod2, cMod3)
 AIC(cMod1, cMod2, cMod3)
 @
+
+%% Pointers for brunch and macrocaic
+\texttt{AIC}\index{Functions!crunch!AIC}
 
 %% %%%%%%%%%%
 %% %% OTHER FUNCTIONS
@@ -911,10 +915,10 @@ text(0.1, 0.9, "c)", cex=1.2)
 %% %%%%%%%%%%
 
 \subsection{Phylogeny and trait simulation: \fnidx{growTree}}
-\label{cladeProperties}
+
 A number of other packages provide fast methods for simulating phylogenies and traits along phylogenies under a range of models. The \fnidx{growTree} function is likely to be considerably slower for some common models but provides a flexible environment for simulating more complex scenarios. It bears many similarities to the simulations provided by the program MeSA written by Paul-Michael Agapow (http://www.agapow.net/software/mesa).
 
-A basic \fnidx{growTree} simulation has three components: a speciation rate (\texttt{b}), an extinction rate (\texttt(d)) and a stopping rule  (\texttt(halt)). The default values for these (\texttt{b=1, d=0, halt=20}) therefore simply grow a phylogeny from a single ancestor until there are 20 extant species. The speciation and extinction rates both specify the rate of an exponential function which is used to draw waiting times until the next event. 
+A basic \fnidx{growTree} simulation has three components: a speciation rate (\texttt{b}), an extinction rate (\texttt{d}) and a stopping rule  (\texttt{halt}). The default values for these (\texttt{b=1, d=0, halt=20}) therefore simply grow a phylogeny from a single ancestor until there are 20 extant species. The speciation and extinction rates both specify the rate of an exponential function which is used to draw waiting times until the next event. 
 
 However, the power of \fnidx{growTree} is that any of these components can be R expressions using information about the scenario being simulated.  In simple simulations of a phylogeny, the following clade properties can be used: \texttt{clade.age},\texttt{nLin}, \texttt{nTip},\texttt{nExtantTip}, \texttt{nExtinctTip}\label{cladeProperties}. For example, the default \texttt{halt = 20} is actually just a shorthand for \texttt{expression(nExtantTip == 20)} and more examples are shown in the code below and in Fig. \ref{simpleGrowTreePlots}.
 
@@ -925,7 +929,7 @@ There are three important details of these simple simulations:
 	\item The \texttt{clade.age} includes the length of the root edge.
 \end{enumerate}
 
-The significance of the argument \texttt{grain=Inf} in these examples is discussed below (\ref{grainLabel}).
+The significance of the argument \texttt{grain=Inf} in these examples is discussed below (Section \ref{grainLabel}).
 <<setSeed, echo=FALSE, print=FALSE>>=
 # reasonable run time and reasonable results (on my Mac, 
 # no idea if this will carry on to R-Forge.)
@@ -937,7 +941,7 @@ extendTree <- growTree(b=1, d=0, halt=20, extend.proportion=1, grain=Inf)
 timeLimit <- growTree(b=1, d=0, halt=expression(clade.age>=3), grain=0.01)
 extinctTree <- growTree(b=1, d=0.1, halt=expression(nExtinctTip>=3), extend.proportion=1, grain=Inf)
 densityDependence <- growTree(b=expression(2/nExtantTip), d=0, halt=50, grain=Inf)
-climateChange <- growTree(b=1, d=expression(0.2 * clade.age), halt=50)
+increasingExtinction <- growTree(b=1, d=expression(0.2 * clade.age), halt=50)
 @
 
 \begin{figure}[htbp]
@@ -949,11 +953,11 @@ plot(extendTree$phy , root.edge=TRUE);  axis(1); par(usr=c(0,1,0,1)); text(0.1,0
 plot(timeLimit$phy  , root.edge=TRUE);   axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"c)")
 plot(extinctTree$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"d)")
 plot(densityDependence$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"e)")
-plot(climateChange$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"f)")
+plot(increasingExtinction$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"f)")
 
 @
-   \caption{Simple simulations using \fnidx{growTree}. See the code example for a) \texttt{basicTree}, b) \texttt{extendTree}, c) \texttt{timeLimit}, d) \texttt{extinctTree}, e) \texttt{densityDependence} and f) \texttt{climateChange}.}
-    \label{modelCritPlot}
+   \caption{Simple simulations using \fnidx{growTree}. See the code example for a) \texttt{basicTree}, b) \texttt{extendTree}, c) \texttt{timeLimit}, d) \texttt{extinctTree}, e) \texttt{densityDependence} and f) \texttt{increasingExtinction}.}
+    \label{simpleGrowTreePlots}
   \end{center}
 \end{figure}
 
@@ -1083,7 +1087,7 @@ with(lastPP, points(xx + 0.12, yy,  pch=22, col=unclass(traitsByNode$trophic), x
 
 \subsubsection{Lineage properties and simulation grain} \label{grainLabel}
 
-In addition to the clade properties (\ref{cladeProperties}), expressions for speciation and extinction rates and halting the simulation can all use properties of the lineages. The basic lineage properties are less likely to be useful (\texttt{parent.id, id, lin.age, birth.time, death.time, extinct, tip}) but any simulated trait is also available using the trait name. Rates are calculated for every extant lineage and then the competing events (speciation, extinction and changes in discrete traits) draw waiting times given their rates and the event with the shortest waiting time occurs.
+In addition to the clade properties (page \pageref{cladeProperties}), expressions for speciation and extinction rates and halting the simulation can all use properties of the lineages. The basic lineage properties are less likely to be useful (\texttt{parent.id, id, lin.age, birth.time, death.time, extinct, tip}) but any simulated trait is also available using the trait name. Rates are calculated for every extant lineage and then the competing events (speciation, extinction and changes in discrete traits) draw waiting times given their rates and the event with the shortest waiting time occurs.
 
 These events occur at the discrete points identified by the winning event. However, change in continuous traits is handled differently: once one of those events has occurred, that waiting time is used to scale simulated change in the continuous traits and all of this change is added on to the trait values at the event. Similarly, clade age advances in chunks: the waiting time is added on to the age of all extant tips as each event occurs.
 
@@ -1255,15 +1259,10 @@ str(vcv.array(perisso$phy, dim=3))
 
 \appendix
 
-\section{The CAIC `package'}
-comparative data
- - now 'data' argument is assumed to be 'comparative.data'
-changes
-- lose the markov CI on fusco - test is biased so why use it.
+\section{The \texttt{CAIC} `package'}
+The \texttt{CAIC} package was initially developed and used within the Section of Ecology and Evolution at Imperial College London as a replacement for the \texttt{CAIC} program \citep{Purvis.Rambaut.1995.a}. Over time, the \texttt{CAIC} package was circulated outside of the Section and accreted additional functions for comparative analysis and was subsequently made available through the R-Forge website. However, there was little integration of the different data formats across functions and no consistent provision of basic methods and documentation to support the main functions. 
 
-\section{Requirements}
-The \caper{} package, and the code in this vignette, requires the `ape' package \citep{Paradis.Claude.ea.2004.a}.
-
+The \caper{} package addresses these failings and replaces the package \texttt{CAIC}. Although the code and functions largely mirror the \texttt{CAIC} package, many functions are now used in different ways -- notably through the use of a common comparative data structure -- and function arguments have changed. Where possible these changes are backwards compatible but the two packages are not completely interchangeable. The change in name of the package therefore reflects both the broader set of methods provided and this step change in the way the package is used.
 
 \end{document}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    

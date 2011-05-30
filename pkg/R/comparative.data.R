@@ -390,6 +390,75 @@ caicStyleArgs <- function(phy, data, names.col, warn.dropped=FALSE){
 ## crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, shorebird.data, names.col=Species)
 
 
+as.comparative.data <- function(x, ...){
+    
+	if(inherits(x, 'comparative.data')){
+		return(x)
+	} else {
+		UseMethod('as.comparative.data')
+	}
+}
+
+as.comparative.data.growTree <- function(x, ...){
+	
+    lineages <- x$lineages
+    clade <- x$clade
+    
+	# get a phylo object
+	
+    if(dim(lineages)[1] > 1){
+        # extract information (excluding root node)
+        linNoR <- lineages[-1,]
+            
+        # now need to coerce the numbering into ape style
+        parentMap <- data.frame(linPar=unique(linNoR$parent.id), apePar=with(clade, (nTip+1):nLin))
+        childMap <- data.frame(linPar=with(linNoR, id[tip]), apePar=with(clade, 1:nTip))
+        nodeMap <- rbind(parentMap, childMap)
+        linNoR$pnode <- nodeMap$apePar[match(linNoR$parent.id, nodeMap$linPar)]
+        linNoR$node <- nodeMap$apePar[match(linNoR$id, nodeMap$linPar)]
+        
+        edge <- as.matrix(linNoR[, c("pnode", "node")])
+        dimnames(edge) <- NULL
+        
+        # lets be honest... the caic.code column is really only there as a cheap
+        # route to a cladewise sorting of the edge matrix!
+        ord <- order(linNoR$caic.code)
+        edge <- edge[ord,]
+        edge.length <- linNoR$lin.age[ord]
+        
+        phy <- list(edge=edge, edge.length=edge.length, tip.label=1:clade$nTip, 
+                    Nnode=with(clade, nLin-nTip), root.edge=lineages$lin.age[1])              
+        class(phy) <- "phylo"
+        
+    } else {
+        # have an unspeciated root so put in slightly  as a single tip with a root edge of zero
+        phy <- list(edge=matrix(c(1,2), ncol=2), edge.length=lineages$lin.age[1], 
+                    tip.label=1, root.edge=0, Nnode=1)
+        class(phy) <- "phylo"
+    }
+    
+	# sort out comparative data
+	lastRules <- x$epochRules[[length(x$epochRules)]]
+	datCol <- c('node', 'lin.age', 'birth.time', 'death.time', 'extinct', 'tip',
+				names(lastRules$ct.set$ct.start), names(lastRules$dt.rates))
+	dat <- linNoR[,datCol]
+    
+	# get tip data set without tips flag
+	tipData <- dat[dat$tip, -6]
+	nodeData <- dat[! dat$tip, -5:-6]
+ 	com <- comparative.data(phy, tipData, 'node', na.omit=FALSE)
+	com$node.data <- nodeData
+    com$epochRules <- x$epochRules
+    attr(com, 'growTree') <- TRUE
+
+    return(com)
+}
+
+## as.comparative.data.phylo4d <- function(x, ...){
+## 	
+## 	
+## 	
+## }
 
 ## x <- comparative.data(shorebird.tree, shorebird.data, 'Species')
 ## x[]

@@ -9,9 +9,8 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	## pglm replaces lik.lambda - exactly the same as a null model
 	
 	## all the internal functions that were here are now farmed out to externally accessible functions
-	## - except because I don't know what it does!
+	## - except Dfun because I don't know what it does!
 	
-	## What does this do?
 	Dfun <- function(Cmat) {
 		iCmat <- solve(Cmat,  tol = .Machine$double.eps)
 		svdCmat <- La.svd(iCmat)
@@ -24,7 +23,7 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	dname <- deparse(substitute(data))
 	call <- match.call()
 	
-	## check for missing data in the formula
+	## check for missing data in the formula and replace the data object with a complete version
 	miss <- model.frame(formula, data$data, na.action=na.pass)
 	miss.na <- apply(miss, 1, function(X) (any(is.na(X))))
 	if(any(miss.na)) {
@@ -383,8 +382,6 @@ pglm.likelihood <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, name
 	##       * exp(-(1 / (2 * s2)) * t(y - x %*% mu)
 	##       %*% solve(V) %*% (y - x %*% mu)))
 	ll <- -n / 2.0 * log( 2 * pi) - n / 2.0 * log( (n - k) * s2 / n) - logDetV / 2.0  - n / 2.0
-	
-	#
 	
 	# if being used for optimization, only return the log likelihood
 	if(optim.output) return(ll)  else return( list(ll = ll, mu = mu, s2 = s2) )

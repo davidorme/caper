@@ -31,7 +31,7 @@ data(perissodactyla)
 (perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit=FALSE))
 na.omit(perisso)
 }
-\seealso{ caic, pglm }
+\seealso{ caic, pgls }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

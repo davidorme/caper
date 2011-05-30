@@ -1,17 +1,17 @@
-\name{plot.pglm}
-\alias{plot.pglm}
+\name{plot.pgls}
+\alias{plot.pgls}
 \title{
-Diagnostic plots for 'pglm' models.
+Diagnostic plots for 'pgls' models.
 }
 \description{
-The function generates four diagnostics plots for 'pglm' models.
+The function generates four diagnostics plots for 'pgls' models.
 }
 \usage{
-\method{plot}{pglm}(x, ...)
+\method{plot}{pgls}(x, ...)
 }
 
 \arguments{
-  \item{x}{An object of class 'pglm'.}
+  \item{x}{An object of class 'pgls'.}
   \item{...}{Additional arguments to plot functions.}
 }
 \details{
@@ -21,12 +21,12 @@ The first two plots show the fit of the phylogenetic residuals from the model to
 Rob Freckleton, David Orme
 }
 \seealso{
-\code{\link{pglm}}
+\code{\link{pgls}}
 }
 \examples{
 data(shorebird)
 shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
-mod1 <- pglm(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird)
+mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird)
 par(mfrow=c(2,2))
 plot(mod1)
 }

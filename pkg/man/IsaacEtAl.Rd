@@ -43,7 +43,7 @@ marsupialia <- comparative.data(marsupialia.tree, marsupialia.data, 'binomial', 
 }
 \references{Isaac, N., Jones, K., Gittleman, J., and Purvis, A. (2005). Correlates of species richness in mammals: Body size, life history, and ecology. American Naturalist, 165(5):600-607.}
 
-\seealso{ caic, pglm }
+\seealso{ caic, pgls }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

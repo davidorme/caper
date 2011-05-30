@@ -59,41 +59,41 @@ print(benchDicho)
 print(benchPoly)
 @
 
-\section{Benchmarking \texttt{pglm}.}
+\section{Benchmarking \texttt{pgls}.}
 
-The programs Continuous and BayesTraits both implement similar phylogenetic generalised least squares models, but Continuous is no longer readily available\footnote{Discontinued?} and has been superseded by BayesTraits. The tests below compare the output of \texttt{pglm} with the same models fitted using BayesTraits. In order to avoid convergence problems, the lower limit of the parameter bounds for \texttt{pglm} have been raised slightly. Model names indicate the optimised parameters (lower case = fixed at 1, upper case = optimised). The test models fit ML estimates of all combinations of branch length transformations and also fit three fixed point sets of parameters: all zero (equivalent to a standard linear model), all set to 0.5 and all set to 1.
+The programs Continuous and BayesTraits both implement similar phylogenetic generalised least squares models, but Continuous is no longer readily available\footnote{Discontinued?} and has been superseded by BayesTraits. The tests below compare the output of \texttt{pgls} with the same models fitted using BayesTraits. In order to avoid convergence problems, the lower limit of the parameter bounds for \texttt{pgls} have been raised slightly. Model names indicate the optimised parameters (lower case = fixed at 1, upper case = optimised). The test models fit ML estimates of all combinations of branch length transformations and also fit three fixed point sets of parameters: all zero (equivalent to a standard linear model), all set to 0.5 and all set to 1.
 
-<<pglmTests>>=
+<<pglsTests>>=
 bnds <- list(lambda=c(0.01,1), kappa=c(0.01,3), delta=c(0.01,3))
 
 bnds <- list(lambda=c(0,1), kappa=c(0,3), delta=c(0,3))
-nul <- pglm(V1 ~ V2, test, bounds=bnds, lambda=0, kappa=0, delta=0)
-fix <- pglm(V1 ~ V2, test, bounds=bnds,, lambda=0.5, kappa=0.5, delta=0.5)
+nul <- pgls(V1 ~ V2, test, bounds=bnds, lambda=0, kappa=0, delta=0)
+fix <- pgls(V1 ~ V2, test, bounds=bnds,, lambda=0.5, kappa=0.5, delta=0.5)
 
-kld <- pglm(V1 ~ V2, test, lambda=1, delta=1, kappa=1)
-Kld <- pglm(V1 ~ V2, test, lambda=1, delta=1, kappa="ML")
-kLd <- pglm(V1 ~ V2, test, lambda="ML", delta=1, kappa=1)
-klD <- pglm(V1 ~ V2, test, lambda=1, delta="ML", kappa=1)
-kLD <- pglm(V1 ~ V2, test, lambda="ML", delta="ML", kappa=1)
-KlD <- pglm(V1 ~ V2, test, lambda=1, delta="ML", kappa="ML")
-KLd <- pglm(V1 ~ V2, test, lambda="ML", delta=1, kappa="ML")
-KLD <- pglm(V1 ~ V2, test, lambda="ML", delta="ML", kappa="ML")
+kld <- pgls(V1 ~ V2, test, lambda=1, delta=1, kappa=1)
+Kld <- pgls(V1 ~ V2, test, lambda=1, delta=1, kappa="ML")
+kLd <- pgls(V1 ~ V2, test, lambda="ML", delta=1, kappa=1)
+klD <- pgls(V1 ~ V2, test, lambda=1, delta="ML", kappa=1)
+kLD <- pgls(V1 ~ V2, test, lambda="ML", delta="ML", kappa=1)
+KlD <- pgls(V1 ~ V2, test, lambda=1, delta="ML", kappa="ML")
+KLd <- pgls(V1 ~ V2, test, lambda="ML", delta=1, kappa="ML")
+KLD <- pgls(V1 ~ V2, test, lambda="ML", delta="ML", kappa="ML")
 
 @
 
-The following code constructs a summary table for comparison with a similar summary table from BayesTraits (Table \ref{pglmComparison}):
+The following code constructs a summary table for comparison with a similar summary table from BayesTraits (Table \ref{pglsComparison}):
 
-<<pglmMerge>>=
-pglmMods <- list(nul=nul, fix=fix, kld = kld, Kld = Kld, kLd = kLd, 
+<<pglsMerge>>=
+pglsMods <- list(nul=nul, fix=fix, kld = kld, Kld = Kld, kLd = kLd, 
 	             klD = klD, kLD = kLD, KlD = KlD, KLd = KLd, KLD = KLD)
 
-pglmlogLik <- sapply(pglmMods, logLik)
-pglmCoefs <- t(sapply(pglmMods, coef))
-pglmSigma <- sapply(pglmMods, '[[', 'RMS')
-pglmR.sq <- sapply(pglmMods, function(X) summary(X)$r.squared)
-pglmParam <- t(sapply(pglmMods, '[[', 'param'))
+pglslogLik <- sapply(pglsMods, logLik)
+pglsCoefs <- t(sapply(pglsMods, coef))
+pglsSigma <- sapply(pglsMods, '[[', 'RMS')
+pglsR.sq <- sapply(pglsMods, function(X) summary(X)$r.squared)
+pglsParam <- t(sapply(pglsMods, '[[', 'param'))
 
-pglmModTab <-  data.frame(mods=names(pglmMods), pglmlogLik, pglmCoefs, pglmSigma, pglmR.sq, pglmParam)
+pglsModTab <-  data.frame(mods=names(pglsMods), pglslogLik, pglsCoefs, pglsSigma, pglsR.sq, pglsParam)
 
 data(benchBayesTraitsOutputs)
 @
@@ -104,10 +104,10 @@ data(benchBayesTraitsOutputs)
   \hline
 Model & logLik & Intercept & Slope & Variance & $r^2$ & $\kappa$ & $\lambda$ & $\delta$ \\
 \hline
-\multicolumn{9}{l}{a) Models fitted using \texttt{pglm}}\\
-<<pglmTabRes, echo=FALSE, print=FALSE, results=tex>>=
-pglmXt <- xtable(pglmModTab)
-print(pglmXt, only.contents=TRUE, include.colnames=FALSE, include.rownames=FALSE)
+\multicolumn{9}{l}{a) Models fitted using \texttt{pgls}}\\
+<<pglsTabRes, echo=FALSE, print=FALSE, results=tex>>=
+pglsXt <- xtable(pglsModTab)
+print(pglsXt, only.contents=TRUE, include.colnames=FALSE, include.rownames=FALSE)
 @
 \hline
 \multicolumn{9}{l}{b) Models fitted using BayesTraits}\\
@@ -118,8 +118,8 @@ print(bayesXt, only.contents=TRUE, include.colnames=FALSE, include.rownames=FALS
 
  \hline
 \end{tabular}
-\caption{Model outputs from \texttt{pglm} and BayesTraits.}
-\label{pglmComparison}
+\caption{Model outputs from \texttt{pgls} and BayesTraits.}
+\label{pglsComparison}
 \end{center}
 \end{table}
 

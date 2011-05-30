@@ -217,7 +217,7 @@ The examples in this vignette make use of the following datasets:
 
 The \caper{} package provides two broad sets of methods of accounting for phylogenetic autocorrelation in analyses. One is the use of phylogenetic independent contrasts \citep{Felsenstein.1985.a}, the other is the use of a phylogenetic variance-covariance matrix within a standard linear model \citep{Freckleton.Harvey.ea.2002.a} [other refs]. These two approaches are basically equivalent, although small differences may arise from the way in which polytomies are handled.
 
-<<pglmSetup, echo=FALSE>>=
+<<pglsSetup, echo=FALSE>>=
 ## demo tree
 z <- structure(list(edge = structure(c(11L, 15L, 18L, 18L, 15L, 16L, 
 16L, 11L, 12L, 13L, 13L, 19L, 19L, 12L, 14L, 14L, 17L, 17L, 15L, 
@@ -235,7 +235,7 @@ V <- vcv.array(z)
 In a basic linear regression, the response variable ($y$) is modelled as the product of the estimated coefficients ($\beta$) and the explanatory variables ($\mathbf{X}$), plus residual variation ($\epsilon$): $y = \beta\mathbf{X} + \epsilon$. If the cases in the model are related taxa, then the values in $y$
 and $\mathbf{X}$ are no longer independent: each value will be more similar to some values (closer relatives) than others (distant relatives). 
 
-The \fnidx{pglm} function addresses this problem by incorporating the covariance between taxa into the calculation of estimated coefficients: this is a generalized least squares (GLS) model. The covariance matrix ($\mathbf{V}$), showing the expected covariance between each pair of tips is calculated using the branch lengths of a phylogeny showing how the taxa are related (Fig. \ref{vcvFig}). 
+The \fnidx{pgls} function addresses this problem by incorporating the covariance between taxa into the calculation of estimated coefficients: this is a generalized least squares (GLS) model. The covariance matrix ($\mathbf{V}$), showing the expected covariance between each pair of tips is calculated using the branch lengths of a phylogeny showing how the taxa are related (Fig. \ref{vcvFig}). 
 
 \begin{figure}[htbp]
   \begin{center}
@@ -284,11 +284,11 @@ plot(z, no.margin=TRUE, cex=0.6, label.offset=0.3, edge.col=ec)
   \end{center}
 \end{figure}
 
-The initial covariance matrix ($\mathbf{V}$) taken from an ultrametric phylogeny assumes a Brownian model of evolution: that variation between tips accumulates along all branches of the tree at a rate proportional to the length of the branches. However, not all variables necessarily correspond to this assumption and likelihood methods can be used to find transformations of $\mathbf{V}$ that improve the fit of the model to the data. Three transformations are implemented in the \fnidx{pglm} function (Fig. \ref{bltrans}):
+The initial covariance matrix ($\mathbf{V}$) taken from an ultrametric phylogeny assumes a Brownian model of evolution: that variation between tips accumulates along all branches of the tree at a rate proportional to the length of the branches. However, not all variables necessarily correspond to this assumption and likelihood methods can be used to find transformations of $\mathbf{V}$ that improve the fit of the model to the data. Three transformations are implemented in the \fnidx{pgls} function (Fig. \ref{bltrans}):
 
 \begin{description}
 	\item[lambda ($\lambda$)]{The internal branch lengths of the phylogeny are multiplied by a constant. When $\lambda = 0$, internal branch lengths are all zero and all the variation in the data is modelled as a function of the independent evolution along the branches leading to the tips. If $\lambda > 1$, then the data shows more covariance than expected under a Brownian model.
-	 Note that a \fnidx{pglm} model with a lambda of 0 will not be the same as a standard linear model if the tree is not ultrametric: although the covariance terms will all be zero, the variances of the tips will differ.}
+	 Note that a \fnidx{pgls} model with a lambda of 0 will not be the same as a standard linear model if the tree is not ultrametric: although the covariance terms will all be zero, the variances of the tips will differ.}
 	\item[delta ($\delta$)]{In this case, all the values in the $\mathbf{V}$ matrix are raised to the power of $\delta$. This is a transformation of the sum of the length of the shared branches between two tips {$l$}: $\sum{\left(l\right)}^\delta$.}
 	\item[kappa ($\kappa$)]{All branch lengths in the phylogeny are raised to the power $\kappa$ --- the elements of the $\mathbf{V}$ are the sum of the individually transformed branch lengths $\sum{\left(l^\kappa\right)}$. As $\kappa$ decrease towards zero, all branches will become of equal length, representing an evolutionary model where variation accumulates only when two clades diverge.}
 \end{description}
@@ -370,36 +370,36 @@ abline(v=vlines, lty=2, col='grey')
   \end{center}
 \end{figure}
 
-\subsubsection{Fitting phylogenetic GLS models: \fnidx{pglm}}
+\subsubsection{Fitting phylogenetic GLS models: \fnidx{pgls}}
 
-The \fnidx{pglm} function implements GLS models accounting for phylogeny. It also includes the three branch length transformations ($\lambda, \kappa, \delta$) described above. The values of these  may be fixed at values provided by the user or optimised within bounds to find the maximum likelihood transformation. Multiple transformations can be optimised simultaneously, although the underlying evolutionary model may be hard to interpret.
+The \fnidx{pgls} function implements GLS models accounting for phylogeny. It also includes the three branch length transformations ($\lambda, \kappa, \delta$) described above. The values of these  may be fixed at values provided by the user or optimised within bounds to find the maximum likelihood transformation. Multiple transformations can be optimised simultaneously, although the underlying evolutionary model may be hard to interpret.
 
-The function uses a formula interface to describe the model and uses data provided as a comparative data object. Because the model fitting uses a covariance matrix, which can be computationally expensive to extract from a phylogeny, it is useful to include this when creating the comparative data object at the start of an analysis using \texttt{vcv=TRUE}. The resulting \texttt{pglm} model object has standard \texttt{print}\index{Functions!pglm!print} and \texttt{summary}\index{Functions!pglm!summary} methods.
+The function uses a formula interface to describe the model and uses data provided as a comparative data object. Because the model fitting uses a covariance matrix, which can be computationally expensive to extract from a phylogeny, it is useful to include this when creating the comparative data object at the start of an analysis using \texttt{vcv=TRUE}. The resulting \texttt{pgls} model object has standard \texttt{print}\index{Functions!pgls!print} and \texttt{summary}\index{Functions!pgls!summary} methods.
 
 <<basicPGLS>>=
 data(shorebird)
 shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE)
-mod <- pglm(log(Egg.Mass) ~ log(M.Mass), shorebird)
+mod <- pgls(log(Egg.Mass) ~ log(M.Mass), shorebird)
 print(mod)
 summary(mod)
 @
 
-\subsection{Optimising branch length transformations: \fnidx{profile.pglm}.}
+\subsection{Optimising branch length transformations: \fnidx{profile.pgls}.}
 
-The \fnidx{pglm} function has three arguments to specify parameter values for the $\lambda$, $\kappa$ and $\delta$ transformations. However, the value for these parameters can alternatively be specified as \texttt{"ML"}, in which case the maximum likelihood value for each ML parameter will be found within set bounds. The default bounds ($\lambda = [1\times10^{-6},1], \kappa = [1\times10^{-6},3], \delta = [1\times10^{-6},3]$) may be altered but cannot be negative. Optimising multiple parameters can lead to computational problems with lower bounds very close to zero, so it may be necessary to increase the lower bound slightly.
+The \fnidx{pgls} function has three arguments to specify parameter values for the $\lambda$, $\kappa$ and $\delta$ transformations. However, the value for these parameters can alternatively be specified as \texttt{"ML"}, in which case the maximum likelihood value for each ML parameter will be found within set bounds. The default bounds ($\lambda = [1\times10^{-6},1], \kappa = [1\times10^{-6},3], \delta = [1\times10^{-6},3]$) may be altered but cannot be negative. Optimising multiple parameters can lead to computational problems with lower bounds very close to zero, so it may be necessary to increase the lower bound slightly.
 
 Because calculating likelihood under a $\kappa$ transformation requires a transformation of the individual branch lengths, it is not possible with a simple $\mathbf{V}$ matrix. This is because $\mathbf{V}$ only holds the sums of those branch lengths. Any variation of $\kappa$, whether for optimization or for profiling likelihood values, therefore needs a 3 dimensional $\mathbf{V}$ array, in which the branch lengths are held separately. The \texttt{vcv.dim} argument to the \fnidx{comparative.data} function creates this.
 
-By default, \fnidx{pglm} will use likelihood ratio tests to establish confidence bounds on optimised parameters. The likelihood value at the ML estimate is tested against the values at the parameter bounds and confidence intervals of the ML estimate are also calculated. The \fnidx{profile.pglm} function allows the likelihood surface of a parameter for a model to be displayed. If the ML estimate of the parameter is known then then the profile will show this along with confidence limits (Fig. \ref{lambdaOptPlot}). The likelihood profile is taken for a single parameter at a time, with the other two parameters held at their fixed or optimum values.
+By default, \fnidx{pgls} will use likelihood ratio tests to establish confidence bounds on optimised parameters. The likelihood value at the ML estimate is tested against the values at the parameter bounds and confidence intervals of the ML estimate are also calculated. The \fnidx{profile.pgls} function allows the likelihood surface of a parameter for a model to be displayed. If the ML estimate of the parameter is known then then the profile will show this along with confidence limits (Fig. \ref{lambdaOptPlot}). The likelihood profile is taken for a single parameter at a time, with the other two parameters held at their fixed or optimum values.
 
 <<lambdaOpt>>=
 data(shorebird)
 shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
-mod <- pglm(log(Egg.Mass) ~ log(M.Mass), shorebird, lambda='ML')
+mod <- pgls(log(Egg.Mass) ~ log(M.Mass), shorebird, lambda='ML')
 summary(mod)
-mod.l <- pglm.profile(mod, 'lambda')
-mod.d <- pglm.profile(mod, 'delta')
-mod.k <- pglm.profile(mod, 'kappa')
+mod.l <- pgls.profile(mod, 'lambda')
+mod.d <- pgls.profile(mod, 'delta')
+mod.k <- pgls.profile(mod, 'kappa')
 plot(mod.l); plot(mod.d); plot(mod.k)
 @
 
@@ -414,30 +414,30 @@ plot(mod.l); plot(mod.d); plot(mod.k)
   \end{center}
 \end{figure}
 
-\subsubsection{Criticism and simplification of\fnidx{pglm} models: \texttt{plot}\index{Functions!pglm!plot}, \texttt{anova}\index{Functions!pglm!anova} and \texttt{AIC}\index{Functions!pglm!AIC}.}
+\subsubsection{Criticism and simplification of\fnidx{pgls} models: \texttt{plot}\index{Functions!pgls!plot}, \texttt{anova}\index{Functions!pgls!anova} and \texttt{AIC}\index{Functions!pgls!AIC}.}
 
-The \caper{} package provides standard generic methods for examining \texttt{pglm} models. The first is the \texttt{plot}\index{Functions!pglm!plot} methods, which produces four diagnostic plots. The first two show the fit of the residuals to a normal distribution: a density plot of the distribution of the residuals and a normal Q-Q plot the distribution of the residuals against their expected distribution under a normal distribution. The second two show the fitted values against both the residuals and the observed value to look for pattern in the residuals within the model. Figure \ref{pglmPlotCmd} shows these plots for the model above using the command \texttt{plot(mod)}.
+The \caper{} package provides standard generic methods for examining \texttt{pgls} models. The first is the \texttt{plot}\index{Functions!pgls!plot} methods, which produces four diagnostic plots. The first two show the fit of the residuals to a normal distribution: a density plot of the distribution of the residuals and a normal Q-Q plot the distribution of the residuals against their expected distribution under a normal distribution. The second two show the fitted values against both the residuals and the observed value to look for pattern in the residuals within the model. Figure \ref{pglsPlotCmd} shows these plots for the model above using the command \texttt{plot(mod)}.
 
 \begin{figure}[htbp]
   \begin{center}
-<<pglmPlotCmd, fig=TRUE, echo=FALSE, print=FALSE, height=6, width=6>>=
+<<pglsPlotCmd, fig=TRUE, echo=FALSE, print=FALSE, height=6, width=6>>=
 par(mfrow=c(2,2), mar=c(3,3,1,1), mgp=c(2,0.7,0), tcl=-0.2)
 plot(mod)
 @    
 \caption{Model diagnostic plots for a simple model (\texttt{log(Egg.Mass) \~ log(M.Mass)}) on the \dtidx{shorebird} dataset.}
-    \label{pglmPlotCmd}
+    \label{pglsPlotCmd}
   \end{center}
 \end{figure}
 
-The package also provides \texttt{anova}\index{Functions!pglm!anova} and \texttt{logLik}\index{Functions!pglm!logLik} methods that allow model comparison. The \texttt{logLik}\index{Functions!pglm!logLik} method allows the generic \texttt{AIC}\index{Functions!pglm!AIC} methods to be used with \fnidx{pglm} models. Analysis of variance tables for a \fnidx{pglm} model uses sequential sums of squares: each F value is the marginal improvement in the model given the combined effects of the terms above. The \texttt{anova}\index{Functions!pglm!anova} command can also be used to compare a set of models.
+The package also provides \texttt{anova}\index{Functions!pgls!anova} and \texttt{logLik}\index{Functions!pgls!logLik} methods that allow model comparison. The \texttt{logLik}\index{Functions!pgls!logLik} method allows the generic \texttt{AIC}\index{Functions!pgls!AIC} methods to be used with \fnidx{pgls} models. Analysis of variance tables for a \fnidx{pgls} model uses sequential sums of squares: each F value is the marginal improvement in the model given the combined effects of the terms above. The \texttt{anova}\index{Functions!pgls!anova} command can also be used to compare a set of models.
 
-<<pglmCrit>>=
-mod1 <- pglm(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird) 
+<<pglsCrit>>=
+mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird) 
 anova(mod1)
 
-mod2 <- pglm(log(Egg.Mass) ~ log(M.Mass) + log(F.Mass), shorebird)  
-mod3 <- pglm(log(Egg.Mass) ~ log(M.Mass) , shorebird)
-mod4 <- pglm(log(Egg.Mass) ~ 1, shorebird)
+mod2 <- pgls(log(Egg.Mass) ~ log(M.Mass) + log(F.Mass), shorebird)  
+mod3 <- pgls(log(Egg.Mass) ~ log(M.Mass) , shorebird)
+mod4 <- pgls(log(Egg.Mass) ~ 1, shorebird)
 
 anova(mod1, mod2, mod3, mod4)
 AIC(mod1, mod2, mod3, mod4)
@@ -1262,7 +1262,7 @@ str(vcv.array(perisso$phy, dim=3))
 \section{The \texttt{CAIC} `package'}
 The \texttt{CAIC} package was initially developed and used within the Section of Ecology and Evolution at Imperial College London as a replacement for the \texttt{CAIC} program \citep{Purvis.Rambaut.1995.a}. Over time, the \texttt{CAIC} package was circulated outside of the Section and accreted additional functions for comparative analysis and was subsequently made available through the R-Forge website. However, there was little integration of the different data formats across functions and no consistent provision of basic methods and documentation to support the main functions. 
 
-The \caper{} package addresses these failings and replaces the package \texttt{CAIC}. Although the code and functions largely mirror the \texttt{CAIC} package, many functions are now used in different ways -- notably through the use of a common comparative data structure -- and function arguments have changed. Where possible these changes are backwards compatible but the two packages are not completely interchangeable. The change in name of the package therefore reflects both the broader set of methods provided and this step change in the way the package is used.
+The \caper{} package addresses these failings and replaces the package \texttt{CAIC}. Although the code and functions largely mirror the \texttt{CAIC} package, many functions are now used in different ways -- notably through the use of a common comparative data structure -- and function arguments have changed. Where possible these changes are backwards compatible but the two packages are not completely interchangeable. One of the more noticeable changes is that the function \texttt{pglm}\index{Functions!pglm|seealso{pgls}} has been renamed to \fnidx{pgls}: the function provides generalised least squares but does not provide the link functions of generalised linear models. The change in name of the package therefore reflects both the broader set of methods provided and this step change in the way the package is used.
 
 \end{document}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    

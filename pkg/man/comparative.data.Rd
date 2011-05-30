@@ -77,7 +77,7 @@ David Orme
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{crunch}},\code{\link{pglm}}
+\code{\link{crunch}},\code{\link{pgls}}
 }
 \examples{
 data(shorebird)

@@ -1,12 +1,12 @@
 ## RESTRUCTURE AND EXPANSION/MERGING OF PGLM CODE
 
-pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0, 
+pgls <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0, 
 	             param.CI = 0.95, control = list(fnscale=-1), 
                  bounds = list(lambda=c(1e-6,1), kappa=c(1e-6,3), delta=c(1e-6,3))) {
 
 	## bounds go singular: bounds = list(delta = c(1e-04, 3), lambda = c(1e-04,  0.99999), kappa = c(1e-04, 3))
 	
-	## pglm replaces lik.lambda - exactly the same as a null model
+	## pgls replaces lik.lambda - exactly the same as a null model
 	
 	## all the internal functions that were here are now farmed out to externally accessible functions
 	## - except Dfun because I don't know what it does!
@@ -98,7 +98,7 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	## which are being optimised
 	mlVals <- sapply(parVals,  "==", "ML")
 
-	## if any are being optimised then run pglm.likelihood as a simple optimising function,
+	## if any are being optimised then run pgls.likelihood as a simple optimising function,
 	## returning the logLik for a particular set of transformations
 	##  - start the search for ML estimates from the midpoint of the specified bounds
 	
@@ -120,7 +120,7 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
     	
 		## TODO - could isolate single optimisations here to use optimise() rather than optim()
 		## likelihood function swapped out for externally visible one
-    	optim.param.vals <- optim(optimPar, fn = pglm.likelihood, # function and start vals
+    	optim.param.vals <- optim(optimPar, fn = pgls.likelihood, # function and start vals
     	    method="L-BFGS-B", control=control, upper=upper.b, lower=lower.b, # optim control
     	    V = V, y=y, x=x, fixedPar = fixedPar, optim.output=TRUE) # arguments to function
 	    
@@ -138,14 +138,14 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
     
 	## run the likelihood function again with the fixed parameter values
 	## ll <- log.likelihood(optimPar=NULL, fixedPar=fixedPar, y, x, V, optim=FALSE)
-	ll <- pglm.likelihood(optimPar=NULL, fixedPar=fixedPar, y, x, V, optim=FALSE)
+	ll <- pgls.likelihood(optimPar=NULL, fixedPar=fixedPar, y, x, V, optim=FALSE)
 	
 	## store the log likelihood of the optimized solution for use in ci.searchs
 	log.lik <- ll$ll
 	
 	## get the transformed vcv matrix for the fitted model for use
 	## in calculating the remaining outputs.
-	Vt <- pglm.blenTransform(V, fixedPar)
+	Vt <- pgls.blenTransform(V, fixedPar)
 	
 	## start collating outputs:
 	
@@ -175,7 +175,7 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	
 	## null model
 	xdummy <- matrix(rep(1, length(y)))
-	nullMod <- pglm.likelihood(optimPar=NULL, fixedPar=fixedPar, y, xdummy, V, optim.output=FALSE)
+	nullMod <- pgls.likelihood(optimPar=NULL, fixedPar=fixedPar, y, xdummy, V, optim.output=FALSE)
 	NMS <- nullMod$s2
 	NSSQ <- nullMod$s2 * (n -1) 
 	
@@ -192,7 +192,7 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	            x = x, data = data,  varNames = varNames, y = y, param = fixedPar, mlVals=mlVals,
 	            namey = namey, bounds=bounds, Vt=Vt, dname=dname)
 	
-	class(RET) <- "pglm"
+	class(RET) <- "pgls"
 	
 	## missing data
 	if(any(miss.na)){
@@ -208,7 +208,7 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 		mlNames <- names(mlVals)[which(mlVals)]
 		
 		for(param in mlNames){
-			param.CI.list[[param]] <- pglm.confint(RET, param, param.CI)
+			param.CI.list[[param]] <- pgls.confint(RET, param, param.CI)
 		}
 		
 		RET$param.CI <- param.CI.list
@@ -218,37 +218,37 @@ pglm <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	
 }
 
-pglm.profile <- function(pglm, which=c('lambda','kappa','delta'), N=50, param.CI=NULL){
+pgls.profile <- function(pgls, which=c('lambda','kappa','delta'), N=50, param.CI=NULL){
 	
-	## takes a pglm model and profiles one of the branch length transformations
+	## takes a pgls model and profiles one of the branch length transformations
 	
 	# get the x sequence for the parameter
 	which <- match.arg(which)
-	bnds <- pglm$bounds[[which]]
+	bnds <- pgls$bounds[[which]]
 	x <- seq(from=bnds[1], to=bnds[2], length=N)
 	
 	# get a matrix of parameter values
-	pars <- matrix(pglm$param, nrow=N, ncol=3, byrow=TRUE)
-	colnames(pars) <- names(pglm$param)
+	pars <- matrix(pgls$param, nrow=N, ncol=3, byrow=TRUE)
+	colnames(pars) <- names(pgls$param)
 	pars[,which] <- x
 	
 	## now get the sequence of likelihoods for the parameter in question
-	logLik <- sapply(seq_along(x), function(X){ pglm.likelihood(optimPar=NULL, fixedPar=pars[X,], y=pglm$y, x=pglm$x, V=pglm$data$vcv, optim.output=TRUE)})
+	logLik <- sapply(seq_along(x), function(X){ pgls.likelihood(optimPar=NULL, fixedPar=pars[X,], y=pgls$y, x=pgls$x, V=pgls$data$vcv, optim.output=TRUE)})
 	
-	RET <- list(x=x,logLik=logLik, which=which, pars=pglm$param, dname=pglm$dname, formula=pglm$formula)
-	class(RET) <- 'pglm.profile'
+	RET <- list(x=x,logLik=logLik, which=which, pars=pgls$param, dname=pgls$dname, formula=pgls$formula)
+	class(RET) <- 'pgls.profile'
 	
 	# test for existing parameter ci otherwise create if asked
-	if(! is.null(pglm$param.CI[which])){
-		RET$ci <- pglm$param.CI[[which]]
+	if(! is.null(pgls$param.CI[which])){
+		RET$ci <- pgls$param.CI[[which]]
 	} else if(! is.null(param.CI)){
-		RET$ci <- pglm.confint(pglm, which, param.CI)
+		RET$ci <- pgls.confint(pgls, which, param.CI)
 	} 
 
 	return(RET)
 }
 
-plot.pglm.profile <- function(x, ...){
+plot.pgls.profile <- function(x, ...){
 	
 	xlab <- as.expression(x$which)
 	xsub <- sprintf('Data: %s; Model: %s\nkappa %0.2f; lambda %0.2f; delta %0.2f', 
@@ -265,7 +265,7 @@ plot.pglm.profile <- function(x, ...){
 
 }
 
-pglm.confint <- function(pglm, which=c('lambda','kappa','delta'), param.CI=0.95){
+pgls.confint <- function(pgls, which=c('lambda','kappa','delta'), param.CI=0.95){
 	
 	# Are we dealing with a same confidence interval
 	# ha! first planned use of sequential 'or'  operator
@@ -279,17 +279,17 @@ pglm.confint <- function(pglm, which=c('lambda','kappa','delta'), param.CI=0.95)
 	# - if not, then this needs to be estimated in order 
 	#   to get confidence intervals.
 	# - currently, bail out but could refit to model to get this.
-	if(pglm$mlVals[which] == FALSE) stop('The pglm object contains a fixed, not ML, estimate of ', which)
-	ML <- pglm$model$log.lik
+	if(pgls$mlVals[which] == FALSE) stop('The pgls object contains a fixed, not ML, estimate of ', which)
+	ML <- pgls$model$log.lik
 	
 	# separate out the values held constant and varied
-	fix <- pglm$param
+	fix <- pgls$param
 	whichNum <- which(names(fix) == which)
 	opt <- fix[whichNum]
 	fix <- fix[-whichNum]
 	
 	# only one optimPar so get bounds and two intervals
-	bounds  <- pglm$bounds[[which]]
+	bounds  <- pgls$bounds[[which]]
 	belowML <- c(bounds[1], opt)
 	aboveML <- c(opt, bounds[2])
 	
@@ -300,17 +300,17 @@ pglm.confint <- function(pglm, which=c('lambda','kappa','delta'), param.CI=0.95)
 	offset <- (- ML) + MLdelta
 
 	## get the model components
-	y <- pglm$y
-	x <- pglm$x
-	V <- pglm$data$vcv
+	y <- pgls$y
+	x <- pgls$x
+	V <- pgls$data$vcv
 	
 	## find the confidence intervals on the parameter
 	## - first need to find the logLik at the bounds
 	## - as long as the bound is outside the CI, can then use uniroot 
 	##   to find the actual confidence interval.
 
-	lowerBound.ll <- pglm.likelihood(structure(bounds[1], names=which), fix, y, x, V, optim.output=TRUE)
-	upperBound.ll <- pglm.likelihood(structure(bounds[2], names=which), fix, y, x, V, optim.output=TRUE)
+	lowerBound.ll <- pgls.likelihood(structure(bounds[1], names=which), fix, y, x, V, optim.output=TRUE)
+	upperBound.ll <- pgls.likelihood(structure(bounds[2], names=which), fix, y, x, V, optim.output=TRUE)
 	
 	lrt0 <- 2 * (ML - lowerBound.ll)
 	lrt1 <- 2 * (ML - upperBound.ll)
@@ -318,9 +318,9 @@ pglm.confint <- function(pglm, which=c('lambda','kappa','delta'), param.CI=0.95)
 	upperBound.p <- 1 - pchisq(lrt1, 1)
 	
 	## - a problem with uniroot is that the identity of the variables gets stripped
-	##   which is why pglm.likelihood now has an optim.names option used here.
+	##   which is why pgls.likelihood now has an optim.names option used here.
 	ll.fun <- function(opt){
-        pg <- pglm.likelihood(opt, fix, y, x, V, optim.output=TRUE, names.optim=which)
+        pg <- pgls.likelihood(opt, fix, y, x, V, optim.output=TRUE, names.optim=which)
         ll <- pg + offset
         return(ll)
     }
@@ -332,7 +332,7 @@ pglm.confint <- function(pglm, which=c('lambda','kappa','delta'), param.CI=0.95)
 
 }
 
-pglm.likelihood <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, names.optim=NULL) {
+pgls.likelihood <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, names.optim=NULL) {
     
 	# Full ML estimation for given x and V: modified to also act as an engine for optim
 	# - this is why the branch length  parameters are passed as two chunks, so that
@@ -364,7 +364,7 @@ pglm.likelihood <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, name
     allPar <- c(optimPar, fixedPar)
     
 	# get the transformed VCV matrix and its inverse
-    V <- pglm.blenTransform(V, allPar)
+    V <- pgls.blenTransform(V, allPar)
 	iV <- solve(V, tol = .Machine$double.eps)
 	
 	mu <- get.coeffs(y, iV, x)
@@ -374,7 +374,7 @@ pglm.likelihood <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, name
 	logDetV <- determinant(V, logarithm = TRUE)$modulus[1]
 	
 	## Likelihood calculation
-	## original pglm3.2: ll <- -n / 2.0 * log( 2 * pi) - n / 2.0 * log(s2) - logDetV / 2.0 - (n - 1)/2.0
+	## original pgls3.2: ll <- -n / 2.0 * log( 2 * pi) - n / 2.0 * log(s2) - logDetV / 2.0 - (n - 1)/2.0
 	## Richard Duncan's implementation: log.lkhood.y <- log((1/((2*pi*sigma.sqr)^(ntax/2))) * det(VCV)^-0.5
 	##  * exp(-(1 / (2 * sigma.sqr)) * t(response - design.matrix %*% alpha)
 	##  %*% solve(VCV) %*% (response - design.matrix %*% alpha)))
@@ -387,7 +387,7 @@ pglm.likelihood <- function(optimPar, fixedPar, y, x, V, optim.output=TRUE, name
 	if(optim.output) return(ll)  else return( list(ll = ll, mu = mu, s2 = s2) )
 }
 
-pglm.blenTransform <- function(V, fixedPar){
+pgls.blenTransform <- function(V, fixedPar){
 	## applies the three branch length transformations to a VCV matrix
 	
     # apply transformations
@@ -406,7 +406,7 @@ pglm.blenTransform <- function(V, fixedPar){
 	return(V)
 }
 
-plot.pglm <- function(x, ...) {
+plot.pgls <- function(x, ...) {
 	
 	# layout(matrix(c(1,2,3,4), 2, 2, byrow = FALSE))
 	res <- residuals(x, phylo = TRUE)
@@ -419,11 +419,11 @@ plot.pglm <- function(x, ...) {
 	plot(x$y, fitted(x), xlab = "Observed value", ylab = "Fitted value")
 }
 
-summary.pglm <- function(object,...) {
+summary.pgls <- function(object,...) {
 	
 	## call and return object
 	ans <- list(call=object$call)
-	class(ans) <- 'summary.pglm'
+	class(ans) <- 'summary.pgls'
 	
 	## model size
 	p <- object$k
@@ -464,7 +464,7 @@ summary.pglm <- function(object,...) {
 	
 }
 
-print.summary.pglm <- function(x, digits = max(3, getOption("digits") - 3), ...){
+print.summary.pgls <- function(x, digits = max(3, getOption("digits") - 3), ...){
 	
     cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")	
 
@@ -504,7 +504,7 @@ print.summary.pglm <- function(x, digits = max(3, getOption("digits") - 3), ...)
 
 }
 
-print.pglm <- function(x,  digits = max(3, getOption("digits") - 3), ...){
+print.pgls <- function(x,  digits = max(3, getOption("digits") - 3), ...){
 	
 	cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
     
@@ -514,7 +514,7 @@ print.pglm <- function(x,  digits = max(3, getOption("digits") - 3), ...){
 	cat("\n")
 }
 
-coef.pglm <- function(object, ...){
+coef.pgls <- function(object, ...){
 	
 	cf <- object$model$coef
 	nm <- rownames(cf)
@@ -525,7 +525,7 @@ coef.pglm <- function(object, ...){
 
 # This returns the residuals from the model
 ## CDLO - argument name changed for consistency with S3 generic
-residuals.pglm <- function(object, phylo = FALSE, ...) {
+residuals.pgls <- function(object, phylo = FALSE, ...) {
     ret <- NULL
 	if(phylo == FALSE){ret <- object$res} else {ret <- object$phyres}
 	return(ret)
@@ -533,7 +533,7 @@ residuals.pglm <- function(object, phylo = FALSE, ...) {
 
 # This returns the fitted values
 ## CDLO - argument name changed for consistency with S3 generic
-fitted.pglm <- function(object, ...){
+fitted.pgls <- function(object, ...){
     ret <- object$fitted
     return(ret)
 }
@@ -542,14 +542,14 @@ fitted.pglm <- function(object, ...){
 ## CDLO - argument name changed for consistency with S3 generic
 ## CDLO - argument name of x changed to discriminate from generic to plot and print
 
-predict.pglm <- function(object, pred.x, ...) {
+predict.pgls <- function(object, pred.x, ...) {
     mu <- as.matrix(coef(object) )
     ret <- cbind(1,  pred.x) %*% t(mu)
     return(ret)
 }
 
 ## enables the generic AIC methods for objects and lists of objects 
-logLik.pglm <- function(object, REML = FALSE, ...){
+logLik.pgls <- function(object, REML = FALSE, ...){
 	
 	val <- object$model$log.lik
 	
@@ -562,18 +562,18 @@ logLik.pglm <- function(object, REML = FALSE, ...){
 
 ## # This returns the AICc
 ## ## CDLO - argument name changed for consistency with S3 generic
-## AICc.pglm <- function(object) {
+## AICc.pgls <- function(object) {
 ##     ret <- object$aicc
 ##     return(ret[1])
 ## }
 
-anova.pglm <- function(object, ...){
+anova.pgls <- function(object, ...){
 	
 	## SEQUENTIAL SUMS OF SQUARES.
 	## ASSUMES ORDER OF TERMS PRESERVE MARGINALITY
 	
     if (length(list(object, ...)) > 1L){
-        return(anova.pglmlist(object, ...))
+        return(anova.pglslist(object, ...))
 	} else {
 	    data <- object$data
 	    tlabels <- attr( terms(object$formula), "term.labels")
@@ -593,7 +593,7 @@ anova.pglm <- function(object, ...){
 		# fit the sequential models
 	    for( i in 1:(k-1)) {
 	    		fmla <- as.formula(paste( object$namey, " ~ ", paste(tlabels[1:i], collapse = "+") ))
-	    		plm <- pglm(fmla, data, lambda=lm, delta=dl, kappa=kp)
+	    		plm <- pgls(fmla, data, lambda=lm, delta=dl, kappa=kp)
 	    		rss[i+1] <- plm$RSSQ
 	    		resdf[i+1] <- (n - 1) - plm$k + 1
 	    }
@@ -611,13 +611,13 @@ anova.pglm <- function(object, ...){
 	    #if (attr(object$terms, "intercept")) 
 	    #    table <- table[-1, ]
 	    structure(table, heading = c("Analysis of Variance Table", 
-	        sprintf("Sequential SS for pglm: lambda = %0.2f, delta = %0.2f, kappa = %0.2f\n", lm, dl,kp), 
+	        sprintf("Sequential SS for pgls: lambda = %0.2f, delta = %0.2f, kappa = %0.2f\n", lm, dl,kp), 
 	        paste("Response:", deparse(formula(object)[[2L]]))), 
 	        class = c("anova", "data.frame"))
 	}
 }
 
-anova.pglmlist <- function(object, ..., scale = 0, test = "F"){
+anova.pglslist <- function(object, ..., scale = 0, test = "F"){
 	
     objects <- list(object, ...)
 
@@ -653,7 +653,7 @@ anova.pglmlist <- function(object, ..., scale = 0, test = "F"){
     dimnames(table) <- list(1L:nmodels, c("Res.Df", "RSS", "Df", 
         "Sum of Sq"))
     title <- "Analysis of Variance Table"
-    subtitle <- sprintf("pglm: lambda = %0.2f, delta = %0.2f, kappa = %0.2f\n", 
+    subtitle <- sprintf("pgls: lambda = %0.2f, delta = %0.2f, kappa = %0.2f\n", 
                         param['lambda', 1], param['delta', 1], param['kappa', 1])
     topnote <- paste("Model ", format(1L:nmodels), ": ", variables, 
         sep = "", collapse = "\n")

@@ -1,7 +1,7 @@
-\name{pglm}
-\alias{pglm}
-\alias{pglm.likelihood}
-\alias{pglm.blenTransform}
+\name{pgls}
+\alias{pgls}
+\alias{pgls.likelihood}
+\alias{pgls.blenTransform}
 
 
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -9,9 +9,9 @@
 \description{
 Fits a linear model, taking into account phylogenetic non-independence between data points. The strength and type of the phylogenetic signal in the data matrix can also be accounted for by adjusting branch length transformations (lambda, delta and kappa). These transformations can also be optimised to find the maximum likelihood transformation given the data and the model.}
 \usage{
-pglm(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0, param.CI = 0.95, control = list(fnscale=-1), bounds = list(lambda=c(1e-6,1), kappa=c(1e-6,3), delta=c(1e-6,3)))
-pglm.likelihood(optimPar, fixedPar, y, x, V, optim.output=TRUE, names.optim=NULL)
-pglm.blenTransform(V, fixedPar)
+pgls(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0, param.CI = 0.95, control = list(fnscale=-1), bounds = list(lambda=c(1e-6,1), kappa=c(1e-6,3), delta=c(1e-6,3)))
+pgls.likelihood(optimPar, fixedPar, y, x, V, optim.output=TRUE, names.optim=NULL)
+pgls.blenTransform(V, fixedPar)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,23 +28,23 @@ pglm.blenTransform(V, fixedPar)
 \item{y}{A column matrix of the model response.}
 \item{x}{The design matrix of the model.}
 \item{V}{A phylogenetic covariance matrix.}
-\item{optim.output}{A logical value. If true then 'pglm.likelihood' returns only the likelihood value for use in the 'optim' function.}
+\item{optim.output}{A logical value. If true then 'pgls.likelihood' returns only the likelihood value for use in the 'optim' function.}
 \item{names.optim}{The name of a single parameter being optimised. This is only required for estimating parameter confidence intervals, where the function 'uniroot' strips names from vectors.}
 }
 \details{
 This function fits a linear model controlling for the non-independence between cases resulting from phylogenetic structure in the data. The stucture of the phylogenetic signal can be controlled by altering the parameters lambda, delta and kappa (see the 'caper' vignette for details). The implementation of the method is currently as described in Freckleton et al (2002). 
 
-The 'pglm.likelihood' and 'pglm.blenTransform' methods are not primarily intended to be called by users. The 'pglm.likelihood' function provides a general method to calculate the likelihood of a model, given the covariance matrix, response, design matrix and branch length parameters. 
+The 'pgls.likelihood' and 'pgls.blenTransform' methods are not primarily intended to be called by users. The 'pgls.likelihood' function provides a general method to calculate the likelihood of a model, given the covariance matrix, response, design matrix and branch length parameters. 
 }
 \section{Warning}{
 The model is fitted using a data frame reduced to complete row cases to eliminate missing values. In order to ensure that the models fitted using different subsets of the data are comparable, the whole data frame \code{data} is reduced to complete cases. In the future, a scope argument may be provided to control this but at present the data frame should be reduced to only those variables used in the maximal model in order to avoid prevent redundant variables causing rows to be dropped unnecessarily.
 }
 
 \value{
-The 'pglm' function returns an object of class \code{pglm} containing the following:
+The 'pgls' function returns an object of class \code{pgls} containing the following:
 
 "na.action" "param.CI"
- \item{call}{The original call to the 'pglm' function}
+ \item{call}{The original call to the 'pgls' function}
  \item{model }{A summary of the fitted model containing:}
  \item{formula}{The model formula supplied.}
  \item{data}{The comparative data object provided.}
@@ -77,12 +77,12 @@ The 'pglm' function returns an object of class \code{pglm} containing the follow
 review of evidence. American Naturalist, 160:712-726, 2002.}
 \author{Rob Freckleton; David Orme}
 %\note{}
-\seealso{\code{\link{pglm.profile}}, \code{\link{anova.pglm}}, \code{\link{summary.pglm}}}
+\seealso{\code{\link{pgls.profile}}, \code{\link{anova.pgls}}, \code{\link{summary.pgls}}}
 \examples{
 data(shorebird)
 shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
-mod1 <- pglm(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird, lambda='ML')
-mod2 <- pglm(log(Egg.Mass) ~ log(M.Mass), data=shorebird, lambda='ML', delta='ML')
+mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird, lambda='ML')
+mod2 <- pgls(log(Egg.Mass) ~ log(M.Mass), data=shorebird, lambda='ML', delta='ML')
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

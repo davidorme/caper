@@ -41,6 +41,8 @@
 
 \begin{document}
 
+\maketitle
+
 <<setup, print=FALSE, echo=FALSE>>=
 	library(caper)
 	## whilst code is being tested, load most recent versions from the pkg repository
@@ -1262,7 +1264,7 @@ str(vcv.array(perisso$phy, dim=3))
 \section{The \texttt{CAIC} `package'}
 The \texttt{CAIC} package was initially developed and used within the Section of Ecology and Evolution at Imperial College London as a replacement for the \texttt{CAIC} program \citep{Purvis.Rambaut.1995.a}. Over time, the \texttt{CAIC} package was circulated outside of the Section and accreted additional functions for comparative analysis and was subsequently made available through the R-Forge website. However, there was little integration of the different data formats across functions and no consistent provision of basic methods and documentation to support the main functions. 
 
-The \caper{} package addresses these failings and replaces the package \texttt{CAIC}. Although the code and functions largely mirror the \texttt{CAIC} package, many functions are now used in different ways -- notably through the use of a common comparative data structure -- and function arguments have changed. Where possible these changes are backwards compatible but the two packages are not completely interchangeable. One of the more noticeable changes is that the function \texttt{pglm}\index{Functions!pglm|seealso{pgls}} has been renamed to \fnidx{pgls}: the function provides generalised least squares but does not provide the link functions of generalised linear models. The change in name of the package therefore reflects both the broader set of methods provided and this step change in the way the package is used.
+The \caper{} package addresses these failings and replaces the package \texttt{CAIC}. Although the code and functions largely mirror the \texttt{CAIC} package, many functions are now used in different ways -- notably through the use of a common comparative data structure -- and function arguments have changed. Where possible these changes are backwards compatible but the two packages are not completely interchangeable. One of the more noticeable changes is that the function \texttt{pglm}\index{Functions!pglm|see{pgls}} has been renamed to \fnidx{pgls}: the function provides generalised least squares but does not provide the link functions of generalised linear models. The change in name of the package therefore reflects both the broader set of methods provided and this step change in the way the package is used.
 
 \end{document}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    

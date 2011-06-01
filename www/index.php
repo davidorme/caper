@@ -56,7 +56,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <h3>Installing <i>caper</i></h3>
 
 <h4>Official versions</h4>
-<p>Official 'released' versions of <i>caper</i> for Windows, Mac OS X and Linux are available from the Comprehensive R Archive Network (<a href="http://cran.r.project.org">http://cran.r.project.org</a>) and can be installed from within R using the following code:</p>
+<p>Official 'released' versions of <i>caper</i> for Windows, Mac OS X and Linux are available from the Comprehensive R Archive Network (<a href="http://cran.r-project.org/package=caper">http://cran.r-project.org/package=caper</a>) and can be installed from within R using the following code:</p>
 
 <blockquote><font size=2><tt>install.packages('caper')</tt></font></blockquote>
 

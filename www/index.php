@@ -75,7 +75,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 <h3>Using <em>caper</em></h3>
 
-<p>In addition to the standard R documentation pages for functions and datasets, (see <font size=2><tt>help(package='caper')</tt></font> the <em>caper</em> package contains two vignettes. The first, the 'caper' vignette, contains a short introduction to phylogenetic comparative methods and step by step guidance on the use of the various functions:</p>
+<p>In addition to the standard R documentation pages for functions and datasets (see <font size=2><tt>help(package='caper')</tt></font>, the <em>caper</em> package contains two vignettes. The first, the 'caper' vignette, contains a short introduction to phylogenetic comparative methods and step by step guidance on the use of the various functions:</p>
 
 <blockquote><font size=2><tt>vignette('caper')</tt></font></blockquote>
 

@@ -1,0 +1,13 @@
+Version 0.1
+
+Contains reworked, documented versions of the main functions in the CAIC package. Common interfaces and generic methods for the main independent contrast and PGLS models and rationalisation of the PGLS code down to a smaller set of more flexible commands. 
+
+Fixed as a tagged version 0.1 (rev 31) and sent out to a small set of users for first comments.
+
+Version 0.2
+
+Added in PD and ED calculations and documentation. Added in benchmark data and vignette.
+
+Fixed as a tagged version 0.2 (rev 56).
+
+Version 0.3

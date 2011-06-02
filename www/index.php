@@ -56,6 +56,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <h3>Installing <i>caper</i></h3>
 
 <h4>Official versions</h4>
+
+<em>A first official release of caper is currently being tested for CRAN and should be available from 03/06/11</em>
+	
 <p>Official 'released' versions of <i>caper</i> for Windows, Mac OS X and Linux are available from the Comprehensive R Archive Network (<a href="http://cran.r-project.org/package=caper">http://cran.r-project.org/package=caper</a>) and can be installed from within R using the following code:</p>
 
 <blockquote><font size=2><tt>install.packages('caper')</tt></font></blockquote>

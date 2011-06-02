@@ -1,13 +1,24 @@
 Version 0.1
-
-Contains reworked, documented versions of the main functions in the CAIC package. Common interfaces and generic methods for the main independent contrast and PGLS models and rationalisation of the PGLS code down to a smaller set of more flexible commands. 
-
-Fixed as a tagged version 0.1 (rev 31) and sent out to a small set of users for first comments.
-
+  
+  Contains reworked, documented versions of the main functions in the CAIC package. Common interfaces and generic methods for the main independent contrast and PGLS models and rationalisation of the PGLS code down to a smaller set of more flexible commands. 
+  
+  Fixed as a tagged version 0.1 (rev 31) and sent out to a small set of users for first comments.
+  
 Version 0.2
-
-Added in PD and ED calculations and documentation. Added in benchmark data and vignette.
-
-Fixed as a tagged version 0.2 (rev 56).
-
+  
+  Added in PD and ED calculations and documentation. Added in benchmark data and vignette.
+  
+  Fixed as a tagged version 0.2 (rev 56).
+  
 Version 0.3
+  
+  Fixing up bugs and documentation, pglm renamed to pgls
+  Submitted to CRAN and fixed as a tagged version 0.3 (rev 63)
+  
+Version 0.4
+  
+  Resolving build problems on CRAN:
+  - Renamed vcv.array to VCV.array to avoid ape vcv generic
+  - Cached pgls benchmark tests in an rda file to avoid machine specific optim problems during package builds.
+  
+  Resubmitted to CRAN and fixed as tagged version 0.4 (rev 68)

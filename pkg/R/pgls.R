@@ -41,7 +41,7 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	## if the comparative data doesn't contain a VCV,
 	## then get one and put it in the data object too. Bit wasteful
 	if(is.null(data$vcv)){
-		V <- if(kappa == 1) {vcv.array(data$phy)} else {vcv.array(data$phy, dim=3)}
+		V <- if(kappa == 1) {VCV.array(data$phy)} else {VCV.array(data$phy, dim=3)}
 		data$vcv <- V
 	} else {
 		V <- data$vcv
@@ -93,7 +93,7 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 			stop(sprintf("%s value (%0.2f) is out of specified bounds [%0.2f, %0.2f]", nm, p, lb, ub))
 	}
 	
-	if(kappa != 1 && length(dim(V)) != 3) stop("3D vcv.array needed for kappa transformation.")
+	if(kappa != 1 && length(dim(V)) != 3) stop("3D VCV.array needed for kappa transformation.")
 
 	## which are being optimised
 	mlVals <- sapply(parVals,  "==", "ML")

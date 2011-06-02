@@ -1,4 +1,5 @@
 \name{caper-benchmarks}
+\alias{caper-benchmarks}
 \alias{benchBayesTraitsOutputs}
 \alias{benchBrunchOutputs}
 \alias{benchCrunchOutputs}

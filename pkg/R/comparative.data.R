@@ -92,7 +92,7 @@ comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit
     
     # Add a VCV array if requested
     if(vcv) {
-        RET$vcv <- vcv.array(matchedPhy, dim=vcv.dim)
+        RET$vcv <- VCV.array(matchedPhy, dim=vcv.dim)
         RET$vcv.dim <- vcv.dim
     }
     

@@ -1,4 +1,4 @@
-vcv.array <- function(phy, dim=2, compact=TRUE){
+VCV.array <- function(phy, dim=2, compact=TRUE){
     
     ## turns a phylogeny into a 3d array similar to a VCV matrix
     ## but keeping each beanch length separate. This is useful for 
@@ -68,7 +68,7 @@ vcv.array <- function(phy, dim=2, compact=TRUE){
         }
     }
     
-    class(V) <- "vcv.array"
+    class(V) <- "VCV.array"
     return(V)
     
 }
@@ -80,9 +80,9 @@ vcv.array <- function(phy, dim=2, compact=TRUE){
 ## for(t in seq(along=sz)){
 ##     tree <- rcoal(sz[t])
 ##     tm[t,1] <- system.time(x1 <- vcv.phylo(tree))[3]
-##     tm[t,2] <- system.time(x2 <- vcv.array(tree))[3]
-##     tm[t,2] <- system.time(x2 <- vcv.array(tree))[3]
-##     tm[t,3] <- system.time(x3 <- vcv.array(tree, dim=3))[3]
+##     tm[t,2] <- system.time(x2 <- VCV.array(tree))[3]
+##     tm[t,2] <- system.time(x2 <- VCV.array(tree))[3]
+##     tm[t,3] <- system.time(x3 <- VCV.array(tree, dim=3))[3]
 ##     if(sum(x1 - x2) > 1e-10) stop("disagreeement!")
 ##     if(sum(x1 - apply(x3, c(1,2), sum)) > 1e-10) stop("disagreeement2!")
 ## }

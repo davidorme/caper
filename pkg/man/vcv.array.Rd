@@ -1,11 +1,11 @@
-\name{vcv.array}
-\alias{vcv.array}
+\name{VCV.array}
+\alias{VCV.array}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Create a 2D or 3D variance-covariance matrix from a phylogeny}
 \description{
 The function turns a phylogeny into a variance-covariance matrix, as in the function \code{vcv.phylo} in the 'ape' package but can also return a 3D array retaining the individual branch lengths contributing to the shared branch lengths. This is useful for handling some branch length transformations, such as kappa, and has a lower overhead than repeatedly calling \code{vcv.phylo} on a phylogeny after transforming the vector of edge lengths.}
 \usage{
-vcv.array(phy, dim=2, compact=TRUE)
+VCV.array(phy, dim=2, compact=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,16 +21,16 @@ The algorithm for the noncompact form is faster than for the compact form but it
 The \code{apply} function can be easily used to collapse the array down to a standard VCV matrix, as in the example. 
 }
 \value{
-When dim = 2, a variance covariance matrix of class 'vcv.array' of dimension nTips by nTips with dimnames set from the tip labels of the phylogeny.
+When dim = 2, a variance covariance matrix of class 'VCV.array' of dimension nTips by nTips with dimnames set from the tip labels of the phylogeny.
 
-When dim = 3, a 3 dimensional array of class 'vcv.array' with dimensions of the number of taxa in the phylogeny for the rows and columns and either the maximum number of branches on the root to tip path or the number of internal nodes as the depth, depending on the setting of \code{compact}. The rows and columns are named using the tip labels from the phylogeny and the depth only named with node numbers if \code{compact} is TRUE. 
+When dim = 3, a 3 dimensional array of class 'VCV.array' with dimensions of the number of taxa in the phylogeny for the rows and columns and either the maximum number of branches on the root to tip path or the number of internal nodes as the depth, depending on the setting of \code{compact}. The rows and columns are named using the tip labels from the phylogeny and the depth only named with node numbers if \code{compact} is TRUE. 
 }
 \author{David Orme}
 \seealso{ \code{\link[ape]{vcv.phylo}},  \code{\link{pgls}}}
 \examples{
 tree <- rcoal(8)
 tree.VCV <- vcv.phylo(tree)
-tree.VCVA <- vcv.array(tree)
+tree.VCVA <- VCV.array(tree)
 
 # reconstruct a simple VCV array
 tree.VCVA.reduced <- apply(tree.VCVA, c(1,2), sum, na.rm=TRUE)

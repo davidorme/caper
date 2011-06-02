@@ -58,13 +58,13 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000) {
 		## there was a call to lambdaTree(phy,1) - why???	
 		## - get the variance covariance for the tree
 		if(is.null(data$vcv)){
-			vcv <- vcv.array(data$phy)
+			vcv <- VCV.array(data$phy)
 		} else {
 			vcv <- data$vcv
 		}
 		
 		# Simulate traits up the tree
-		ds.phy <- rmvnorm(permut, sigma=unclass(vcv)) # class of 'vcv.array' throws the method dispatch
+		ds.phy <- rmvnorm(permut, sigma=unclass(vcv)) # class of 'VCV.array' throws the method dispatch
 		ds.phy <- as.data.frame(t(ds.phy))
 	
 		## - find the threshold in each variable. 

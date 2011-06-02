@@ -39,6 +39,16 @@
 \alias{MeSA.I}
 \alias{testData}
 \alias{testTree}
+\alias{nul}
+\alias{fix}
+\alias{kld}
+\alias{Kld}
+\alias{kLd}
+\alias{klD}
+\alias{KLd}
+\alias{kLD}
+\alias{KlD}
+\alias{KLD}
 
 \docType{data}
 \title{Datasets used for benchmarking caper}

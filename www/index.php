@@ -57,7 +57,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 <h4>Official versions</h4>
 
-<em>A first official release of caper is currently being tested for CRAN and should be available from 03/06/11</em>
+03/06/11 <em> The source package of caper (version 0.4) is now on CRAN. Binary packages for R 2.13 on Windows and Mac OS X will be available shortly.</em>
 	
 <p>Official 'released' versions of <i>caper</i> for Windows, Mac OS X and Linux are available from the Comprehensive R Archive Network (<a href="http://cran.r-project.org/package=caper">http://cran.r-project.org/package=caper</a>) and can be installed from within R using the following code:</p>
 

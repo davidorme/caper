@@ -57,11 +57,26 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 <h4>Official versions</h4>
 
-03/06/11 <em> The source package of caper (version 0.4) is now on CRAN. Binary packages for R 2.13 on Windows and Mac OS X will be available shortly.</em>
-	
+06/06/11 <em> Version 0.4 of caper is now on CRAN, including both source versions and binary versions for Mac OS X and Windows.</em>
+
 <p>Official 'released' versions of <i>caper</i> for Windows, Mac OS X and Linux are available from the Comprehensive R Archive Network (<a href="http://cran.r-project.org/package=caper">http://cran.r-project.org/package=caper</a>) and can be installed from within R using the following code:</p>
 
 <blockquote><font size=2><tt>install.packages('caper')</tt></font></blockquote>
+
+<p>The table below shows the list of CRAN releases of <i>caper</i> along with the R versions for which binary builds should be available.</p>
+<table>
+<tr>
+<td width=170><b>Version</b></td>
+<td width=80><b>Date</b></td>
+<td width=100><b>R version >=</b></td>
+</tr>
+<tr>
+<td>0.4 (code revision 68)</td>
+<td>04/06/11</td>
+<td>2.13</td>
+</tr>
+</table>
+
 
 <h4>Development versions</h4>
 <p>The package is developed and maintained on the R-Forge website, from which the most recent version of the package can be downloaded or installed. Note that this will include all recent changes and <i>may contain code still in development</i>. Binary packages for Windows and Mac OS X and the most recent version of the source code can be found <a href="http://r-forge.r-project.org/R/?group_id=983">here</a>.</p>

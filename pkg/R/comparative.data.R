@@ -75,8 +75,9 @@ comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit
 			matchedPhy$node.label <- IntNd
 		} else {
 			# set up missing node labels
+			matchedPhy$node.label <- ifelse(matchedPhy$node.label == "", NA, matchedPhy$node.label)
 			if(any(duplicated(na.omit(matchedPhy$node.label)))) stop('Duplicate node labels present in phylogeny')
-			matchedPhy$node.label <- ifelse(matchedPhy$node.label == "" | is.na(matchedPhy$node.label),  IntNd, matchedPhy$node.label)
+			matchedPhy$node.label <- ifelse(is.na(matchedPhy$node.label),  IntNd, matchedPhy$node.label)
 		}
 		
 		

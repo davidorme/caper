@@ -9,7 +9,7 @@
 Calculates the D value, a measure of phylogenetic signal in a binary trait, and tests the estimated D value for significant departure from both random association and the clumping expected under a Brownian evolution threshold model.
 }
 \usage{
-phylo.d(data, phy, names.col, binvar, permut = 1000)
+phylo.d(data, phy, names.col, binvar, permut = 1000, rnd.bias=NULL)
 \method{print}{phylo.d}(x, ...)
 \method{summary}{phylo.d}(object, ...)
 
@@ -21,6 +21,7 @@ phylo.d(data, phy, names.col, binvar, permut = 1000)
   \item{names.col}{A name specifying the column in 'data' that matches rows to tips in 'phy', required when data is not a 'comparative.data' object.}
   \item{binvar}{The name of the variable in \code{data} holding the binary variable of interest.}
   \item{permut}{Number of permutations to be used in the randomisation test.}
+  \item{rnd.bias}{An optional name of a variable in \code{data} holding probability weights to bias the generation of the random distribution. See 'destails'}
   \item{x}{An object of class 'phylo.d'}
   \item{object}{An object of class 'phylo.d'}
   \item{\ldots}{Further arguments to print and summary methods}
@@ -35,7 +36,8 @@ This function calculates the observed D for a binary trait on a tree and compare
 \item{Brownian threshold model}{A continuous trait is evolved along the phylogeny under a Brownian process and then converted to a binary trait using a threshold that reproduces the relative prevalence of the observed trait.}
 }
 The value of D depends on phylogeny size - more sister clades yield higher sums - and so the means of the  two sets of simulated data are used as calibrations to scale both observed and simulated values of D to set points of 0 (as phylogenetically conserved as expected under a Brownian threshold model) and 1 (random). The value of D can be both smaller than 0 (highly conserved) and greater than 1 (overdispersed) and the distributions of scaled D from the simulations are used to assess the significance of the observed scaled D.
-}
+
+\code{rnd.bias} is passed to \code{\link{sample}} as the \code{prob} argument to weight the random shuffles of the observed trait. The weights are not checked for validity.}
 \value{
 Returns an object of class 'phylo.d', which is a list of the following:
 \item{DEstimate}{The estimated D value}
@@ -48,6 +50,7 @@ Returns an object of class 'phylo.d', which is a list of the following:
 \item{phyName}{The name of the phylogeny object used}
 \item{dsName}{The name of the dataframe used}
 \item{nPermut}{The number of permutations used}
+\item{rnd.bias}{If a bias was introduced to the calculation of the random distribution, the bias used, else \code{NULL}}
 }
 \references{Fritz, S. A. and Purvis, A. (2010). Selectivity in mammalian extinction risk and threat types: a new measure of phylogenetic signal strength in binary traits. Conservation Biology, 24(4):1042-1051.}
 \author{Susanne Fritz (SFritz@bio.ku.dk) and David Orme}

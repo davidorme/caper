@@ -18,7 +18,7 @@
 ## ## extra.clumpy  brown.clumpy        random overdispersed 
 ## ##          1.0           5.0           6.5           8.0
 
-phylo.d <- function(data, phy, names.col, binvar, permut=1000) {
+phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias) {
 
     # - test to see if there is a comparative data object and if not then
     #   retrofit the remaining arguments into a comparative data object.
@@ -47,11 +47,19 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000) {
 	# check for a number
     if (!is.numeric(permut)) (stop("'", permut, "' is not numeric.")) 
 	
+	# look for probaility weights argument and get its value if found
+	if(missing(rnd.bias)) rnd.bias<-NULL else {
+    	rnd.bias <- deparse(substitute(rnd.bias))
+    	rnd.ind <- match(rnd.bias, names(data$data))
+    	if (is.na(rnd.ind)) (stop("'", rnd.bias, "' is not a variable in data."))
+		rnd.bias<-data$data[ ,rnd.bias]}
+	
 	## This is rewritten away from the original version with internal functions
 	##  - structure was slowing and the functions aren't externalised ever
 	
 	## Random Association model random data
-		ds.ran <- replicate(permut, sample(ds))
+	##  - with weighted shuffling if weights are given
+		ds.ran <- replicate(permut, sample(ds, prob=rnd.bias))
 	
 	## Brownian Threshold model random data
 	
@@ -131,7 +139,7 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000) {
 		        NodalVals=list(observed = ds.ran.cc$nodVals[, 1,drop=FALSE], 
 			                   random   = ds.ran.cc$nodVals[,-1,drop=FALSE], 
 			                   brownian = ds.phy.cc$nodVals[,-1,drop=FALSE]),
-				binvar = binvar,  data=data, nPermut = permut)
+				binvar = binvar,  data=data, nPermut = permut, rnd.bias=rnd.bias)
 	
 	class(dvals) <- 'phylo.d'
 	return(dvals)
@@ -150,7 +158,7 @@ summary.phylo.d <- function(object, ...){
     cat('\n  Number of permutations : ', object$nPermut)
     
     cat("\n\nEstimated D : ", object$DEstimate)
-    cat("\nProbability of E(D) resulting from no (random) phylogenetic structure : ", object$Pval1)
+    if(is.null(object$rnd.bias)) cat("\nProbability of E(D) resulting from no (random) phylogenetic structure : ", object$Pval1) else cat("\nProbability of E(D) resulting from no (biased random) phylogenetic structure : ", object$Pval1)
     cat("\nProbability of E(D) resulting from Brownian phylogenetic structure    : ", object$Pval0)
     cat("\n\n")
 }

@@ -276,24 +276,26 @@ subset.comparative.data <- function(x, subset, select,  ...){
 		}
 		
 		# Work out which to drop
+		#  - 'drop.tip' will create a pointless tree if asked to drop nothing from a tree 
 		rowToKeep <- match(toKeep, rownames)
-		if(length(rowToKeep) < 2) stop('Comparative dataset reduced to fewer than 2 taxa')
-		
-		toDrop    <- setdiff(rownames, toKeep)
-		# this assumes that drop.tip preserves the remaining order - testing suggests ok
-		x$phy <- drop.tip(x$phy, toDrop)
-		
-		# add to dropped list
-		x$dropped$tips <- c(x$dropped$tips, toDrop)
-		
-        # lose VCV elements if needed
-        if(! is.null(x$vcv)){ 
-			if((x$vcv.dim == 2)){
-				x$vcv <- x$vcv[rowToKeep, rowToKeep] 
-			} else {
-				x$vcv <- x$vcv[rowToKeep, rowToKeep, ] 
+		if(length(rowToKeep) < 2) stop('Comparative dataset cannot be reduced to fewer than 2 taxa')
+		if(length(rowToKeep) != length(rownames)) {
+			toDrop    <- setdiff(rownames, toKeep)
+			# this assumes that drop.tip preserves the remaining order - testing suggests ok
+			if(length(rowToKeep) == length(rownames)) warning('No taxa to drop from comparative dataset') else x$phy <- drop.tip(x$phy, toDrop)
+			
+			# add to dropped list
+			x$dropped$tips <- c(x$dropped$tips, toDrop)
+			
+        	# lose VCV elements if needed
+        	if(! is.null(x$vcv)){ 
+				if((x$vcv.dim == 2)){
+					x$vcv <- x$vcv[rowToKeep, rowToKeep] 
+					} else {
+						x$vcv <- x$vcv[rowToKeep, rowToKeep, ] 
+					}
+				}
 			}
-		}
         x$data <- x$data[rowToKeep,, drop=FALSE]
 	}
 	

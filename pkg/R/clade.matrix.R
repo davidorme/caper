@@ -27,18 +27,21 @@ function(phy){
 	node.id <- names(node.members)
 	for(rows in seq(along=node.id)){
 		clade.mat[node.id[rows], node.members[rows][[1]]] <- 1}
-	
-	# get edge lengths into correct order, inserting root edge
-	if(is.null(phy$root.edge)){
-		edge.len <- c(phy$edge.length,0)
-		} else {
-		edge.len <- c(phy$edge.length,phy$root.edge)}
-	
-	names(edge.len) <- c(phy$edge[,2], nb.tips + 1)
-	edge.len <- edge.len[as.character(mat.names$edges)]
-	
-	RET <- list(clade.matrix=clade.mat, edge.length=edge.len, tip.label=phy$tip.label, edge=phy$edge)
+
+	RET <- list(clade.matrix=clade.mat, tip.label=phy$tip.label, edge=phy$edge)
 	class(RET) <- "clade.matrix"
+
+	# if they exist, get edge lengths into correct order, inserting root edge
+	if(! is.null(phy$edge.length)){
+		if(is.null(phy$root.edge)){
+			edge.len <- c(phy$edge.length,0)
+			} else {
+			edge.len <- c(phy$edge.length,phy$root.edge)}
+	
+		names(edge.len) <- c(phy$edge[,2], nb.tips + 1)
+		edge.len <- edge.len[as.character(mat.names$edges)]
+		RET$edge.length <- edge.len
+	}
 	
 	return(RET)
 }

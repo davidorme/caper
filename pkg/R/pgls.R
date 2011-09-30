@@ -542,11 +542,30 @@ fitted.pgls <- function(object, ...){
 ## CDLO - argument name changed for consistency with S3 generic
 ## CDLO - argument name of x changed to discriminate from generic to plot and print
 
-predict.pgls <- function(object, pred.x, ...) {
-    mu <- as.matrix(coef(object) )
-    ret <- cbind(1,  pred.x) %*% t(mu)
+## predict.pgls <- function(object, pred.x, ...) {
+##     mu <- as.matrix(coef(object) )
+##     ret <- cbind(1,  pred.x) %*% t(mu)
+##     return(ret)
+## }
+
+## - rewritten by CDLO to use standard method as in lm - prompted by Mike Steiper
+predict.pgls <- function (object, newdata=NULL, ...){
+	
+    # pull the data from the model if no new data is provided
+    if(is.null(newdata)){
+    	newdata <- object$data$data
+    }
+    
+    # turn that into a design matrix
+    # need to drop the response from the formula
+    dmat <- model.matrix(delete.response(terms(formula(object))), data=newdata)
+    
+    # multiply through by the coefficients
+    mu <- as.matrix(coef(object))
+    ret <- dmat %*% mu
     return(ret)
 }
+
 
 ## enables the generic AIC methods for objects and lists of objects 
 logLik.pgls <- function(object, REML = FALSE, ...){

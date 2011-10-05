@@ -58,8 +58,13 @@ contrCalc <- function(vals, phy, ref.var, picMethod, crunch.brlen, macro=NULL, t
 		macro <- FALSE
 	}
 	
-	# guard against phylo.d on missing data
-	if(any(is.na(vals)) & picMethod == 'phylo.d') stop('Missing data in phylo.d call.')
+	# guard against phylo.d on missing data and zero branch lengths (Will Pearse)
+	# - testing here and not in phylo.d itself in case anyone wants to
+	#   run the calculations without the phylo.d wrapper
+	if(picMethod == 'phylo.d'){
+		if(any(is.na(vals))) stop('Missing data in phylo.d call.')
+		if(any(phy$edge.length == 0)) stop('Zero branch lengths in phylo.d call.')
+	}
 	
     # loop the nodes
     for(nd in seq_along(contrGp)){

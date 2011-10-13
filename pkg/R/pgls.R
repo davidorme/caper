@@ -38,6 +38,13 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	k <- ncol(x)
 	namey <- names(m)[1]
 
+	# test for variables with no variance in model matrices (thx to Sarah Dryhurst)
+	# - will cause singularity - lm() filters for this and aliases variables
+	#   but here we'll just fail for the time being
+	xVar <- apply(x,2,var)[-1] # drop intercept
+	badCols <- xVar < .Machine$double.eps
+	if(any(badCols)) stop('Model matrix contains columns with zero variance: ', paste(names(xVar)[badCols], collapse=', '))
+
 	## if the comparative data doesn't contain a VCV,
 	## then get one and put it in the data object too. Bit wasteful
 	if(is.null(data$vcv)){

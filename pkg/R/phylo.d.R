@@ -122,7 +122,7 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias) {
 		ransocc <- colSums(ds.ran.cc$contrMat)
 		physocc <- colSums(ds.phy.cc$contrMat)
 		# double check the observed, but only to six decimal places or you can get floating point errors
-		if(round(ransocc[1], digits=6) != round(physocc[1]), digits=6) stop('Problem with character change calculation in phylo.d')
+		if(round(ransocc[1], digits=6) != round(physocc[1], digits=6)) stop('Problem with character change calculation in phylo.d')
 		obssocc <- ransocc[1]
 		ransocc <- ransocc[-1]
 		physocc <- physocc[-1]

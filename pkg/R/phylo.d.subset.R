@@ -39,7 +39,7 @@ phylo.d.subset <- function(data, phy, names.col, binvar, permut=1000, rnd.bias, 
 	
 	# prepare output
 	output.raw <- vector(mode="list", length(phy.subtrees))
-	output.D <- output.depth <- output.P0 <- output.P1 <- numeric(length(phy.subtrees))
+	output.D <- output.depth <- output.P0 <- output.P1 <- output.tips <- output.nodes <- output.bin.freq <- numeric(length(phy.subtrees))
 	
 	##TO-DO:
 	#  - make a 'clean' version where the raw output isn't saved (when used on a big phylogeny this could be big)
@@ -64,9 +64,12 @@ phylo.d.subset <- function(data, phy, names.col, binvar, permut=1000, rnd.bias, 
 		output.P1[i] <- output.raw[[i]]$Pval1
 		clade.mat <- clade.matrix(phy.subtrees[[i]])
 		output.depth[i] <- sum(clade.mat$edge.length[as.logical(clade.mat$clade.matrix[,1])])
+		output.tips[i] <- length(phy.subtrees[[i]]$tip.label)
+		output.nodes[i] <- phy.subtrees[[i]]$Nnode
+		output.bin.freq[i] <- sum(t.data$data[,bininds])
 		}
 	
-	output <- list(raw=output.raw, DEstimate=output.D, Pval1=output.P1, Pval0=output.P0, phy.depth=output.depth)
+	output <- list(raw=output.raw, DEstimate=output.D, Pval1=output.P1, Pval0=output.P0, phy.depth=output.depth, tips=output.tips, nodes=output.nodes, bin.freq=output.bin.freq)
 	class(output)<-'phylo.d.subset'
 	return(output)
 }

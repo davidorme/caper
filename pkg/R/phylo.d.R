@@ -37,8 +37,9 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias) {
 
 	# get the variable out and do a general test for binarity
 	ds <- data$data[ ,bininds]
-	if(length(unique(ds)) != 2) stop("'", binvar, "' doesn't contain two states.")
 	if(any(is.na(ds))) stop("'", binvar, "' contains missing values.")
+	if(length(unique(ds)) > 2) stop("'", binvar, "' contains more than two states.")
+	if(length(unique(ds)) < 2) stop("'", binvar, "' only contains a single state.")
 	
 	# proportion - applies to any two unique values
 	propStates <- unclass(table(ds))

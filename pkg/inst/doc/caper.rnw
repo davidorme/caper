@@ -314,8 +314,24 @@ xl <- c(0,15)
 pvals <- c(1.4, 0.5)
 ec <- ifelse(internal,'red', 'grey30')
 
-zz$edge.length <- ifelse(internal, z$edge.length*pvals[1], z$edge.length)
-plot(zz, edge.col=ec, x.lim=xl, label.offset=0.2)
+## zz$edge.length <- ifelse(internal, z$edge.length*pvals[1], z$edge.length)
+## plot(zz, edge.col=ec, x.lim=xl, label.offset=0.2)
+## mtext(bquote(lambda == .(pvals[1])), side=3, cex=cx, line=ln)
+## abline(v=vlines, lty=2, col='grey')
+## 
+## plot(z,  edge.col=ec, x.lim=xl, label.offset=0.2)
+## abline(v=vlines, lty=2, col='grey')
+## mtext(expression(lambda == 1), side=3, cex=cx, line=ln)
+## 
+## zz$edge.length <- ifelse(internal, z$edge.length*pvals[2], z$edge.length)
+## plot(zz,  edge.col=ec, x.lim=xl, label.offset=0.2)
+## mtext(bquote(lambda == .(pvals[2])), side=3, cex=cx, line=ln)
+## abline(v=vlines, lty=2, col='grey')
+
+# get the branching structure back from the matrix
+dd <- ifelse(lower.tri(V) | upper.tri(V), V * pvals[1], V)
+ddh <- as.phylo(hclust(dist(dd)))
+plot(ddh, edge.col = 'red', x.lim=xl, label.offset=0.2)
 mtext(bquote(lambda == .(pvals[1])), side=3, cex=cx, line=ln)
 abline(v=vlines, lty=2, col='grey')
 
@@ -323,10 +339,12 @@ plot(z,  edge.col=ec, x.lim=xl, label.offset=0.2)
 abline(v=vlines, lty=2, col='grey')
 mtext(expression(lambda == 1), side=3, cex=cx, line=ln)
 
-zz$edge.length <- ifelse(internal, z$edge.length*pvals[2], z$edge.length)
-plot(zz,  edge.col=ec, x.lim=xl, label.offset=0.2)
-mtext(bquote(lambda == .(pvals[2])), side=3, cex=cx, line=ln)
+dd <- ifelse(lower.tri(V) | upper.tri(V), V * pvals[2], V)
+ddh <- as.phylo(hclust(dist(dd)))
+plot(ddh, edge.col = 'red', x.lim=xl, label.offset=0.2)
+mtext(bquote(lambda == .(pvals[1])), side=3, cex=cx, line=ln)
 abline(v=vlines, lty=2, col='grey')
+
 
 # delta: 
 pvals <- c(1.2, 0.5)
@@ -363,7 +381,7 @@ mtext(expression(kappa == 1), side=3, cex=cx, line=ln)
 
 zz$edge.length <- z$edge.length^pvals[2]
 plot(zz, edge.col='red', x.lim=xl, label.offset=0.2)
-mtext(bquote(kappa == .(pvals[2])),  cex=cx, line=ln)
+mtext(bquote(kappa == .(pvals[1])),  cex=cx, line=ln)
 abline(v=vlines, lty=2, col='grey')
 
 @

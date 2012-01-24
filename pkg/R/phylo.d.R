@@ -44,6 +44,7 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias) {
 	# proportion - applies to any two unique values
 	propStates <- unclass(table(ds))
 	propState1 <- propStates[1]/sum(propStates)
+	names(dimnames(propStates)) <- binvar
 	
 	# check for a number
     if (!is.numeric(permut)) (stop("'", permut, "' is not numeric.")) 
@@ -135,7 +136,8 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias) {
 	
 	dvals <- list(DEstimate=soccratio, Pval1=soccpval1, Pval0=soccpval0,
 		        Parameters=list(Observed=obssocc, 
-		        MeanRandom=mean(ransocc), MeanBrownian=mean(physocc)), 
+		        MeanRandom=mean(ransocc), MeanBrownian=mean(physocc)),
+				StatesTable=propStates,
 		        Permutations=list(random=ransocc, brownian=physocc), 
 		        NodalVals=list(observed = ds.ran.cc$nodVals[, 1,drop=FALSE], 
 			                   random   = ds.ran.cc$nodVals[,-1,drop=FALSE], 
@@ -154,7 +156,10 @@ print.phylo.d <- function(x, ...){
 summary.phylo.d <- function(object, ...){
     cat('\nCalculation of D statistic for the phylogenetic structure of a binary variable\n')
     cat('\n  Data : ', object$data$data.name)
-    cat('\n  Binary variable : ', object$binvar)
+    cat('\n  Binary variable: ', object$binvar)
+    stCounts <- paste(names(StatesTable), ' = ', StatesTable, sep='')
+    cat('\n  Counts of states: ', stCounts[1])
+    cat('\n                    ', stCounts[2])
     cat('\n  Phylogeny : ', object$data$phy.name)
     cat('\n  Number of permutations : ', object$nPermut)
     
@@ -163,3 +168,5 @@ summary.phylo.d <- function(object, ...){
     cat("\nProbability of E(D) resulting from Brownian phylogenetic structure    : ", object$Pval0)
     cat("\n\n")
 }
+
+

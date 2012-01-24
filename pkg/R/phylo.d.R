@@ -35,16 +35,24 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias) {
     bininds <- match(binvar, names(data$data))
     if (is.na(bininds)) (stop("'", binvar, "' is not a variable in data."))
 
-	# get the variable out and do a general test for binarity
+	# get the variable out 
 	ds <- data$data[ ,bininds]
 	if(any(is.na(ds))) stop("'", binvar, "' contains missing values.")
+
+	# sort out character variables
+	if(is.character(ds)) ds <- as.factor(ds)
+	
+	# test for binary states
 	if(length(unique(ds)) > 2) stop("'", binvar, "' contains more than two states.")
 	if(length(unique(ds)) < 2) stop("'", binvar, "' only contains a single state.")
 	
-	# proportion - applies to any two unique values
+	# get proportion and table of classes 
 	propStates <- unclass(table(ds))
 	propState1 <- propStates[1]/sum(propStates)
 	names(dimnames(propStates)) <- binvar
+	
+	# convert factors to numeric for calculation
+	if(is.factor(ds)) ds <- as.numeric(ds)
 	
 	# check for a number
     if (!is.numeric(permut)) (stop("'", permut, "' is not numeric.")) 
@@ -156,8 +164,8 @@ print.phylo.d <- function(x, ...){
 summary.phylo.d <- function(object, ...){
     cat('\nCalculation of D statistic for the phylogenetic structure of a binary variable\n')
     cat('\n  Data : ', object$data$data.name)
-    cat('\n  Binary variable: ', object$binvar)
-    stCounts <- paste(names(StatesTable), ' = ', StatesTable, sep='')
+    cat('\n  Binary variable : ', object$binvar)
+    stCounts <- paste(names(object$StatesTable), ' = ', object$StatesTable, sep='')
     cat('\n  Counts of states: ', stCounts[1])
     cat('\n                    ', stCounts[2])
     cat('\n  Phylogeny : ', object$data$phy.name)

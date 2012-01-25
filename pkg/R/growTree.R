@@ -493,6 +493,9 @@ as.comparative.data.growTree <- function(x, ...){
         phy <- list(edge=matrix(c(1,2), ncol=2), edge.length=lineages$lin.age[1], 
                     tip.label=1, root.edge=0, Nnode=1)
         class(phy) <- "phylo"
+		# extract data for use in comparative data objects.
+		linNoR <- lineages
+		names(linNoR)[2] <- 'node'
     }
     
 	# sort out comparative data

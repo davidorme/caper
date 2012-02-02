@@ -18,7 +18,7 @@ These are simple summary methods, accessor functions and summary and print metho
 \method{coef}{pgls}(object, ...)
 \method{residuals}{pgls}(object, phylo = FALSE, ...)
 \method{fitted}{pgls}(object, ...)
-\method{predict}{pgls}(object, pred.x, ...)
+\method{predict}{pgls}(object, newdata, ...)
 \method{summary}{pgls}(object, ...)
 \method{print}{pgls}(x, digits = max(3, getOption("digits") - 3), ...)
 \method{print}{summary.pgls}(x, digits = max(3, getOption("digits") - 3), ...)
@@ -28,7 +28,7 @@ These are simple summary methods, accessor functions and summary and print metho
   \item{object}{An object of class 'pgls'.}
   \item{x}{An object of class 'pgls'.}
   \item{phylo}{Return phylogenetically corrected residuals or ordinary residuals (see details).}
-  \item{pred.x}{Alternative data for predicting from 'pgls' models.}
+  \item{newdata}{Alternative data for predicting from 'pgls' models.}
   \item{digits}{Number of digits to show in summary methods.}
   \item{...}{Further arguments to methods.}
 }

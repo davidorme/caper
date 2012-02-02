@@ -18,7 +18,7 @@
 ## ## extra.clumpy  brown.clumpy        random overdispersed 
 ## ##          1.0           5.0           6.5           8.0
 
-phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias) {
+phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias=NULL) {
 
     # - test to see if there is a comparative data object and if not then
     #   retrofit the remaining arguments into a comparative data object.
@@ -58,11 +58,12 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias) {
     if (!is.numeric(permut)) (stop("'", permut, "' is not numeric.")) 
 	
 	# look for probaility weights argument and get its value if found
-	if(missing(rnd.bias)) rnd.bias<-NULL else {
+	if(! is.null(rnd.bias)){
     	rnd.bias <- deparse(substitute(rnd.bias))
     	rnd.ind <- match(rnd.bias, names(data$data))
     	if (is.na(rnd.ind)) (stop("'", rnd.bias, "' is not a variable in data."))
-		rnd.bias<-data$data[ ,rnd.bias]}
+		rnd.bias<-data$data[ ,rnd.bias]
+	}
 	
 	## This is rewritten away from the original version with internal functions
 	##  - structure was slowing and the functions aren't externalised ever

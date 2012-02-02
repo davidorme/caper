@@ -1,4 +1,6 @@
-phylo.d.subset <- function(data, phy, names.col, binvar, permut=1000, rnd.bias, min.tips=1, max.tips=length(data$phy$tip.label), min.nodes=1, max.nodes=data$phy$Nnode, verbose=FALSE) {
+phylo.d.subset <- function(data, phy, names.col, binvar, permut=1000, 
+	                       rnd.bias=NULL, min.tips=1, max.tips=length(data$phy$tip.label), 
+	                       min.nodes=1, max.nodes=data$phy$Nnode, verbose=FALSE) {
 
     # - test to see if there is a comparative data object and if not then
     #   retrofit the remaining arguments into a comparative data object.

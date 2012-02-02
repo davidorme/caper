@@ -9,7 +9,7 @@
 Calculates the D value, a measure of phylogenetic signal in a binary trait, and tests the estimated D value for significant departure from both random association and the clumping expected under a Brownian evolution threshold model. Does this across clades within a phylogeny.
 }
 \usage{
-phylo.d.subset(data, phy, names.col, binvar, permut = 1000, rnd.bias=NULL, verbose=FALSE, min.tips=1, max.tips=length(data$phy$tip.label), min.nodes=1, max.nodes=data$phy$Nnode)
+phylo.d.subset(data, phy, names.col, binvar, permut = 1000, rnd.bias=NULL, min.tips=1, max.tips=length(data$phy$tip.label), min.nodes=1, max.nodes=data$phy$Nnode, verbose=FALSE)
 \method{print}{phylo.d.subset}(x, ...)
 \method{summary}{phylo.d.subset}(object, ...)
 

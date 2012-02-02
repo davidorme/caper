@@ -22,6 +22,7 @@
 
 <<echo=FALSE>>=
 options(width=85)
+library(xtable)
 @
 
 

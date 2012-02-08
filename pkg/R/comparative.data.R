@@ -99,7 +99,9 @@ comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit
     
     # NA handling
     if(na.omit){
-        RET <- na.omit(RET, scope) 
+    	before.drop.rows <- rownames(RET$data)
+        RET <- na.omit(RET, scope)
+        if(!identical(rownames(RET$data), before.drop.rows)) RET$dropped$NA.rows <- before.drop.rows
     }
     
 	if(warn.dropped){

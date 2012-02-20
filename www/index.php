@@ -71,8 +71,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <td width=100><b>R version >=</b></td>
 </tr>
 <tr>
-<td>0.5 (code revision 91)</td>
-<td>20/02/12</td>
+<td>0.5 (code revision 92)</td>
+<td>21/02/12</td>
 <td>2.14</td>
 </tr>
 <tr>

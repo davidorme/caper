@@ -95,7 +95,7 @@ summary.phylo.d.subset <- function(object, ...){
     cat('\n  Number of permutations : ', object$raw[[1]]$nPermut)
     
     cat("\n\nEstimated D values: \n")
-	t<-format(round(object$DEstimate, digit=2), trim=TRUE)
+	t<-format(round(object$DEstimate, digits=2), trim=TRUE)
 	cat(format(object$DEstimate, width=nchar(t)))
 	if(is.null(object$raw[[1]]$rnd.bias)) cat("\nProbabilities of E(D) resulting from no (random) phylogenetic structure : \n") else cat("\nProbability of E(D) resulting from no (biased random) phylogenetic structure : \n")
 	cat(format(object$Pval0, width=nchar(t)))

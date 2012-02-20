@@ -8,5 +8,5 @@ Maintainer: David Orme <d.orme@imperial.ac.uk>
 Depends: R (>= 2.6.0), ape, MASS, mvtnorm
 Suggests: xtable
 Description: Functions for performing phylogenetic comparative analyses.
-License: GPL (>= 2) 
+License: GPL (>= 2)
 

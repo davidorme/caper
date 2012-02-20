@@ -223,7 +223,7 @@ growTree <- function(b=1,d=0,halt=20, grain=0.1, linObj=NULL,
 
         ## - force multiplication by unity to extend constants across the clade
 	    unitConst <- rep(1,length(lineages$id))
-        rates <- lapply(rateExp, function(X) eval(X, env=c(lineages, clade)) * unitConst)
+        rates <- lapply(rateExp, function(X) eval(X, envir=c(lineages, clade)) * unitConst)
 	    
         ## negative rates?
         if(any(unlist(rates) < 0)){
@@ -247,7 +247,7 @@ growTree <- function(b=1,d=0,halt=20, grain=0.1, linObj=NULL,
 	    return(rates)
 	}
 	
-    while( ! any(haltStatus <-sapply(halt, eval, env=c(lineages, clade)))){
+    while( ! any(haltStatus <- sapply(halt, eval, envir=c(lineages, clade)))){
         
         ## evaluate the birth and death rate expressions
         bRates <- ratesCheck(b, lineages, inf.rates, neg.rates)
@@ -352,7 +352,7 @@ growTree <- function(b=1,d=0,halt=20, grain=0.1, linObj=NULL,
            ## inheritance rules go in here
            if(! is.null(inheritance)){
                for(x in seq(along=inheritance)){
-                   daughterInfo[, names(inheritance)[x]] <- eval(inheritance[[x]], env=daughterInfo)
+                   daughterInfo[, names(inheritance)[x]] <- eval(inheritance[[x]], envir=daughterInfo)
                }
            }
            

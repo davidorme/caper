@@ -145,7 +145,7 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
     
 	## run the likelihood function again with the fixed parameter values
 	## ll <- log.likelihood(optimPar=NULL, fixedPar=fixedPar, y, x, V, optim=FALSE)
-	ll <- pgls.likelihood(optimPar=NULL, fixedPar=fixedPar, y, x, V, optim=FALSE)
+	ll <- pgls.likelihood(optimPar=NULL, fixedPar=fixedPar, y, x, V, optim.output=FALSE)
 	
 	## store the log likelihood of the optimized solution for use in ci.searchs
 	log.lik <- ll$ll

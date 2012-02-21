@@ -57,7 +57,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 <h4>Official versions</h4>
 
-20/02/12 <em> Version 0.5 of caper is now on CRAN, includes bug fixes and compatibility with R >= 2.14<\em>. Thanks for bug reports in this update to: Tom Kraft, Mike Steiper, Sarah Dryhurst, Kirsty McGregor and Lynsey McInnes.
+20/02/12 <em> Version 0.5 of caper is now on CRAN, includes bug fixes and compatibility with R >= 2.14</em>. Thanks for bug reports in this update to: Tom Kraft, Mike Steiper, Sarah Dryhurst, Kirsty McGregor and Lynsey McInnes.
 
 <p>Official 'released' versions of <i>caper</i> for Windows, Mac OS X and Linux are available from the Comprehensive R Archive Network (<a href="http://cran.r-project.org/package=caper">http://cran.r-project.org/package=caper</a>) and can be installed from within R using the following code:</p>
 

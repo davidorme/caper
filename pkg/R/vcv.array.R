@@ -12,6 +12,10 @@ VCV.array <- function(phy, dim=2, compact=TRUE){
     if (class(phy) != "phylo") 
         stop("object \"phy\" is not of class \"phylo\"")
     
+    if(is.null(phy$edge.length))
+    	stop("Object \"phy\" is missing edge lengths. Cannot provide VCV matrix.")
+
+    
     if(! dim %in% 2:3) stop("dim must be 2 or 3, for a VCV matrix or array respectively. ")
     
     cm <- clade.matrix(phy)

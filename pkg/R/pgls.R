@@ -2,7 +2,7 @@
 
 pgls <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0, 
 	             param.CI = 0.95, control = list(fnscale=-1), 
-                 bounds = list(lambda=c(1e-6,1), kappa=c(1e-6,3), delta=c(1e-6,3))) {
+                 bounds = NULL) {
 
 	## bounds go singular: bounds = list(delta = c(1e-04, 3), lambda = c(1e-04,  0.99999), kappa = c(1e-04, 3))
 	
@@ -65,11 +65,20 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 			stop('param.CI is not a number between 0 and 1.')
 	}
 	
-	# check and sort elements of bounds
-	if(! setequal(names(bounds), c('kappa', 'lambda', 'delta'))){
-		stop("Bounds does not contain elements labelled 'kappa','lambda' and 'delta'")
+	# check and insert elements from user bounds
+	usrBounds <- bounds
+	bounds <- list(kappa=c(1e-6,3), lambda=c(1e-6,1), delta=c(1e-6,3))
+	if(! is.null(usrBounds)){
+		if(! is.list(usrBounds))
+			stop("Bounds must be a list of named bounds for any or all of kappa, lambda and delta")
+
+		usrNames <- names(usrBounds)
+		badNames <- setdiff(usrNames, c('kappa', 'lambda', 'delta')) 
+		if(length(badNames) > 0)
+			stop("The list of bounds contains names other than kappa, lambda and delta")
+		
+		for(nm in usrNames){bounds[nm] <- usrBounds[nm]}
 	}
-	bounds <- bounds[c('kappa','lambda','delta')]
 	
 	## check the branch length transformations to be applied
 	## - gather into a named list: names are used throughout to 

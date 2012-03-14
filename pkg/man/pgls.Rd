@@ -22,7 +22,7 @@ pgls.blenTransform(V, fixedPar)
 \item{delta}{A value for the delta transformation.}
 \item{param.CI}{A p value used to calculate confidence intervals.}
 \item{control}{A list of control parameters for the optim function.}
-\item{bounds}{A list of length three giving upper and lower bounds for branch length parameters.}
+\item{bounds}{A list of bounds to use for branch length transformations (see Details).}
 \item{optimPar}{A named vector of branch length parameters to be optimised to find the maximum likelihood value.}
 \item{fixedPar}{A named vector of fixed values for branch length parameters.}
 \item{y}{A column matrix of the model response.}
@@ -33,6 +33,8 @@ pgls.blenTransform(V, fixedPar)
 }
 \details{
 This function fits a linear model controlling for the non-independence between cases resulting from phylogenetic structure in the data. The stucture of the phylogenetic signal can be controlled by altering the parameters lambda, delta and kappa (see the 'caper' vignette for details). The implementation of the method is currently as described in Freckleton et al (2002). 
+
+The branch length transformations can be optimised between bounds using maximum likelihood by setting the value for a transformation to 'ML'. The default bounds are: lambda = c(1e-6,1), kappa = c(1e-6,3) and delta=c(1e-6,3). These defaults may be overridden by passing a named list with new elements to the bounds argument - only the bounds to be changed need to be provided (e.g. bounds=list(lambda=c(0,3))).
 
 The 'pgls.likelihood' and 'pgls.blenTransform' methods are not primarily intended to be called by users. The 'pgls.likelihood' function provides a general method to calculate the likelihood of a model, given the covariance matrix, response, design matrix and branch length parameters. 
 }

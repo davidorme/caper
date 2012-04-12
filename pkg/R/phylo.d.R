@@ -71,7 +71,7 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias=NULL) {
 	
 	if(any(el[elTip] == 0)) 
 		stop('Phylogeny contains pairs of tips on zero branch lengths, cannot currently simulate')
-	if(any(el[elTip] == 0)) 
+	if(any(el[! elTip] == 0)) 
 		stop('Phylogeny contains zero length internal branches. Use di2multi.')
 	
 	## This is rewritten away from the original version with internal functions

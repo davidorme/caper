@@ -65,6 +65,15 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias=NULL) {
 		rnd.bias<-data$data[ ,rnd.bias]
 	}
 	
+	# check tree branch lengths
+	el    <- data$phy$edge.length
+	elTip <- data$phy$edge[,2] <= length(data$phy$tip.label)
+	
+	if(any(el[elTip] == 0)) 
+		stop('Phylogeny contains pairs of tips on zero branch lengths, cannot currently simulate')
+	if(any(el[elTip] == 0)) 
+		stop('Phylogeny contains zero length internal branches. Use di2multi.')
+	
 	## This is rewritten away from the original version with internal functions
 	##  - structure was slowing and the functions aren't externalised ever
 	

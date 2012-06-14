@@ -42,7 +42,7 @@ The randomization option generates confidence intervals around the mean I'.
 }
 \value{
 The function \code{fusco.test} produces an object of class 'fusco' containing:
-	\item{observed}{A data frame of informative nodes showing nodal imbalance statistics.}
+	\item{observed}{A data frame of informative nodes showing nodal imbalance statistics. If the phylogeny has labelled nodes, then the node names are also returned in this data frame.}
 	\item{median}{The median value of I.}
 	\item{qd}{The quartile deviation of I.}
 	\item{tipsAsSpecies}{A logical indicating whether the tips of the trees were treated as species or higher taxa.}

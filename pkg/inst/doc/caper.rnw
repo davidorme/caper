@@ -342,7 +342,7 @@ mtext(expression(lambda == 1), side=3, cex=cx, line=ln)
 dd <- ifelse(lower.tri(V) | upper.tri(V), V * pvals[2], V)
 ddh <- as.phylo(hclust(dist(dd)))
 plot(ddh, edge.col = 'red', x.lim=xl, label.offset=0.2)
-mtext(bquote(lambda == .(pvals[1])), side=3, cex=cx, line=ln)
+mtext(bquote(lambda == .(pvals[2])), side=3, cex=cx, line=ln)
 abline(v=vlines, lty=2, col='grey')
 
 

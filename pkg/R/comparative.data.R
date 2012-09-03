@@ -35,6 +35,8 @@ comparative.data <- function(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit
 		}
             
         if(any(duplicated(phy$tip.label))) stop('Duplicate tip labels present in phylogeny')
+        if(any(duplicated(c(phy$tip.label, phy$node.label)))) stop('Labels duplicated between tips and nodes in phylogeny')
+
 
     # MERGE
     

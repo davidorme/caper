@@ -6,6 +6,7 @@
 \alias{print.pgls}
 \alias{summary.pgls}
 \alias{print.summary.pgls}
+\alias{nobs.pgls}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -22,6 +23,8 @@ These are simple summary methods, accessor functions and summary and print metho
 \method{summary}{pgls}(object, ...)
 \method{print}{pgls}(x, digits = max(3, getOption("digits") - 3), ...)
 \method{print}{summary.pgls}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{nobs}{pgls}(object, ...)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

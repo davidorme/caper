@@ -164,7 +164,7 @@ na.omit.comparative.data <- function(object, scope=NULL, ...){
         # lose bits of tree
         object$phy <- drop.tip(object$phy, to.drop) 
         # lose rows
-        object$data <- object$data[-to.drop,]
+        object$data <- object$data[-to.drop,, drop=FALSE]
         
         # lose VCV elements if needed
         if(! is.null(object$vcv)){ 
@@ -325,13 +325,19 @@ reorder.comparative.data <- function(x, order = "cladewise", ...){
 	# otherwise
     nb.tip <- length(x$phy$tip.label)
     nb.edge <- dim(x$phy$edge)[1]
-    neworder <- if (order == "cladewise") 
-        .C("neworder_cladewise", as.integer(nb.tip), as.integer(x$phy$edge[, 
-            1]), as.integer(x$phy$edge[, 2]), as.integer(nb.edge), 
-            integer(nb.edge), PACKAGE = "ape")[[5]]
-    else .C("neworder_pruningwise", as.integer(nb.tip), as.integer(nb.node), 
-        as.integer(x$phy$edge[, 1]), as.integer(x$phy$edge[, 2]), as.integer(nb.edge), 
-        integer(nb.edge), PACKAGE = "ape")[[6]]
+
+	# get the new order - testing for ape version for change in code
+	if( packageVersion('ape') >= '3.0.5'){
+		neworder <- reorder(x$phy, order=order, index.only=TRUE)
+	} else {
+	    neworder <- if (order == "cladewise") 
+	        .C("neworder_cladewise", as.integer(nb.tip), as.integer(x$phy$edge[, 
+	            1]), as.integer(x$phy$edge[, 2]), as.integer(nb.edge), 
+	            integer(nb.edge), PACKAGE = "ape")[[5]]
+	    else .C("neworder_pruningwise", as.integer(nb.tip), as.integer(nb.node), 
+	        as.integer(x$phy$edge[, 1]), as.integer(x$phy$edge[, 2]), as.integer(nb.edge), 
+	        integer(nb.edge), PACKAGE = "ape")[[6]]
+	}
 	
 	# apply new order to elements
     x$phy$edge <- x$phy$edge[neworder, ]

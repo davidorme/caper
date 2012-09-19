@@ -53,7 +53,7 @@ Returns an object of class 'phylo.d', which is a list of the following:
 \item{rnd.bias}{If a bias was introduced to the calculation of the random distribution, the bias used, else \code{NULL}}
 }
 \references{Fritz, S. A. and Purvis, A. (2010). Selectivity in mammalian extinction risk and threat types: a new measure of phylogenetic signal strength in binary traits. Conservation Biology, 24(4):1042-1051.}
-\author{Susanne Fritz (SFritz@bio.ku.dk) and David Orme}
+\author{Susanne Fritz <Susanne.Fritz@senckenberg.de> and David Orme}
 \examples{
 data(BritishBirds)
 BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)

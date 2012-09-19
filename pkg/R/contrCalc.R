@@ -129,8 +129,15 @@ contrCalc <- function(vals, phy, ref.var, picMethod, crunch.brlen, macro=NULL, t
                                 group <- (rv > mean(rv, na.rm=TRUE)) # TODO - think >= or >?                               
                            }
                      
-                            ProdValBl <- aggregate(compVals * (1/bl), by=list(group), FUN=sum)[,-1]
-                            SumWght <- aggregate((1/bl), by=list(group), FUN=sum)[,-1]
+                            # ProdValBl <- aggregate(compVals * (1/bl), by=list(group), FUN=sum)[,-1]
+                            # SumWght <- aggregate((1/bl), by=list(group), FUN=sum)[,-1]
+                            # subNV <- as.matrix(ProdValBl/SumWght)
+                            # subBL <- crunch.brlen + (1 / SumWght)
+
+                            invbl <- 1/bl
+                            ProdValBl <- vals * invbl
+                            ProdValBl <- rbind(colSums(ProdValBl[! group,, drop=FALSE]), colSums(ProdValBl[group,, drop=FALSE]))
+                            SumWght <- c(sum(invbl[! group]), sum(invbl [group]))
                             subNV <- as.matrix(ProdValBl/SumWght)
                             subBL <- crunch.brlen + (1 / SumWght)
                      
@@ -177,11 +184,18 @@ contrCalc <- function(vals, phy, ref.var, picMethod, crunch.brlen, macro=NULL, t
                                 group <- (rv > mean(rv, na.rm=TRUE)) # TODO - think >= or >?                               
                            }
 
-                            ProdValBl <- aggregate(vals * (1/bl), by=list(group), FUN=sum)[,-1]
-                            SumWght <- aggregate((1/bl), by=list(group), FUN=sum)[,-1]
+                            # ProdValBl <- aggregate(vals * (1/bl), by=list(group), FUN=sum)[,-1]
+                            # SumWght <- aggregate((1/bl), by=list(group), FUN=sum)[,-1]
+                            # subNV <- as.matrix(ProdValBl/SumWght)
+                            # subBL <- crunch.brlen + (1 / SumWght)
+
+                            invbl <- 1/bl
+                            ProdValBl <- vals * invbl
+                            ProdValBl <- rbind(colSums(ProdValBl[! group,, drop=FALSE]), colSums(ProdValBl[group,, drop=FALSE]))
+                            SumWght <- c(sum(invbl[! group]), sum(invbl [group]))
                             subNV <- as.matrix(ProdValBl/SumWght)
                             subBL <- crunch.brlen + (1 / SumWght)
-							
+
 							# get the nodal values 
                             currNV <- colSums(subNV*(1/subBL))/sum(1/subBL) # weighted means
 							# subtract the parent from the children and sum the absolute changes
@@ -249,10 +263,17 @@ contrCalc <- function(vals, phy, ref.var, picMethod, crunch.brlen, macro=NULL, t
                                 # TODO - Hmm. what to do if there is no variance in the reference variable
                                 group <- (rv > mean(rv, na.rm=TRUE)) # From CAIC, this looks like gt not geq?
                         
-                                ProdValBl <- aggregate(compVals * (1/bl), by=list(group), FUN=sum)[,-1]
-                                SumWght <- aggregate((1/bl), by=list(group), FUN=sum)[,-1]
-                                subNV <- as.matrix(ProdValBl/SumWght)
-                                subBL <- crunch.brlen + (1 / SumWght)
+                                # ProdValBl <- aggregate(compVals * (1/bl), by=list(group), FUN=sum)[,-1]
+                                # SumWght <- aggregate((1/bl), by=list(group), FUN=sum)[,-1]
+                                # subNV <- as.matrix(ProdValBl/SumWght)
+                                # subBL <- crunch.brlen + (1 / SumWght)
+
+	                            invbl <- 1/bl
+	                            ProdValBl <- vals * invbl
+	                            ProdValBl <- rbind(colSums(ProdValBl[! group,, drop=FALSE]), colSums(ProdValBl[group,, drop=FALSE]))
+	                            SumWght <- c(sum(invbl[! group]), sum(invbl [group]))
+	                            subNV <- as.matrix(ProdValBl/SumWght)
+	                            subBL <- crunch.brlen + (1 / SumWght)
  
                                 currContr <- diff(subNV)
                                 currNV <- colSums(subNV*(1/subBL))/sum(1/subBL) # weighted means

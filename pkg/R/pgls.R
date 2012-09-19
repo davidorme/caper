@@ -595,6 +595,10 @@ logLik.pgls <- function(object, REML = FALSE, ...){
     val
 }
 
+## generic function for number of observations. 
+nobs.pgls <- function(object, ...) length(resid(object))
+
+
 ## # This returns the AICc
 ## ## CDLO - argument name changed for consistency with S3 generic
 ## AICc.pgls <- function(object) {

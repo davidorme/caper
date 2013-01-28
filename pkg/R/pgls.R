@@ -470,9 +470,9 @@ summary.pgls <- function(object,...) {
 	if(! is.null(object$param.CI)) ans$param.CI <- object$param.CI
 	
 	if(! is.null(object$na.action)) ans$na.action <- object$na.action
-	## model statistics: p includes the intercept - it is the number of columns of the design matrix
 	
-	ans$fstatistic <- c(value= ((object$NSSQ - object$RSSQ) / object$RMS) / (object$k - 1),  numdf=p,dendf=rdf) 
+	## model statistics: p includes the intercept - it is the number of columns of the design matrix
+	ans$fstatistic <- c(value= ((object$NSSQ - object$RSSQ) / object$RMS) / (object$k - 1),  numdf= p-1,dendf=rdf) 
 	ans$r.squared <- (object$NSSQ - object$RSSQ) / object$NSSQ
     ans$adj.r.squared <- (object$NMS - object$RMS) / object$NMS
    	

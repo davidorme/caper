@@ -75,7 +75,7 @@ anova.caiclist <- function(object, ..., scale=0, test='F'){
 	## OK - now pass the mod parts of those object into anova.lmlist()
 	mods <- lapply(objects, '[[', 'mod')
 	args <- c(mods, list(scale=scale, test=test))
-	anv  <- do.call('anova.lmlist', args)
+	anv  <- do.call('anova', args)
 	# attr(anv, 'heading')[1] <- "Analysis of Variance Table from 'caic' objects\n"
 	return(anv)
 }

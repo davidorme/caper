@@ -15,7 +15,8 @@ Comparative dataset creation
 A simple tool to combine phylogenies with datasets and ensure consistent structure and ordering for use in functions. 
 }
 \usage{
-comparative.data(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE, force.root=FALSE, warn.dropped=FALSE, scope=NULL)
+comparative.data(phy, data, names.col, vcv=FALSE, vcv.dim=2, na.omit=TRUE, 
+	             force.root=FALSE, warn.dropped=FALSE, scope=NULL)
 \method{print}{comparative.data}(x, ...)
 \method{na.omit}{comparative.data}(object, scope=NULL, ...)
 \method{subset}{comparative.data}(x, subset, select, ...)

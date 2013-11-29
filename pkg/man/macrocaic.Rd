@@ -6,7 +6,9 @@
 Macroevolutionary hypotheses about correlates of species richness require testing in a phylogenetic framework in order to avoid phylogenetic autocorrelation. Independent contrasts as described by Felsenstein (1985) are appropriate for explanatory variables in such models but not for species richness as the response variable. This function implements two methods for calculating species richness constrasts described by Agapow and Isaac (2002) and originally implemented in the program MacroCAIC.
 }
 \usage{
-macrocaic(formula, data, phy, names.col, macroMethod = "RRD", stand.contr = TRUE, robust=Inf, ref.var = NULL, node.depth = NULL, macroMinSize = 3, equal.branch.length = FALSE)
+macrocaic(formula, data, phy, names.col, macroMethod = "RRD", 
+          stand.contr = TRUE, robust=Inf, ref.var = NULL, node.depth = NULL, 
+          macroMinSize = 3, equal.branch.length = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

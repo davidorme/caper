@@ -6,7 +6,8 @@
 Calculate a linear model using the brunch algorithm.
 }
 \usage{
-brunch(formula, data, phy, names.col, stand.contr = TRUE, robust = Inf, ref.var=NULL, node.depth=NULL, equal.branch.length=FALSE)
+brunch(formula, data, phy, names.col, stand.contr = TRUE, robust = Inf, 
+       ref.var=NULL, node.depth=NULL, equal.branch.length=FALSE)
 }
 
 

@@ -13,8 +13,11 @@
 These functions are a set of diagnostic tools to assess whether a particular contrast model is adequate.
 }
 \usage{
-caic.table(caicObj, validNodes=TRUE, nodalValues=FALSE, ultrametric.tol=0.0001, CAIC.codes=FALSE, style="CAIC")
-caic.diagnostics(caicObj, which.terms=NULL, which.tests=c("NV","SD","AGE"), plot=TRUE, outlier=3, ultrametric.tol=0.0001, plot.signif=plot, alpha=0.05, cex.id=0.7,  ...)
+caic.table(caicObj, validNodes=TRUE, nodalValues=FALSE, ultrametric.tol=0.0001,
+           CAIC.codes=FALSE, style="CAIC")
+caic.diagnostics(caicObj, which.terms=NULL, which.tests=c("NV","SD","AGE"),
+           plot=TRUE, outlier=3, ultrametric.tol=0.0001, plot.signif=plot, 
+           alpha=0.05, cex.id=0.7,  ...)
 \method{print}{caic.diagnostics}(x, ...)
 caic.robust(caicObj, robust=3)
 caic.label(phy, charset=NULL, action="insert", style="CAIC", tips=FALSE)

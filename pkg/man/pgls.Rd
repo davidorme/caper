@@ -9,7 +9,9 @@
 \description{
 Fits a linear model, taking into account phylogenetic non-independence between data points. The strength and type of the phylogenetic signal in the data matrix can also be accounted for by adjusting branch length transformations (lambda, delta and kappa). These transformations can also be optimised to find the maximum likelihood transformation given the data and the model.}
 \usage{
-pgls(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0, param.CI = 0.95, control = list(fnscale=-1), bounds = list(lambda=c(1e-6,1), kappa=c(1e-6,3), delta=c(1e-6,3)))
+pgls(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0, param.CI = 0.95, 
+	 control = list(fnscale=-1), bounds = list(lambda=c(1e-6,1), 
+	 kappa=c(1e-6,3), delta=c(1e-6,3)))
 pgls.likelihood(optimPar, fixedPar, y, x, V, optim.output=TRUE, names.optim=NULL)
 pgls.blenTransform(V, fixedPar)
 }

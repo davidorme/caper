@@ -7,7 +7,10 @@
 This function provides a very general environment in which to simulate trees. The basic philosophy is that the user provides a series of expressions that define speciation rates, extinction rates and trait evolution. These expressions can make use of information about the internal state of the tree, allowing for very flexible definitions of rules for tree growth.}
 
 \usage{
-growTree(b = 1, d = 0, halt = 20, grain = 0.1, linObj = NULL, ct.start = NULL, ct.change = NULL, ct.var = NULL, dt.rates = NULL, inheritance = NULL, trace.events = FALSE, trace.cladesize = FALSE, output.lineages = FALSE, neg.rates = "abort", inf.rates = "abort", stall.time = 10, extend.proportion=0)
+growTree(b = 1, d = 0, halt = 20, grain = 0.1, linObj = NULL, ct.start = NULL,
+	     ct.change = NULL, ct.var = NULL, dt.rates = NULL, inheritance = NULL, 
+		 trace.events = FALSE, trace.cladesize = FALSE, output.lineages = FALSE, 
+		 neg.rates = "abort", inf.rates = "abort", stall.time = 10, extend.proportion=0)
 \method{as.comparative.data}{growTree}(x, ...)
 }
 

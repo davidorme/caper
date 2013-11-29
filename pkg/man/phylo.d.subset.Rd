@@ -9,7 +9,9 @@
 Calculates the D value, a measure of phylogenetic signal in a binary trait, and tests the estimated D value for significant departure from both random association and the clumping expected under a Brownian evolution threshold model. Does this across clades within a phylogeny.
 }
 \usage{
-phylo.d.subset(data, phy, names.col, binvar, permut = 1000, rnd.bias=NULL, min.tips=1, max.tips=length(data$phy$tip.label), min.nodes=1, max.nodes=data$phy$Nnode, verbose=FALSE)
+phylo.d.subset(data, phy, names.col, binvar, permut = 1000, rnd.bias=NULL, 
+	           min.tips=1, max.tips=length(data$phy$tip.label), min.nodes=1, 
+			   max.nodes=data$phy$Nnode, verbose=FALSE)
 \method{print}{phylo.d.subset}(x, ...)
 \method{summary}{phylo.d.subset}(object, ...)
 
@@ -47,11 +49,11 @@ Returns an object of class 'phylo.d.subset', which is a list of the following:
 \examples{
 data(BritishBirds)
 BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
-#NOT-RUN - would take a long time
-#redPhyloDSubsets <- phylo.d.subset(BritishBirds, binvar=Red_list)
-#So let's only look at big clades
-redPhyloDSubsets <- phylo.d.subset(BritishBirds, binvar=Red_list, verbose=TRUE, min.tips=10, min.nodes=5)
-print(redPhyloDSubsets)
+# Look at big clades only
+\dontrun{
+bigClades <- phylo.d.subset(BritishBirds, binvar=Red_list, verbose=TRUE, min.tips=10, min.nodes=5)
+print(bigClades)
+}
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

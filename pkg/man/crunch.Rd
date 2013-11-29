@@ -7,7 +7,9 @@
 Calculate a linear model using the crunch algorithm.
 }
 \usage{
-crunch(formula, data, phy, names.col, stand.contr = TRUE, robust=Inf, ref.var=NULL, node.depth=NULL, polytomy.brlen=0, equal.branch.length=FALSE, factor.action="abort")
+crunch(formula, data, phy, names.col, stand.contr = TRUE, robust=Inf,
+	   ref.var=NULL, node.depth=NULL, polytomy.brlen=0, equal.branch.length=FALSE, 
+	   factor.action="abort")
 }
 
 

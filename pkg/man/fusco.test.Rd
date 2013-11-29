@@ -12,7 +12,8 @@ Fusco and Cronk (1995) described a method for testing the imbalance of phylogene
 Purvis et al. (2002) demonstrated that I is not independent of the node size S, resulting in a bias to the expected median of 0.5. They proposed a modification (I') that corrects this to give a statistic with an expected median of 0.5 regardless of node size. The defaults in this function perform testing of imbalance using I', but it is also possible to use the original measure proposed by Fusco and Cronk (1995).
 }
 \usage{
-fusco.test(phy, data , names.col, rich, tipsAsSpecies=FALSE, randomise.Iprime=TRUE,  reps=1000, conf.int=0.95)
+fusco.test(phy, data , names.col, rich, tipsAsSpecies=FALSE, 
+	       randomise.Iprime=TRUE,  reps=1000, conf.int=0.95)
 \method{print}{fusco}(x, ...)
 \method{summary}{fusco}(object, ...)
 \method{plot}{fusco}(x, correction=TRUE, nBins=10, right=FALSE, I.prime=TRUE, plot=TRUE, ...)

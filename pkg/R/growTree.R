@@ -45,7 +45,6 @@ growTree <- function(b=1,d=0,halt=20, grain=0.1, linObj=NULL,
         ## CONTINUOUS TRAIT SETUP
         if(! is.null(ct.start)){
             
-            require(MASS)
             ctFlag <- TRUE
 			
             ## check we have the right sort of info to pass to 

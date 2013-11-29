@@ -187,4 +187,30 @@ summary.phylo.d <- function(object, ...){
     cat("\n\n")
 }
 
+plot.phylo.d <- function(x, bw=0.02, ...){
+	
+	brownian <- x$Permutations$brownian
+	random   <- x$Permutations$random
+	
+	centre <- x$Parameters$MeanBrownian
+	scale <- x$Parameters$MeanRandom - centre
 
+	brownian <- (brownian - centre) / scale
+	random   <- (random   - centre) / scale	
+	obs      <- (x$Parameters$Observed - centre) / scale
+
+
+	xlim <- range(obs, brownian, random)
+	
+	bdens <- as.data.frame(density(brownian, bw=bw)[c('y','x')])
+	rdens <- as.data.frame(density(random,   bw=bw)[c('y','x')])
+	
+	ylim <- range(bdens$y, rdens$y)
+	plot(y ~ x, data=bdens, xlim=xlim, ylim=ylim, type='l', col='blue',
+	     xlab="D value", ylab="Density", ...)
+	lines(y ~ x, data=rdens, col='red', ...)
+	
+	abline(v=c(0,1,obs), col=c('blue','red', 'black'))	
+	
+	
+}

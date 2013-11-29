@@ -12,7 +12,7 @@ Calculates the D value, a measure of phylogenetic signal in a binary trait, and 
 phylo.d(data, phy, names.col, binvar, permut = 1000, rnd.bias=NULL)
 \method{print}{phylo.d}(x, ...)
 \method{summary}{phylo.d}(object, ...)
-
+\method{plot}{phylo.d}(x, bw=0.02, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -35,7 +35,7 @@ This function calculates the observed D for a binary trait on a tree and compare
 \item{Phylogenetic randomness}{Trait values are randomly shuffled relative to the tips of the phylogeny and D is calculated.}
 \item{Brownian threshold model}{A continuous trait is evolved along the phylogeny under a Brownian process and then converted to a binary trait using a threshold that reproduces the relative prevalence of the observed trait.}
 }
-The value of D depends on phylogeny size - more sister clades yield higher sums - and so the means of the  two sets of simulated data are used as calibrations to scale both observed and simulated values of D to set points of 0 (as phylogenetically conserved as expected under a Brownian threshold model) and 1 (random). The value of D can be both smaller than 0 (highly conserved) and greater than 1 (overdispersed) and the distributions of scaled D from the simulations are used to assess the significance of the observed scaled D.
+The value of D depends on phylogeny size - more sister clades yield higher sums - and so the means of the  two sets of simulated data are used as calibrations to scale both observed and simulated values of D to set points of 0 (as phylogenetically conserved as expected under a Brownian threshold model) and 1 (random). The value of D can be both smaller than 0 (highly conserved) and greater than 1 (overdispersed) and the distributions of scaled D from the simulations are used to assess the significance of the observed scaled D. The \code{plot} method shows the distributions of the two simulations relative to the observed D value.
 
 \code{rnd.bias} is passed to \code{\link{sample}} as the \code{prob} argument to weight the random shuffles of the observed trait. The weights are not checked for validity.}
 \value{
@@ -59,6 +59,7 @@ data(BritishBirds)
 BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
 redPhyloD <- phylo.d(BritishBirds, binvar=Red_list)
 print(redPhyloD)
+plot(redPhyloD)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

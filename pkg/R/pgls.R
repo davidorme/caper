@@ -682,7 +682,7 @@ anova.pglslist <- function(object, ..., scale = 0, test = "F"){
 	
     nmodels <- length(objects)
     if (nmodels == 1) 
-        return(anova.lm(object))
+        return(anova(object))
     resdf <- as.numeric(lapply(objects, function(X) X$n - X$k))
     resdev <- as.numeric(lapply(objects, '[[', 'RSSQ'))
     table <- data.frame(resdf, resdev, c(NA, -diff(resdf)), c(NA, 

@@ -330,13 +330,14 @@ reorder.comparative.data <- function(x, order = "cladewise", ...){
 	if( packageVersion('ape') >= '3.0.5'){
 		neworder <- reorder(x$phy, order=order, index.only=TRUE)
 	} else {
-	    neworder <- if (order == "cladewise") 
-	        .C("neworder_cladewise", as.integer(nb.tip), as.integer(x$phy$edge[, 
-	            1]), as.integer(x$phy$edge[, 2]), as.integer(nb.edge), 
-	            integer(nb.edge), PACKAGE = "ape")[[5]]
-	    else .C("neworder_pruningwise", as.integer(nb.tip), as.integer(nb.node), 
-	        as.integer(x$phy$edge[, 1]), as.integer(x$phy$edge[, 2]), as.integer(nb.edge), 
-	        integer(nb.edge), PACKAGE = "ape")[[6]]
+		stop('ape versions < 3.0.4 no longer supported.')
+	   # neworder <- if (order == "cladewise") 
+	   #     .C("neworder_cladewise", as.integer(nb.tip), as.integer(x$phy$edge[, 
+	   #         1]), as.integer(x$phy$edge[, 2]), as.integer(nb.edge), 
+	   #         integer(nb.edge), PACKAGE = "ape")[[5]]
+	   # else .C("neworder_pruningwise", as.integer(nb.tip), as.integer(nb.node), 
+	   #     as.integer(x$phy$edge[, 1]), as.integer(x$phy$edge[, 2]), as.integer(nb.edge), 
+	   #     integer(nb.edge), PACKAGE = "ape")[[6]]
 	}
 	
 	# apply new order to elements

@@ -2,6 +2,7 @@
 \alias{phylo.d}
 \alias{print.phylo.d}
 \alias{summary.phylo.d}
+\alias{plot.phylo.d}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Calculates the phylogenetic D statistic}
@@ -24,6 +25,7 @@ phylo.d(data, phy, names.col, binvar, permut = 1000, rnd.bias=NULL)
   \item{rnd.bias}{An optional name of a variable in \code{data} holding probability weights to bias the generation of the random distribution. See 'destails'}
   \item{x}{An object of class 'phylo.d'}
   \item{object}{An object of class 'phylo.d'}
+  \item{bw}{The bandwidth to be used for the density plots}
   \item{\ldots}{Further arguments to print and summary methods}
 }
 
@@ -35,7 +37,7 @@ This function calculates the observed D for a binary trait on a tree and compare
 \item{Phylogenetic randomness}{Trait values are randomly shuffled relative to the tips of the phylogeny and D is calculated.}
 \item{Brownian threshold model}{A continuous trait is evolved along the phylogeny under a Brownian process and then converted to a binary trait using a threshold that reproduces the relative prevalence of the observed trait.}
 }
-The value of D depends on phylogeny size - more sister clades yield higher sums - and so the means of the  two sets of simulated data are used as calibrations to scale both observed and simulated values of D to set points of 0 (as phylogenetically conserved as expected under a Brownian threshold model) and 1 (random). The value of D can be both smaller than 0 (highly conserved) and greater than 1 (overdispersed) and the distributions of scaled D from the simulations are used to assess the significance of the observed scaled D. The \code{plot} method shows the distributions of the two simulations relative to the observed D value.
+The value of D depends on phylogeny size - more sister clades yield higher sums - and so the means of the  two sets of simulated data are used as calibrations to scale both observed and simulated values of D to set points of 0 (as phylogenetically conserved as expected under a Brownian threshold model) and 1 (random). The value of D can be both smaller than 0 (highly conserved) and greater than 1 (overdispersed) and the distributions of scaled D from the simulations are used to assess the significance of the observed scaled D. The \code{plot} method generates density plots of the distributions of the two simulations relative to the observed D value.
 
 \code{rnd.bias} is passed to \code{\link{sample}} as the \code{prob} argument to weight the random shuffles of the observed trait. The weights are not checked for validity.}
 \value{

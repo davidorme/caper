@@ -157,9 +157,9 @@ phylo.d <- function(data, phy, names.col, binvar, permut=1000, rnd.bias=NULL) {
 		        MeanRandom=mean(ransocc), MeanBrownian=mean(physocc)),
 				StatesTable=propStates,
 		        Permutations=list(random=ransocc, brownian=physocc), 
-		        NodalVals=list(observed = ds.ran.cc$nodVals[, 1,drop=FALSE], 
-			                   random   = ds.ran.cc$nodVals[,-1,drop=FALSE], 
-			                   brownian = ds.phy.cc$nodVals[,-1,drop=FALSE]),
+		        NodalVals=list(observed = ds.ran.cc$nodVal[, 1,drop=FALSE], 
+			                   random   = ds.ran.cc$nodVal[,-1,drop=FALSE], 
+			                   brownian = ds.phy.cc$nodVal[,-1,drop=FALSE]),
 				binvar = binvar,  data=data, nPermut = permut, rnd.bias=rnd.bias)
 	
 	class(dvals) <- 'phylo.d'

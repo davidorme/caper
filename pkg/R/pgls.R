@@ -630,7 +630,7 @@ anova.pgls <- function(object, ...){
 		kp <- object$param['kappa']
 	
 		# fit the sequential models
-	    for( i in 1:(k-1)) {
+	    for( i in seq_along(tlabels)) {
 	    		fmla <- as.formula(paste( object$namey, " ~ ", paste(tlabels[1:i], collapse = "+") ))
 	    		plm <- pgls(fmla, data, lambda=lm, delta=dl, kappa=kp)
 	    		rss[i+1] <- plm$RSSQ

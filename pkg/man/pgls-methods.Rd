@@ -37,6 +37,10 @@ These are simple summary methods, accessor functions and summary and print metho
 }
 \details{
 Phylogenetically corrected residuals from 'pgls' models [TODO].
+
+Note that the r^2 values reported by \code{summary.pgls} have a specific interpretation. \code{pgls} fits the intercept-only model for the data using _exactly_ the same covariance matrix (phylogeny plugged through any branch length transformations) as the fitted model to get a null model. The r-squared and adjusted r-squared that are reported therefore hold the covariance matrix constant, so show percentage of variance explained between a null model and the actual model given that precise model of trait change.
+
+The actual ML null model for the data (optimising the BL transformation independently) might be different from this - but then the r squared values confound change in explanatory power from changing the model parameters and from changing the trait model.
 }
 \value{
 The 'summary' method returns an object of class 'summary.pgls' containing:

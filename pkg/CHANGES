@@ -1,20 +1,16 @@
-Version 0.1
-  
-  Contains reworked, documented versions of the main functions in the CAIC package. Common interfaces and generic methods for the main independent contrast and PGLS models and rationalisation of the PGLS code down to a smaller set of more flexible commands. 
-  
-  Fixed as a tagged version 0.1 (rev 31) and sent out to a small set of users for first comments.
-  
-Version 0.2
-  
-  Added in PD and ED calculations and documentation. Added in benchmark data and vignette.
-  
-  Fixed as a tagged version 0.2 (rev 56).
-  
-Version 0.3
-  
-  Fixing up bugs and documentation, pglm renamed to pgls
-  Submitted to CRAN and fixed as a tagged version 0.3 (rev 63)
-  
+Version 1.0.0
+
+  Maintenance update to register S3methods() correctly and import standard packages to
+  pass build process on CRAN. Since the package has been used in the wild without change
+  for several years, I've pushed the version number to 1.0.0 to reflect that it is a mature,
+  stable version. Also:
+
+  - bugfix to summary.pgls() for factor predictors.
+
+Version 0.5.2
+
+  Undocumented changes! Or at least, everything is there on R-Forge, but it has been a while and
+  I don't recall everything that happened between 0.4 and 0.5.2
 Version 0.4
   
   Resolving build problems on CRAN:
@@ -22,3 +18,21 @@ Version 0.4
   - Cached pgls benchmark tests in an rda file to avoid machine specific optim problems during package builds.
   
   Resubmitted to CRAN and fixed as tagged version 0.4 (rev 68)
+
+Version 0.3
+  
+  Fixing up bugs and documentation, pglm renamed to pgls
+  Submitted to CRAN and fixed as a tagged version 0.3 (rev 63)
+  
+Version 0.2
+  
+  Added in PD and ED calculations and documentation. Added in benchmark data and vignette.
+  
+  Fixed as a tagged version 0.2 (rev 56).
+  
+Version 0.1
+  
+  Contains reworked, documented versions of the main functions in the CAIC package. Common interfaces and generic methods for the main independent contrast and PGLS models and rationalisation of the PGLS code down to a smaller set of more flexible commands. 
+  
+  Fixed as a tagged version 0.1 (rev 31) and sent out to a small set of users for first comments.
+  

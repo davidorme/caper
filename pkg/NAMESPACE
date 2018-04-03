@@ -1,12 +1,53 @@
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
-
 # Export all names
 exportPattern(".")
 
 # Import all packages listed as Imports or Depends
 import(
+  stats,
   ape,
   MASS,
   mvtnorm
 )
+
+importFrom("methods", "as")
+importFrom("graphics", "abline", "hist", "lines", "par", "plot",
+           "text", "title")
+importFrom("utils", "packageVersion", "str")
+
+# register S3 methods
+S3method(anova, caic)
+S3method(anova, caiclist)
+S3method(anova, pgls)
+S3method(anova, pglslist)
+S3method(coef, caic)
+S3method(coef, pgls)
+S3method(fitted, pgls)
+S3method(logLik, caic)
+S3method(logLik, pgls)
+S3method(as, comparative.data.growTree) 
+S3method(na.omit, comparative.data)
+S3method(summary, caic)
+S3method(summary, fusco)
+S3method(summary, pgls)
+S3method(summary, phylo.d)
+S3method(summary, phylo.d.subset)
+S3method(nobs, pgls)
+S3method(plot, caic)
+S3method(plot, fusco)
+S3method(plot, pgls)
+S3method(plot, pgls.profile)
+S3method(plot, phylo.d)
+S3method(predict, caic)
+S3method(predict, pgls)
+S3method(print, caic)
+S3method(print, caic.diagnostics)
+S3method(print, comparative.data)
+S3method(print, fusco)
+S3method(print, pgls)
+S3method(print, phylo.d)
+S3method(print, phylo.d.subset)
+S3method(print, summary.pgls)
+S3method(reorder, comparative.data)
+S3method(residuals, caic)
+S3method(residuals, pgls)
+S3method(subset, comparative.data)

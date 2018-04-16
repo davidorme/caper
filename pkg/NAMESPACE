@@ -3,7 +3,6 @@ exportPattern(".")
 
 # Import all packages listed as Imports or Depends
 import(
-  stats,
   ape,
   MASS,
   mvtnorm
@@ -13,6 +12,15 @@ importFrom("methods", "as")
 importFrom("graphics", "abline", "hist", "lines", "par", "plot",
            "text", "title")
 importFrom("utils", "packageVersion", "str")
+importFrom("stats", "IQR", "anova", "as.formula", "coef",
+           "complete.cases", "delete.response", "density", "fitted",
+           "formula", "is.empty.model", "lm", "lm.fit", "logLik",
+           "median", "model.frame", "model.matrix", "model.response",
+           "na.omit", "na.pass", "naprint", "nobs", "optim", "pchisq",
+           "pf", "predict", "printCoefmat", "pt", "qchisq", "qqline",
+           "qqnorm", "quantile", "reorder", "resid", "residuals",
+           "rexp", "rstudent", "runif", "stat.anova", "summary.lm",
+           "terms", "uniroot", "update", "var", "wilcox.test")
 
 # register S3 methods
 S3method(anova, caic)
@@ -51,3 +59,4 @@ S3method(reorder, comparative.data)
 S3method(residuals, caic)
 S3method(residuals, pgls)
 S3method(subset, comparative.data)
+S3method('[', comparative.data)

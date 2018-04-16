@@ -1,8 +1,8 @@
 Package: caper
 Type: Package
 Title: Comparative Analyses of Phylogenetics and Evolution in R
-Version: 1.0.0
-Date: 2018-04-02
+Version: 1.0.1
+Date: 2018-04-16
 Author: David Orme, Rob Freckleton, Gavin Thomas, Thomas Petzoldt, Susanne Fritz, Nick Isaac, Will Pearse
 Maintainer: David Orme <d.orme@imperial.ac.uk>
 Imports: stats, graphics, utils, methods

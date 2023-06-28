@@ -1,4 +1,5 @@
-clade.members <- function(x, phy, tip.labels = FALSE, include.nodes = FALSE) {
+clade.members <- function(x, phy, tip.labels = FALSE,
+                          include.nodes = FALSE) {
     # NEW2OLD: CONVERTED...
 
     # returns a vector of the tips that descend from an identified node
@@ -39,7 +40,8 @@ clade.members <- function(x, phy, tip.labels = FALSE, include.nodes = FALSE) {
     return(RET)
 }
 
-clade.members.list <- function(phy, tips = FALSE, tip.labels = FALSE, include.nodes = FALSE) {
+clade.members.list <- function(phy, tips = FALSE, tip.labels = FALSE,
+                               include.nodes = FALSE) {
     # OLD2NEW CONVERTED
 
     # returns a list of vectors showing the tips
@@ -50,15 +52,14 @@ clade.members.list <- function(phy, tips = FALSE, tip.labels = FALSE, include.no
 
     if (!tips) nodes <- nodes[nodes > length(nodes) - phy$Nnode]
 
-    clade.list <- mapply(clade.members, nodes, MoreArgs = list(phy = phy, tip.labels = tip.labels, include.nodes = include.nodes), SIMPLIFY = FALSE)
+    clade.list <- mapply(
+        clade.members, nodes,
+        MoreArgs = list(
+            phy = phy, tip.labels = tip.labels,
+            include.nodes = include.nodes
+        ), SIMPLIFY = FALSE
+    )
     names(clade.list) <- nodes
 
     return(clade.list)
 }
-
-## "all.clades" <-
-## function(phy, tips=FALSE, tip.labels=FALSE){
-##
-##     .Deprecated("clade.members.list")
-##     clade.members.list(phy, tips=FALSE, tip.labels=FALSE)
-## }

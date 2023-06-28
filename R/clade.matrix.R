@@ -27,7 +27,10 @@ clade.matrix <- function(phy) {
         clade.mat[node.id[rows], node.members[rows][[1]]] <- 1
     }
 
-    RET <- list(clade.matrix = clade.mat, tip.label = phy$tip.label, edge = phy$edge)
+    RET <- list(
+        clade.matrix = clade.mat,
+        tip.label = phy$tip.label, edge = phy$edge
+    )
     class(RET) <- "clade.matrix"
 
     # if they exist, get edge lengths into correct order, inserting root edge

@@ -17,7 +17,9 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
             attr(terms(formula(caicObj$mod)), "factors")
         )[[2]]
     } else {
-        if (!all(which.terms %in% dimnames(attr(terms(formula(caicObj$mod)), "factors"))[[2]])) {
+        if (!all(which.terms %in% dimnames(
+            attr(terms(formula(caicObj$mod)), "factors")
+        )[[2]])) {
             stop("Not all specified terms were present in the model.")
         }
     }
@@ -75,7 +77,9 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
     ## loop over the terms:
     for (term in which.terms) {
         ## need substitute here (eval(parse(text=paste)))
-        ylabExpr <- substitute(expression(abs(plain(" Contrasts in") ~ ~VAR ~ ~ plain(" "))), env = list(VAR = as.name(term)))
+        ylabExpr <- substitute(expression(
+            abs(plain(" Contrasts in") ~ ~VAR ~ ~ plain(" "))
+        ), env = list(VAR = as.name(term)))
         y <- tab[, term]
 
         ## nodal values
@@ -203,18 +207,13 @@ print.caic.diagnostics <- function(x, ...) {
 }
 
 caic.robust <- function(caicObj, robust = 3) {
-    ## Hmm - this is rather tricky because the contrast data is _not_ present
-    ## in the global environment, which means that the refitting runs foul of
-    ## looking for 'contrData' (the data frame inside the function)
+    # Hmm - this is rather tricky because the contrast data is _not_ present
+    # in the global environment, which means that the refitting runs foul of
+    # looking for 'contrData' (the data frame inside the function)
 
-    ## ## THIS BEHAVES CREDIBLY BUT THE DATA DETAILS CHANGE IN UNPLEASANT WAYS
-    ## ## NO IT DOESN'T. CAN'T COPE WITH log(x) - reinterprets
-    ## ## I think for the time being this has to be the lm.fit method again.
-    ##
-    ## caicObj$mod$model$robustRes <- abs(rstudent(caicObj$mod)) < outlier
-    ## robustMod <- update(caicObj$mod, subset=robustRes, data=caicObj$mod$model)
 
-    # this doesn't recalculate the studentised residuals - is only relative to the previous model
+    # this doesn't recalculate the studentised residuals - is only relative to
+    # the previous model
 
     nonrobust <- abs(caicObj$contrast.data$studentResid) > robust
     valid <- caicObj$contrast.data$validNodes
@@ -302,7 +301,6 @@ caic.label <- function(phy, charset = NULL, action = "insert",
     # put in the root label
     caicLab[caicLab == ""] <- "@Root"
 
-    # OLD2NEW: intBool <- as.numeric(names(caicLab)) < 0
     # internal nodes now from max(phy$edge)-phy$Nnode +1 to  max(phy$edge)
     intBool <- with(phy, 1:max(edge) > (max(edge) - Nnode))
 

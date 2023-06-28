@@ -61,18 +61,11 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
         }
     }
 
-    # useful info...
-    root <- length(phy$tip.label) + 1
-    unionData <- nrow(data)
-
     # MACROCAIC SPECIFIC
     # set intermediate branch length to use at polytomies - CAIC used 1, whereas
     # MacroCAIC requires 0 in order to give subnode contrast calculation that is
     # equivalent to a weighted mean
     crunch.brlen <- 0
-
-    # check out the method for calculating species richness contrasts
-    resp.type <- match.arg(macroMethod, c("RRD", "PDI"))
 
     # GET THE BASIC MODEL MATRICES
 

@@ -109,7 +109,9 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
         nm <- names(parVals)[i]
 
         if (length(p) > 1) stop(nm, " not of length one.")
-        if (is.character(p) & p != "ML") stop(nm, " is character and not 'ML'.")
+        if (is.character(p) && p != "ML") {
+            stop(nm, " is character and not 'ML'.")
+        }
 
         ## are the bounds of length 2, numeric and positive or zero
         bnds <- bounds[[nm]]
@@ -429,14 +431,16 @@ pgls.confint <- function(pgls, which = c("lambda", "kappa", "delta"),
 
 pgls.likelihood <- function(optimPar, fixedPar, y, x, V,
                             optim.output = TRUE, names.optim = NULL) {
-    # Full ML estimation for given x and V: modified to also act as an engine for optim
-    # - this is why the branch length  parameters are passed as two chunks, so that
-    #   the first acts as the targets for optimisation.
+    # Full ML estimation for given x and V: modified to also act as an engine
+    # for optim
+    # - this is why the branch length  parameters are passed as two chunks, so
+    #   that the first acts as the targets for optimisation.
     # - the function is passed named vectors containing kappa, lambda and delta
-    #   which might be available for optimization (optimPar) or user defined (fixedPar)
+    #   which might be available for optimization (optimPar) or user defined
+    #   (fixedPar)
 
-    # merge the values of KLD from the two parameter vectors
-    # if names.optim is provided then add it (uniroot in the ci.search strips it out)
+    # merge the values of KLD from the two parameter vectors if names.optim is
+    # provided then add it (uniroot in the ci.search strips it out)
 
     # Estimates the GLS parameters for given data
     get.coeffs <- function(Y, iV, X) {
@@ -755,7 +759,10 @@ anova.pgls <- function(object, ...) {
             heading = c(
                 "Analysis of Variance Table",
                 sprintf(
-                    "Sequential SS for pgls: lambda = %0.2f, delta = %0.2f, kappa = %0.2f\n", lm, dl, kp
+                    paste0(
+                        "Sequential SS for pgls: lambda = %0.2f, ",
+                        "delta = %0.2f, kappa = %0.2f\n"
+                    ), lm, dl, kp
                 ),
                 paste("Response:", deparse(formula(object)[[2L]]))
             ),

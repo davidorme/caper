@@ -63,15 +63,13 @@ phylo.d.subset <- function(data, phy, names.col, binvar, permut = 1000,
 
     # prepare output
     output.raw <- vector(mode = "list", length(phy.subtrees))
-    {
-        output.D <-
-            output.depth <-
-            output.P0 <-
-            output.P1 <-
-            output.tips <-
-            output.nodes <-
-            output.bin.freq <- numeric(length(phy.subtrees))
-    }
+    output.D <-
+        output.depth <-
+        output.P0 <-
+        output.P1 <-
+        output.tips <-
+        output.nodes <-
+        output.bin.freq <- numeric(length(phy.subtrees))
 
     ## TO-DO:
     #  - make a 'clean' version where the raw output isn't saved
@@ -94,12 +92,10 @@ phylo.d.subset <- function(data, phy, names.col, binvar, permut = 1000,
         #   test---I would!
         t.data <- data[rownames(data$data) %in% phy.subtrees[[i]]$tip.label, ]
         if (length(unique(t.data$data[, bininds])) != 2) {
-            {
-                output.raw[[i]] <-
-                    output.depth[i] <-
-                    output.P0[i] <-
-                    output.P1[i] <- NA
-            }
+            output.raw[[i]] <-
+                output.depth[i] <-
+                output.P0[i] <-
+                output.P1[i] <- NA
 
             next
         }

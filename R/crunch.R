@@ -64,10 +64,6 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
     # check for factor.action
     factor.action <- match.arg(factor.action, c("abort", "warn", "allow"))
 
-    # useful info...
-    root <- length(phy$tip.label) + 1
-    unionData <- nrow(data)
-
     # CALCULATE MODEL
     # GET THE MODEL MATRIX and Model Response
 

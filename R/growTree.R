@@ -594,7 +594,10 @@ growTree <- function(b = 1, d = 0, halt = 20, grain = 0.1, linObj = NULL,
     # extendTree() rather than doing it internally...
     if (extend.proportion > 0) {
         if (trace.events) {
-            cat(clade$clade.age, ": Simulation extended beyond last speciation.\n")
+            cat(
+                clade$clade.age,
+                ": Simulation extended beyond last speciation.\n"
+            )
         }
 
         ## generate a waiting time

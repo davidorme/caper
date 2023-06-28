@@ -9,7 +9,7 @@ fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
             tips = phy$tip.label
         )
         phy <- comparative.data(phy = phy, data = data, names.col = "tips")
-    } else if (inherits(phy, "phylo") & !missing(data)) {
+    } else if (inherits(phy, "phylo") && !missing(data)) {
         if (missing(names.col)) stop("Names column not specified")
         names.col <- deparse(substitute(names.col))
         # old style use with data and phylogeny separated
@@ -102,8 +102,6 @@ fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
         ]
     }
 
-    obsStats <- with(observed, c(median(I), IQR(I) / 2))
-
     ret <- list(
         observed = observed,
         median.I = median(observed$I),
@@ -162,7 +160,7 @@ summary.fusco <- function(object, ...) {
         cat("  Tips are higher taxa containing", object$nSpecies, "species.\n")
     }
 
-    if (!is.null(object$randomised) | !is.null(object$simulated)) {
+    if (!is.null(object$randomised) || !is.null(object$simulated)) {
         cat(
             " ", sprintf("%2.1f%%", object$conf.int * 100),
             "confidence intervals around 0.5 randomised using",
@@ -224,7 +222,9 @@ plot.fusco <- function(x, correction = TRUE, nBins = 10, right = FALSE,
         allPossI <- function(S, I.prime) {
             m <- ceiling(S / 2)
             RET <- (seq(from = m, to = S - 1) - m) / ((S - 1) - m)
-            if (I.prime & (S %% 2) == 1) RET <- RET * (S - 1) / S
+            if (I.prime && (S %% 2) == 1) {
+                RET <- RET * (S - 1) / S
+            }
             return(RET)
         }
 
@@ -240,7 +240,7 @@ plot.fusco <- function(x, correction = TRUE, nBins = 10, right = FALSE,
         correction <- rowMeans(correction)
 
         RET$correction <- correction
-        RET$correctedFrequency <- with(RET, observedFrequency + correction)
+        RET$correctedFrequency <- RET$observedFrequency + RET$correction
 
         # hijack the histogram plotting
         if (plot) {

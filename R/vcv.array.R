@@ -59,11 +59,10 @@ VCV.array <- function(phy, dim = 2, compact = TRUE) {
             V <- apply(cmEM, 2, function(X) X * cmM)
             dims <- dim(cmM)
 
-            # gives a (Nnodes * Ntips) by Ntips matrix, which needs reshaping
+            # gives a (Nnodes by Ntips) by Ntips matrix, which needs reshaping
             # into an array of Nnodes by Ntips by Ntips and then rotating to
-            # Ntips * Ntips * Nnodes
+            # Ntips by Ntips by Nnodes
             V <- array(V, rep(dims, c(1, 2)))
-
             V <- aperm(V, c(2, 3, 1))
         }
     }

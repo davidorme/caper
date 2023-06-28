@@ -411,7 +411,7 @@ contrCalc <- function(vals, phy, ref.var, picMethod,
             # get clean copy of rv
             rv <- vals[, ref.var]
 
-            if (nrow(vals) > 2 | any(is.na(rv))) {
+            if (nrow(vals) > 2 || any(is.na(rv))) {
                 macroContr <- NA
                 vals <- vals[, 1]
             } else {

@@ -53,11 +53,6 @@ comparative.data <- function(phy, data, names.col, vcv = FALSE, vcv.dim = 2,
 
 
     # MERGE
-
-    # store original dataset size
-    origTips <- with(phy, max(edge) - Nnode)
-    origData <- nrow(data)
-
     # find the intersection between tip.labels and names in data frame
     in.both <- intersect(rownames(data), phy$tip.label)
     if (length(in.both) == 0) {
@@ -261,7 +256,7 @@ subset.comparative.data <- function(x, subset, select, ...) {
     if (any(!r)) {
         to.drop <- which(!r)
         # lose bits of tree
-        x$phy <- drop.tip(x$phy, to.drop)
+        x$phy <- ape::drop.tip(x$phy, to.drop)
         # lose rows
         x$data <- x$data[r, vars, drop = FALSE] # CANNOT lose data.frame-ness
 
@@ -398,10 +393,6 @@ reorder.comparative.data <- function(x, order = "cladewise", ...) {
     if (nb.node == 1) {
         return(x)
     }
-
-    # otherwise
-    nb.tip <- length(x$phy$tip.label)
-    nb.edge <- dim(x$phy$edge)[1]
 
     # get the new order - testing for ape version for change in code
     if (packageVersion("ape") >= "3.0.5") {

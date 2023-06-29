@@ -1,3 +1,87 @@
+#' Calculates the phylogenetic D statistic
+#'
+#' Calculates the D value, a measure of phylogenetic signal in a binary trait,
+#' and tests the estimated D value for significant departure from both random
+#' association and the clumping expected under a Brownian evolution threshold
+#' model.
+#'
+#' The sum of changes in estimated nodal values of a binary trait along edges
+#' in a phylogeny (D) provides a measure of the phylogenetic signal in that
+#' trait (Fritz and Purvis, 2010). If a trait is highly conserved, with only a
+#' basal division between two clades expressing either trait value, then the
+#' only change will be along the two daughters at the root. This will give a
+#' summed value of 1: the two differences between the root nodal value of 0.5
+#' and the ancestors of the 1 and 0 clades. In contrast, if the trait is
+#' labile, more differences will be observed and the sum will be higher.
+#'
+#' This function calculates the observed D for a binary trait on a tree and
+#' compares this to the value of D found using an equal number of simulations
+#' under each of two models: \describe{ \item{Phylogenetic randomness}{Trait
+#' values are randomly shuffled relative to the tips of the phylogeny and D is
+#' calculated.} \item{Brownian threshold model}{A continuous trait is evolved
+#' along the phylogeny under a Brownian process and then converted to a binary
+#' trait using a threshold that reproduces the relative prevalence of the
+#' observed trait.} } The value of D depends on phylogeny size - more sister
+#' clades yield higher sums - and so the means of the two sets of simulated
+#' data are used as calibrations to scale both observed and simulated values of
+#' D to set points of 0 (as phylogenetically conserved as expected under a
+#' Brownian threshold model) and 1 (random). The value of D can be both smaller
+#' than 0 (highly conserved) and greater than 1 (overdispersed) and the
+#' distributions of scaled D from the simulations are used to assess the
+#' significance of the observed scaled D. The \code{plot} method generates
+#' density plots of the distributions of the two simulations relative to the
+#' observed D value.
+#'
+#' \code{rnd.bias} is passed to \code{\link{sample}} as the \code{prob}
+#' argument to weight the random shuffles of the observed trait. The weights
+#' are not checked for validity.
+#'
+#' @aliases phylo.d print.phylo.d summary.phylo.d plot.phylo.d
+#' @param data A 'comparative.data' or 'data.frame' object.
+#' @param phy An object of class 'phylo', required when data is not a
+#' 'comparative.data' object.
+#' @param names.col A name specifying the column in 'data' that matches rows to
+#' tips in 'phy', required when data is not a 'comparative.data' object.
+#' @param binvar The name of the variable in \code{data} holding the binary
+#' variable of interest.
+#' @param permut Number of permutations to be used in the randomisation test.
+#' @param rnd.bias An optional name of a variable in \code{data} holding
+#' probability weights to bias the generation of the random distribution. See
+#' 'destails'
+#' @param x An object of class 'phylo.d'
+#' @param object An object of class 'phylo.d'
+#' @param bw The bandwidth to be used for the density plots
+#' @param list() Further arguments to print and summary methods
+#' @return Returns an object of class 'phylo.d', which is a list of the
+#' following: \item{DEstimate}{The estimated D value} \item{Pval1}{A p value,
+#' giving the result of testing whether D is significantly different from one}
+#' \item{Pval0}{A p value, giving the result of testing whether D is
+#' significantly different from zero} \item{Parameters}{A list of the Observed,
+#' MeanRandom and MeanBrownian sums of sister-clade differences}
+#' \item{Permutations}{A list with elements random and brownian, containing the
+#' sums of sister-clade differences from random permutations and simulations of
+#' Brownian evolution under a threshold model} \item{NodalVals}{A list with the
+#' elements observed, random and brownian, containing the nodal values
+#' estimated for the observed trait and permutations. The values are as
+#' matrices with rows labelled by the node names in the comparative data
+#' object.} \item{binvar}{The binary variable used} \item{phyName}{The name of
+#' the phylogeny object used} \item{dsName}{The name of the dataframe used}
+#' \item{nPermut}{The number of permutations used} \item{rnd.bias}{If a bias
+#' was introduced to the calculation of the random distribution, the bias used,
+#' else \code{NULL}}
+#' @author Susanne Fritz <Susanne.Fritz@@senckenberg.de> and David Orme
+#' @references Fritz, S. A. and Purvis, A. (2010). Selectivity in mammalian
+#' extinction risk and threat types: a new measure of phylogenetic signal
+#' strength in binary traits. Conservation Biology, 24(4):1042-1051.
+#' @keywords utilities htest
+#' @examples
+#'
+#' data(BritishBirds)
+#' BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
+#' redPhyloD <- phylo.d(BritishBirds, binvar = Red_list)
+#' print(redPhyloD)
+#' plot(redPhyloD)
+#'
 phylo.d <- function(data, phy, names.col, binvar,
                     permut = 1000, rnd.bias = NULL) {
     # - test to see if there is a comparative data object and if not then

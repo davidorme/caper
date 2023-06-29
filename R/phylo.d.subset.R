@@ -1,3 +1,68 @@
+#' Calculates the phylogenetic D statistic across clades within a phylogeny
+#' 
+#' Calculates the D value, a measure of phylogenetic signal in a binary trait,
+#' and tests the estimated D value for significant departure from both random
+#' association and the clumping expected under a Brownian evolution threshold
+#' model. Does this across clades within a phylogeny.
+#' 
+#' A wrapper function for \code{\link{phylo.d}}, calculating D values for
+#' clades within a given dataset. These clades can be filtered according to the
+#' number of species and nodes using the arguments above. See
+#' \code{\link{phylo.d}} for more details on the method itself.
+#' 
+#' Any clades for which there is no variation in the binary variable have
+#' \code{NA} values for all of the below slots.
+#' 
+#' @aliases phylo.d.subset print.phylo.d.subset summary.phylo.d.subset
+#' @param data A 'comparative.data' or 'data.frame' object.
+#' @param phy An object of class 'phylo', required when data is not a
+#' 'comparative.data' object.
+#' @param names.col A name specifying the column in 'data' that matches rows to
+#' tips in 'phy', required when data is not a 'comparative.data' object.
+#' @param binvar The name of the variable in \code{data} holding the binary
+#' variable of interest.
+#' @param permut Number of permutations to be used in the randomisation test.
+#' @param rnd.bias An optional name of a variable in \code{data} holding
+#' probability weights to bias the generation of the random distribution. See
+#' 'destails'
+#' @param verbose Logical; do you want to know how many clades are being
+#' assessed, and see when each is being assessed?
+#' @param min.tips The minimum number of tips a clade should have for it to
+#' have a D value calculated. Defaults to 1 (i.e. no limit).
+#' @param max.tips The maximum number of species a clade should have for it to
+#' have a D value calculated. Defaults to the number of species in the whole
+#' phylogeny (i.e. no limit).
+#' @param min.nodes The minimum number of nodes a clade should have for it to
+#' have a D value calculated. Defaults to 1 (i.e. no limit).
+#' @param max.nodes The maximum number of nodes a clade should have for it to
+#' have a D value calculated. Defaults to the number of nodes in the whole
+#' phylogeny (i.e. no limit).
+#' @param x An object of class 'phylo.d.subset'
+#' @param object An object of class 'phylo.d.subset'
+#' @param list() Further arguments to print and summary methods
+#' @return Returns an object of class 'phylo.d.subset', which is a list of the
+#' following: \item{raw}{A list of the raw output from \code{\link{phylo.d}}
+#' for each clade} \item{DEstimate}{A vector of the estimated D values}
+#' \item{Pval1}{A vector of p values, giving the result of testing whether D is
+#' significantly different from one, for each clade} \item{Pval0}{A vector of p
+#' values, giving the result of testing whether D is significantly different
+#' from zero, for each clade} \item{phy.depth}{A numeric vector giving the age
+#' of the clade for which each value was calculated}
+#' @author Susanne Fritz (SFritz@@bio.ku.dk), Will Pearse and David Orme
+#' @references Fritz, S. A. and Purvis, A. (2010). Selectivity in mammalian
+#' extinction risk and threat types: a new measure of phylogenetic signal
+#' strength in binary traits. Conservation Biology, 24(4):1042-1051.
+#' @keywords utilities htest
+#' @examples
+#' 
+#' data(BritishBirds)
+#' BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
+#' # Look at big clades only
+#' \dontrun{
+#' bigClades <- phylo.d.subset(BritishBirds, binvar=Red_list, verbose=TRUE, min.tips=10, min.nodes=5)
+#' print(bigClades)
+#' }
+#' 
 phylo.d.subset <- function(data, phy, names.col, binvar, permut = 1000,
                            rnd.bias = NULL, min.tips = 1,
                            max.tips = length(data$phy$tip.label),

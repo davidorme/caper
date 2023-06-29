@@ -1,4 +1,114 @@
-
+#' Comparative dataset creation
+#' 
+#' A simple tool to combine phylogenies with datasets and ensure consistent
+#' structure and ordering for use in functions.
+#' 
+#' The function matches rows in a data frame to tips on a phylogeny and ensures
+#' correct ordering of the data with respect to the tips. It also can add a
+#' variance covariance representation of the phylogeny. Mismatched rows and
+#' tips are removed and the taxon labels of these are stored in the 'dropped'
+#' slot of the 'comparative.data' object. The 'print' method displays a brief
+#' summary of the dataset contents and the names of the original 'phylo' and
+#' 'data.frame' objects. If any rows or tips were dropped, 'print' will also
+#' show a venn diagram of the data shared and dropped from each source. Node
+#' labels are preserved but must be unique - unlabelled nodes will be assigned
+#' numeric codes.
+#' 
+#' The 'na.omit' and 'subset' methods provide simple ways to clean up and
+#' extract parts of the comparative dataset. In particular, 'subset' acts
+#' exclusively with the data component of the object and, like subset on a data
+#' frame, expects the subset argument to produce a logical vector of data rows
+#' to include. The 'reorder' method is use to restructure all the components
+#' with the 'comparative.data' object into either pruningwise or cladewise
+#' order. This uses code from the 'ape' library: see
+#' \code{\link{reorder.phylo}}.
+#' 
+#' The '[' method allows subsets to be taken of the data. There are no replace
+#' methods ('[<-'). If only one index is specified (e.g. x[2]), then this is
+#' interpreted as extracting data columns from the object. Otherwise (e.g.
+#' x[2,], x[1,1]), the first index will specify tips to extract and the second
+#' index will specify columns. Indices for tips are permitted to be numeric,
+#' logical or character vectors or empty (missing) or NULL. Numeric values are
+#' coerced to integer as by as.integer (and hence truncated towards zero).
+#' Character vectors will be matched to the names of the object (or for
+#' matrices/arrays, the dimnames): see 'Character indices' below for further
+#' details.
+#' 
+#' The function 'caicStyleArgs' handles turning 'phy', 'data' and 'names.col'
+#' arguments into a 'comparative.data' object when they are provided separately
+#' to a function. This argument structure was used in older versions of many
+#' functions.
+#' 
+#' All of these functions are in part a substitute for the considerably more
+#' sophisticated handling of such data in the package 'phylobase', which will
+#' be integrated into later releases.
+#' 
+#' @aliases comparative.data print.comparative.data na.omit.comparative.data
+#' subset.comparative.data reorder.comparative.data [.comparative.data
+#' as.comparative.data caicStyleArgs
+#' @param data A data frame containing variables that can be attributed to the
+#' taxa at the tips of a phylogeny.
+#' @param phy A phylogeny (class 'phylo') to be matched to the data above.
+#' @param names.col The name of a column in the provided data frame that will
+#' be used to match data rows to phylogeny tips.
+#' @param vcv A logical value indicating whether to include a variance
+#' covariance array representing the phylogeny within the comparative dataset.
+#' @param vcv.dim Either 2 (a standard VCV matrix) or 3 (an array retaining the
+#' individual branches contributing to the standard values). The array form is
+#' of use for optimising some branch length transformations.
+#' @param na.omit A logical value indicating whether to reduce the comparative
+#' dataset to those tips for which all selected variables are complete. Note
+#' that some functions cannot handle missing data and will return an error.
+#' @param force.root Many functions consider a basal polytomy to indicate an
+#' unrooted tree. Using force.root=TRUE will set an arbitrary root edge below
+#' this polytomy.
+#' @param warn.dropped A logical value indicating whether to warn the user when
+#' data or tips are dropped in creating the comparative data object.
+#' @param scope A model formula, used to indicate which variables to consider
+#' when omitting row containing NA values.
+#' @param x An object of class 'comparative.data'.
+#' @param object An object of class 'comparative.data'.
+#' @param subset A logical expression indicating rows of data to keep: missing
+#' values are taken as false.
+#' @param select An expression, indicating columns to select from the data
+#' frame.
+#' @param order One of 'cladewise' or 'pruningwise'. See
+#' \code{\link{reorder.phylo}}.
+#' @param i,j Indices specifying tips or data columns to extract. See details.
+#' @param ... Further arguments to functions.
+#' @return A list of class 'comparative.data': \item{phy}{An object of class
+#' 'phylo'} \item{data}{A data frame of matched data} \item{data.name}{The
+#' original object name of the data} \item{phy.name}{The original object name
+#' of the phylogeny} \item{dropped}{A list of taxon names dropped from the
+#' dataset: \describe{ \item{unmatched.rows}{Data rows that do not match to
+#' tips} \item{tips}{Tips that do not match to data rows}}} And optionally:
+#' \item{vcv}{A variance covariance matrix of the phylogeny} \item{vcv.dim}{The
+#' dimension of the VCV - 2 for a standard VCV matrix and 3 for an expanded
+#' array retaining individual branch lengths}
+#' @author David Orme
+#' @seealso \code{\link{crunch}},\code{\link{pgls}}
+#' @keywords utilities
+#' @examples
+#' 
+#' data(shorebird)
+#' shorebird <- comparative.data(shorebird.tree, shorebird.data, 'Species')
+#' print(shorebird)
+#' 
+#' subset(shorebird, subset=Mat.syst == 'MO')
+#' 
+#' sandpipers <- grep('Calidris', shorebird$phy$tip.label)
+#' shorebird[-sandpipers, ]
+#' 
+#' sandpipers <- grep('Calidris', shorebird$phy$tip.label, value=TRUE)
+#' shorebird[sandpipers, ]
+#' 
+#' shorebird[]
+#' shorebird[,]
+#' shorebird[2:3]
+#' shorebird[, 2:3]
+#' shorebird[1:15, ]
+#' shorebird[1:15, 2:3]
+#' 
 comparative.data <- function(phy, data, names.col, vcv = FALSE, vcv.dim = 2,
                              na.omit = TRUE, force.root = FALSE,
                              warn.dropped = FALSE, scope = NULL) {

@@ -1,3 +1,26 @@
+#' Summarize a crunch, brunch or macrocaic analysis
+#' 
+#' The summary method simply returns the linear model summary from the 'caic'
+#' object. The print method prints some basic information about the analysis
+#' followed by the model summary.
+#' 
+#' 
+#' @aliases summary.caic print.caic
+#' @param object An object of class 'caic'.
+#' @param x An object of class 'caic'.
+#' @param \dots Arguments to be passed to 'summary.lm'.
+#' @return The summary method returns an object of class 'summary.lm'.
+#' @author David Orme
+#' @seealso \code{\link{crunch}},\code{\link{brunch}}, \code{link{macrocaic}}
+#' @keywords methods
+#' @examples
+#' 
+#' data(shorebird)
+#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+#' crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, data=shorebird)
+#' print(crunchMod)
+#' summary(crunchMod)
+#' 
 summary.caic <- function(object, ...) {
     summary(object$mod, ...)
 }
@@ -59,6 +82,55 @@ logLik.caic <- function(object, ...) {
     logLik(object$mod, ...)
 }
 
+
+
+#' Anova and model checking methods for independent contrast models.
+#' 
+#' These functions provide ANOVA tables and model comparison using ANOVA and
+#' AIC, along with standard model diagnostic plots and accessor functions for
+#' phylogenetic independent contrast objects.
+#' 
+#' The 'anova' method provides access to single anova tables for a model and to
+#' comparison of lists of models. The 'logLik' method provides access to the
+#' log likelihood of the 'caic' model and hence to AIC comparison of models.
+#' 
+#' The 'plot' method uses the standard set of model diagnostic plots for linear
+#' models. It is also wise to check the evolutionary assumptions of independent
+#' contrast models using the 'caic' specific diagnostic plots. The 'predict'
+#' and 'residuals' functions provide access to these parts of the 'caic'
+#' object.
+#' 
+#' @aliases anova.caic anova.caiclist logLik.caic plot.caic predict.caic
+#' residuals.caic coef.caic
+#' @param object An object of class 'caic'.
+#' @param scale A character string specifying the test statistic to be used.
+#' Can be one of "F", "Chisq" or "Cp", with partial matching allowed, or NULL
+#' for no test.
+#' @param test numeric. An estimate of the noise variance sigma^2. If zero this
+#' will be estimated from the largest model considered.
+#' @param x An object of class 'caic'.
+#' @param \dots Further argument to be passed to methods.
+#' @author David Orme
+#' @seealso \code{\link{crunch}},
+#' \code{\link{brunch}},\code{\link{macrocaic}},\code{\link{caic.diagnostics}}
+#' @keywords utils stats
+#' @examples
+#' 
+#' data(shorebird)
+#' shorebird.data$lgEgg.Mass <- log(shorebird.data$Egg.Mass)
+#' shorebird.data$lgM.Mass <- log(shorebird.data$M.Mass)
+#' shorebird.data$lgF.Mass <- log(shorebird.data$F.Mass)
+#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
+#' 
+#' cMod1 <- crunch(lgEgg.Mass ~ lgM.Mass * lgF.Mass, data=shorebird)
+#' cMod2 <- crunch(lgEgg.Mass ~ lgM.Mass + lgF.Mass, data=shorebird)
+#' cMod3 <- crunch(lgEgg.Mass ~ lgM.Mass , data=shorebird)
+#' 
+#' anova(cMod1, cMod2, cMod3)
+#' AIC(cMod1, cMod2, cMod3)
+#' 
+#' plot(cMod3)
+#' 
 anova.caic <- function(object, ...) {
     ## borrowing from anova.lm
     if (length(list(object, ...)) == 1L) {

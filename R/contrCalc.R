@@ -82,7 +82,7 @@ contrCalc <- function(vals, phy, ref.var, picMethod,
         # ID the parents and children
         parent <- names(contrGp)[nd]
         children <- contrGp[[nd]]
-        bl <- with(phy, ape::edge.length[match(children, edge[, 2])])
+        bl <- with(phy, edge.length[match(children, edge[, 2])])
         vals <- nodVal[children, , drop = FALSE]
 
         # find complete cases at node... NB: Here, need to use a single set

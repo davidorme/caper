@@ -1,3 +1,24 @@
+Version 1.1.0
+
+  No new functionality but a substantial overhaul of the codebase to use modern
+  package development tools:
+  - Moved package development from R-Forge to Github
+  - Code style heavily updated to be closer to (not at) R style guide. Some of
+    the variable names are badly-styled but changing the exposed argument names
+    would break backward compatibility. 
+  - Moved from manual Rd files to roxygen from docstrings
+  - Added Github actions for CI and to maintain the package website on GH.
+
+Version 1.0.1
+
+  Maintenance update to register S3methods() correctly and import standard packages to
+  pass build process on CRAN. Since the package has been used in the wild without change
+  for several years, I've pushed the version number to 1.0.0 to reflect that it is a mature,
+  stable version. Also:
+
+  - bugfix to summary.pgls() for factor predictors.
+
+
 Version 1.0.0
 
   Maintenance update to register S3methods() correctly and import standard packages to

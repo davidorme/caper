@@ -128,7 +128,15 @@ abline(lm(y~x, data=dat))
 for(sub in split(dat, dat$tx)) abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1], lty=2) 
 
 @ 
-    \caption{Phylogenetic autocorrelation in action. a) Simple regression (solid line) suggests a strong relationship between two variables; the phylogeny shows that within the three main groups, there is no consistent relationship (dashed lines) and the apparent relationship stems from only two linked shifts in the means of the traits early in the evolution of the clade. b) Simple regression (solid line) suggests a weak positive relationship between the two variables; the phylogeny shows that there are strong positive relationships between the traits within each of the three main groups but this is masked by early shifts in the mean value of the red trait.}
+    \caption{Phylogenetic autocorrelation in action. a) Simple regression (solid
+    line) suggests a strong relationship between two variables; the phylogeny
+    shows that within the three main groups, there is no consistent relationship
+    (dashed lines) and the apparent relationship stems from only two linked
+    shifts in the means of the traits early in the evolution of the clade. b)
+    Simple regression (solid line) suggests a weak positive relationship between
+    the two variables; the phylogeny shows that there are strong positive
+    relationships between the traits within each of the three main groups but
+    this is masked by early shifts in the mean value of the red trait.}
     \label{whycaper}
   \end{center}
 \end{figure}
@@ -531,8 +539,10 @@ plot(perisso$phy,  'cladogram', use.edge.length=FALSE, label.offset=0.4, show.no
 points(rep(8.25,9), 1:9, pch=ifelse(perisso$data$Terr=='Yes', 1,19))
 text(rep(8.5,9), 1:9, perisso$phy$tip.label, font=3, adj=0)
 @
-    \caption{Location of \fnidx{brunch} contrasts for territoriality in the \dtidx{perissodactyla} dataset. Branches in bold show the tips contributing to each contrast. See also the output of \fnidx{caic.table} in the main text.}
-    \label{brunchPlot}
+    \caption[Brunch contrast locations]{Location of \fnidx{brunch} contrasts for
+    territoriality in the \dtidx{perissodactyla} dataset. Branches in bold show
+    the tips contributing to each contrast. See also the output of
+    \fnidx{caic.table} in the main text.} \label{brunchPlot}
   \end{center}
 \end{figure}
 
@@ -600,8 +610,11 @@ with(redPD$Parameters, axis(3, at=c(MeanBrownian, Observed, MeanRandom), labels=
 mtext(expression(italic(D)==phantom(x)), side=3, at=25, line=1.2)
 
 @
-    \caption{Scaling of $D$ values for the observed sum of character change from the distributions of simulated sums of character change under models of random association (blue line) and a Brownian process (red line). The distributions of the simulations are used to test the significance of departures from either model.}
-    \label{phylodScale}
+    \caption[D value scalings]{Scaling of $D$ values for the observed sum of
+    character change from the distributions of simulated sums of character
+    change under models of random association (blue line) and a Brownian process
+    (red line). The distributions of the simulations are used to test the
+    significance of departures from either model.} \label{phylodScale}
   \end{center}
 \end{figure}
 
@@ -663,7 +676,9 @@ x <- caic.diagnostics(crunchMod)
 crunchMod2 <- crunch(lgEgg.Mass ~  lgM.Mass, data=shorebird)
 x <- caic.diagnostics(crunchMod2)
 @
-    \caption{Diagnostic plots for contrasts in male shorebird mass for contrast models on unlogged (top row, poorly distributed with one serious outlier) and logged (bottom row) data.}
+    \caption[Crunch diagnostics]{Diagnostic plots for contrasts in male
+    shorebird mass for contrast models on unlogged (top row, poorly distributed
+    with one serious outlier) and logged (bottom row) data.}
     \label{caicDiagExamplePlot}
   \end{center}
 \end{figure}
@@ -708,7 +723,12 @@ crunchModRobust <- caic.robust(crunchMod)
 x <-caic.diagnostics(crunchModRobust, outlier=2)
 @
 
-    \caption{Diagnostic plots and \fnidx{caic.robust}: the upper row shows diagnostic plots for the full model, highlighting a single point with an absolute studentized residual $> 3$. The lower row shows the same plots after applying \fnidx{caic.robust}: the highlighted point has been excluded and the argument \texttt{outlier} has been used to reveal points with absolute residuals $> 2$.}
+    \caption[Crunch diagnostics and robust models]{Diagnostic plots and
+    \fnidx{caic.robust}: the upper row shows diagnostic plots for the full
+    model, highlighting a single point with an absolute studentized residual $>
+    3$. The lower row shows the same plots after applying \fnidx{caic.robust}:
+    the highlighted point has been excluded and the argument \texttt{outlier}
+    has been used to reveal points with absolute residuals $> 2$.}
     \label{caicRobustExamplePlot}
   \end{center}
 \end{figure}
@@ -867,8 +887,9 @@ par(mar=c(3,3,1,1))
 plot(density(rand), main='', xlab= 'TBL values for red listed British birds.')
 abline(v=obs, col='red')
 @
-    \caption{Illustration of the different measures of phylogenetic diversity available and a plot of observed (red) and randomized (black) TBL for red listed British birds}
-    \label{pdMeasurePlot}
+    \caption{Illustration of the different measures of phylogenetic diversity
+    available and a plot of observed (red) and randomized (black) TBL for red
+    listed British birds} \label{pdMeasurePlot}
   \end{center}
 \end{figure}
 
@@ -931,7 +952,12 @@ par(usr=c(0,1,0,1))
 text(0.1, 0.9, "c)", cex=1.2)
 
 @
-    \caption{a) Calculation of ED scores. Edge labels show the calculation of ED contributions (below branch) from the branch length and number of descendent species (above branch). Tip labels show species ED scores and the component contribution values are highlighted for two species. b) The distribution of ED scores for a phylogeny of primate species (c). The paths leading to the species with the highest ED values (red arrow) are shown on the phylogeny.}
+    \caption{a) Calculation of ED scores. Edge labels show the calculation of ED
+    contributions (below branch) from the branch length and number of descendent
+    species (above branch). Tip labels show species ED scores and the component
+    contribution values are highlighted for two species. b) The distribution of
+    ED scores for a phylogeny of primate species (c). The paths leading to the
+    species with the highest ED values (red arrow) are shown on the phylogeny.}
     \label{edExamplePlots}
   \end{center}
 \end{figure}
@@ -982,9 +1008,11 @@ plot(densityDependence$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(
 plot(increasingExtinction$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"f)")
 
 @
-   \caption{Simple simulations using \fnidx{growTree}. See the code example for a) \texttt{basicTree}, b) \texttt{extendTree}, c) \texttt{timeLimit}, d) \texttt{extinctTree}, e) \texttt{densityDependence} and f) \texttt{increasingExtinction}.}
-    \label{simpleGrowTreePlots}
-  \end{center}
+   \caption{growTree simulations}{Simple simulations using \fnidx{growTree}. See
+   the code example for a) \texttt{basicTree}, b) \texttt{extendTree}, c)
+   \texttt{timeLimit}, d) \texttt{extinctTree}, e) \texttt{densityDependence}
+   and f) \texttt{increasingExtinction}.} \label{simpleGrowTreePlots}
+   \end{center}
 \end{figure}
 
 \subsubsection{Simulating continuous characters.}
@@ -1064,9 +1092,10 @@ plot(logBodyMass ~ logLitterSize, data=vtips, xlim=lims[,2], ylim=lims[,1])
 plot(logBodyMass ~ logLitterSize, data=cvtips, xlim=lims[,2], ylim=lims[,1])
 
 @
-   \caption{Simulated values for two continuous traits using a) only starting mean values (\texttt{simpleBrownian}), b) means and variances (\texttt{varBrownian}) and c) means and covariances (\texttt{covarBrownian}).}
-    \label{contTraitPlots}
-  \end{center}
+   \caption[growTree continuous traits]{Simulated values for two continuous
+   traits using a) only starting mean values (\texttt{simpleBrownian}), b) means
+   and variances (\texttt{varBrownian}) and c) means and covariances
+   (\texttt{covarBrownian}).} \label{contTraitPlots} \end{center}
 \end{figure}
 
 
@@ -1105,9 +1134,9 @@ with(lastPP, points(xx + 0.06, yy,  pch=21, col=unclass(traitsByNode$flight), xp
 with(lastPP, points(xx + 0.12, yy,  pch=22, col=unclass(traitsByNode$trophic), xpd=NA, cex=0.6))
 
 @
-   \caption{Simulated values for two discrete traits: \texttt{flight} (circles) and \texttt{trophic} (squares).}
-    \label{discreteTraitPlot}
-  \end{center}
+   \caption[growTree discrete traits]{Simulated values for two discrete traits:
+   \texttt{flight} (circles) and \texttt{trophic} (squares).}
+   \label{discreteTraitPlot} \end{center}
 \end{figure}
 
 
@@ -1164,9 +1193,17 @@ plot(latTraitTree$phy, no.margin=TRUE, cex=0.8, show.tip=FALSE)
 # arrows(rightEdge-bm/20, tips, rightEdge+bm/20, tips, code=0, col='red', xpd=NA, lwd=2, lend=2)
 
 @
-   \caption{Simulations using expressions. a) Simulated extinction and speciation rates. Extinction (black) shows senescence and speciation shows latency. For the first simulation (b: \texttt{latencyTree}), speciation is determined entirely by lineage age and there are relatively few extant basal species and few rapid sequences of speciation along branches. For the second (c: \texttt{latTraitTree}), there are again few rapid sequence of speciation and simulated body mass (red bars) is predominantly smaller than the ancestral average (width of the grey bar). The dashed red lines in a) show the speciation rate for species with simulated log body mass 2 units higher and lower than the ancestral mean.}
-    \label{patencyPlot}
-  \end{center}
+   \caption[growTree and expressions]{Simulations using expressions. a)
+   Simulated extinction and speciation rates. Extinction (black) shows
+   senescence and speciation shows latency. For the first simulation (b:
+   \texttt{latencyTree}), speciation is determined entirely by lineage age and
+   there are relatively few extant basal species and few rapid sequences of
+   speciation along branches. For the second (c: \texttt{latTraitTree}), there
+   are again few rapid sequence of speciation and simulated body mass (red bars)
+   is predominantly smaller than the ancestral average (width of the grey bar).
+   The dashed red lines in a) show the speciation rate for species with
+   simulated log body mass 2 units higher and lower than the ancestral mean.}
+   \label{patencyPlot} \end{center}
 \end{figure}
 
 \subsubsection{Inheritance rules.}
@@ -1232,9 +1269,13 @@ arrows(rightEdge-bm/sc, tips, rightEdge+bm/sc, tips, code=0, col='red', xpd=NA, 
 plot(biogeogTree$phy, edge.col= unclass(biogeogTree$data$region), show.tip.label=FALSE, root.edge=TRUE)
 plot(epochTree3$phy, show.tip.label=FALSE)
 @
-   \caption{Inheritance rules and epochs. a)  Simulation showing divergent evolution of a continuous trait at speciation. b) A biogeographic simulation with sympatric speciation within single regions (red, green) and allopatric speciation of species occurring in both regions (black). Colours show the region at daughter node of an edge and do not show transitions along the edge. c) Use of epochs to simulate a mass extinction event.}
-    \label{inheritancePlots}
-  \end{center}
+   \caption[growTree and inheritance rules]{Inheritance rules and epochs. a)
+   Simulation showing divergent evolution of a continuous trait at speciation.
+   b) A biogeographic simulation with sympatric speciation within single regions
+   (red, green) and allopatric speciation of species occurring in both regions
+   (black). Colours show the region at daughter node of an edge and do not show
+   transitions along the edge. c) Use of epochs to simulate a mass extinction
+   event.} \label{inheritancePlots} \end{center}
 \end{figure}
 
 

@@ -30,12 +30,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: r-lib/actions/setup-tinytex@v2
-      - run: tlmgr --version
-
-      - name: Install additional LaTeX packages
-        run: |
-          tlmgr install caption array colortbl xcolor
-          tlmgr list --only-installed
+        env:
+          # install massive overblown full CTAN - array package is tricky now.
+          TINYTEX_INSTALLER: TinyTeX-2
+      # - name: Install additional LaTeX packages
+      #   run: |
+      #     tlmgr install caption array colortbl xcolor
+      #     tlmgr list --only-installed
 
       - uses: r-lib/actions/setup-pandoc@v2
 

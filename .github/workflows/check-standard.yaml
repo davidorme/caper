@@ -51,6 +51,8 @@ jobs:
           extra-packages: rcmdcheck, pkgdown
 
       - uses: r-lib/actions/check-r-package@v2
+        with:
+          build-args: 'c("--compact-vignettes=both")'
 
       #- name: Build docs
       #  run: |

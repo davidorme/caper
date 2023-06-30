@@ -1,5 +1,5 @@
 #' Comparative analysis using independent contrasts on species richness data.
-#' 
+#'
 #' Macroevolutionary hypotheses about correlates of species richness require
 #' testing in a phylogenetic framework in order to avoid phylogenetic
 #' autocorrelation. Independent contrasts as described by Felsenstein (1985)
@@ -7,23 +7,23 @@
 #' richness as the response variable. This function implements two methods for
 #' calculating species richness constrasts described by Agapow and Isaac (2002)
 #' and originally implemented in the program MacroCAIC.
-#' 
+#'
 #' The 'macrocaic' function fits a regression to the formula provided using
 #' 'crunch' contrasts for continuous explanatory variables and species richness
 #' contrasts for the response. The species richness contrasts are either the
 #' relative rate difference (RRD) or proportion dominance index (PDI):
-#' 
+#'
 #' \deqn{RRD = \ln\left(\frac{N_1}{N_2}\right)} RRD = ln(N_1/N_2)
-#' 
+#'
 #' \deqn{PDI = \left(\frac{N_1}{N_1+N_2}\right)-0.5} PDI = (N_1/(N_1 +
 #' N_2))-0.5
-#' 
+#'
 #' The values \eqn{N_1} and \eqn{N_2} are the species richness of the two
 #' daughter nodes and \eqn{N_1} is the species richness of the clade with the
 #' larger value of the reference variable. Species richness contrasts are not
 #' calculated at polytomies. Nodal values for species richness are calculated
 #' as the sum of the richness of the daughter nodes.
-#' 
+#'
 #' @param formula A formula describing a linear model predicting species
 #' richness.
 #' @param data A data frame containing the variables to be used in the model.
@@ -56,13 +56,13 @@
 #' 57(1):18-26.
 #' @keywords models regression
 #' @examples
-#' 
+#'
 #' data(IsaacEtAl)
-#' primates <- comparative.data(primates.tree, primates.data, binomial, na.omit=FALSE)
-#' primatesBodySize <- macrocaic(species.rich ~ body.mass, data=primates)
+#' primates <- comparative.data(primates.tree, primates.data, binomial, na.omit = FALSE)
+#' primatesBodySize <- macrocaic(species.rich ~ body.mass, data = primates)
 #' summary(primatesBodySize)
-#' 
-#' 
+#'
+#' @export
 macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
                       stand.contr = TRUE, robust = Inf, ref.var = NULL,
                       node.depth = NULL, macroMinSize = 3,

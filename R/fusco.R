@@ -93,7 +93,7 @@
 #' summary(fusco.test(syrphidae, rich=nSpp))
 #' summary(fusco.test(syrphidae, tipsAsSpecies=TRUE))
 #' plot(fusco.test(syrphidae, rich=nSpp))
-#' 
+#' @export
 fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
                        randomise.Iprime = TRUE, reps = 1000, conf.int = 0.95) {
     # want to be able to just run it on a phylogeny for the topology

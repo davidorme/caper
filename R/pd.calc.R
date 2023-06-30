@@ -1,10 +1,10 @@
 #' Calculate and bootstrap phylogenetic diversity measurements.
-#' 
+#'
 #' These functions calculate various phylogenetic diversity measures for either
 #' a given set of nodes on a tree or for a randomly chosen set of nodes of a
 #' given size. The ed.calc function calculates a related species-level
 #' measurement of evolutionary distinctness.
-#' 
+#'
 #' There are five implemented PD measures: \describe{ \item{Total Branch Length
 #' (TBL)}{The sum of all the edge lengths in the subtree given by the tip
 #' subset. This measure can be partitioned into the two next measures.}
@@ -18,12 +18,12 @@
 #' Spanning Tree (MST)}{The sum of the lengths of the edges for the smallest
 #' tree that links the subset tips, excluding any edges below the node of the
 #' most recent common ancestor.}}
-#' 
+#'
 #' These options are illustrated in the caper package vignette. The pd.calc
 #' function returns the PD value for a given set of tips, whereas the
 #' pd.bootstrap function returns a vector of PD values for randomly selected
 #' sets of tips of a given size.
-#' 
+#'
 #' The ed.calc function returns the evolutionary distinctness (ED) metric
 #' (Isaac et al, 2007) for the tips of a given phylogeny. The idea behind the
 #' ED measure is that the evolutionary history of each branch is shared equally
@@ -35,7 +35,7 @@
 #' lengths on the unresolved polytomy. The function provides two correction
 #' factors for this: 'isaac' uses a correction factor calibrated from
 #' simulations and 'mooers' uses empirical predictions from a pure birth model.
-#' 
+#'
 #' @aliases pd.calc pd.bootstrap ed.calc
 #' @param cm A object of class 'clade matrix'. Alternatively an object of class
 #' 'phylo', which will be converted to a clade.matrix.
@@ -61,7 +61,7 @@
 #' vector of length 'nrep' containing the pd values for a random set of tips of
 #' a given size. The method used is stored in the 'pd.method' attribute of the
 #' vector.
-#' 
+#'
 #' The ed.calc function returns a list containing: \describe{ \item{branch}{A
 #' data frame of the ED contributions arising from each branch.} \item{spp}{A
 #' data frame of the summed ED contributions for each species.} }
@@ -71,22 +71,24 @@
 #' priorities based on threat and phylogeny. Plos One, 2(3):e296
 #' @keywords utilities
 #' @examples
-#' 
-#' treeString <- paste('((((A:1,B:1):1.5,C:2.5):0.5,(D:0.6,E:0.6):2.4):0.5,',
-#'                     '((F:1.9,G:1.9):0.8,(H:1.6,I:1.6):1.1):0.8):0.2;' ,sep='')
-#' tre <- read.tree(text=treeString)
+#'
+#' treeString <- paste("((((A:1,B:1):1.5,C:2.5):0.5,(D:0.6,E:0.6):2.4):0.5,",
+#'     "((F:1.9,G:1.9):0.8,(H:1.6,I:1.6):1.1):0.8):0.2;",
+#'     sep = ""
+#' )
+#' tre <- read.tree(text = treeString)
 #' clmat <- clade.matrix(tre)
-#' tips <- c("A","C","D","E","G","H")
-#' pd.calc(clmat, tip.subset=tips)
-#' pd.calc(clmat, tip.subset=c(1,3,4,5,7,8))
-#' pd.calc(clmat, tip.subset=tips, root.edge=TRUE)
-#' 
-#' pd.bootstrap(clmat, ntips=6, reps=1000, method='TBL')
-#' 
+#' tips <- c("A", "C", "D", "E", "G", "H")
+#' pd.calc(clmat, tip.subset = tips)
+#' pd.calc(clmat, tip.subset = c(1, 3, 4, 5, 7, 8))
+#' pd.calc(clmat, tip.subset = tips, root.edge = TRUE)
+#'
+#' pd.bootstrap(clmat, ntips = 6, reps = 1000, method = "TBL")
+#'
 #' data(IsaacEtAl)
 #' primatesCM <- clade.matrix(primates.tree)
 #' primatesED <- ed.calc(primatesCM)
-#' 
+#' @export
 pd.calc <- function(cm, tip.subset = NULL, method = "TBL", root.edge = FALSE) {
     # check we have a valid method
     method <- match.arg(method, c("TBL", "MST", "UEH", "SBL", "TIP"))

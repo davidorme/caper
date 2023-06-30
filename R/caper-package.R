@@ -1,3 +1,27 @@
+#' Comparative analysis of phylogenetics and evolution in R (caper)
+#'
+#' The \pkg{caper} package provides a set of functions to conduct comparative
+#' analyses using both independent contrasts and phylogenetic generalised least
+#' squares methods. It also provides functions to combine phylogeny objects
+#' with data frames into simple comparative datasets and some utility functions
+#' for manipulating phylogenies.
+#'
+#' In addition to linear models correcting for phylogeny, the package also
+#' provides functions to test tree imbalance, calculate various measures of
+#' phylogenetic diversity and simulate phylogenies and traits.
+#'
+#' \tabular{ll}{ Package: \tab caper\cr Type: \tab Package\cr Version: \tab
+#' 0.2\cr Date: \tab 2011-05-06\cr License: \tab GPL\cr } A package to carry
+#' out phylogenetic comparative analysis.
+#'
+#' @name caper-package
+#' @aliases caper-package caper
+#' @docType package
+#' @author David Orme Maintainer: David Orme <d.orme@@imperial.ac.uk>
+#' @seealso \code{\link[ape:ape-package]{ape}}
+#' @keywords package
+NULL
+
 #' Datasets used for benchmarking caper
 #'
 #' These data files and model objects contain input datasets for benchmarking
@@ -23,9 +47,6 @@
 NULL
 
 
-
-
-
 #' Conservation status of British birds (Thomas 2008)
 #'
 #' The dataset contains a molecular phylogeny of 249 species of British birds
@@ -47,14 +68,11 @@ NULL
 #' Sciences, 275(1647):2077-2083.
 #' @keywords datasets
 #' @examples
-#'
 #' data(BritishBirds)
-#' BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
-#'
+#' BritishBirds <- comparative.data(
+#'     BritishBirds.tree, BritishBirds.data, binomial
+#' )
 NULL
-
-
-
 
 
 #' The 'caic' S3 object class and methods
@@ -89,38 +107,8 @@ NULL
 #' \item{stand.cont}{A logical value showing whether the contrasts in the
 #' object have been standardized.} }
 #' @keywords class
+#' @export
 NULL
-
-
-
-
-
-#' Comparative analysis of phylogenetics and evolution in R (caper)
-#'
-#' The \pkg{caper} package provides a set of functions to conduct comparative
-#' analyses using both independent contrasts and phylogenetic generalised least
-#' squares methods. It also provides functions to combine phylogeny objects
-#' with data frames into simple comparative datasets and some utility functions
-#' for manipulating phylogenies.
-#'
-#' In addition to linear models correcting for phylogeny, the package also
-#' provides functions to test tree imbalance, calculate various measures of
-#' phylogenetic diversity and simulate phylogenies and traits.
-#'
-#' \tabular{ll}{ Package: \tab caper\cr Type: \tab Package\cr Version: \tab
-#' 0.2\cr Date: \tab 2011-05-06\cr License: \tab GPL\cr } A package to carry
-#' out phylogenetic comparative analysis.
-#'
-#' @name caper-package
-#' @aliases caper-package caper
-#' @docType package
-#' @author David Orme Maintainer: David Orme <d.orme@@imperial.ac.uk>
-#' @seealso \code{\link[ape:ape-package]{ape}}
-#' @keywords package
-NULL
-
-
-
 
 
 #' Example dataset for Fusco imbalance calculations
@@ -137,11 +125,8 @@ NULL
 #' of the test and the families were unlabelled in this original file.
 #' @seealso fusco.test
 #' @keywords datasets
+#' @export
 NULL
-
-
-
-
 
 #' Example dataset for the caper package
 #'
@@ -181,11 +166,8 @@ NULL
 #' carnivora <- comparative.data(carnivora.tree, carnivora.data, "binomial", na.omit = FALSE)
 #' primates <- comparative.data(primates.tree, primates.data, "binomial", na.omit = FALSE)
 #' marsupialia <- comparative.data(marsupialia.tree, marsupialia.data, "binomial", na.omit = FALSE)
-#'
+#' @export
 NULL
-
-
-
 
 
 #' Example dataset for the CAIC package
@@ -215,15 +197,17 @@ NULL
 #'
 #' data(perissodactyla)
 #' # default behaviour is to omit incomplete data rows
-#' (perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial))
+#' (perisso <- comparative.data(
+#'     perissodactyla.tree, perissodactyla.data, Binomial
+#' ))
 #' # but this can be turned off
-#' (perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit = FALSE))
+#' (perisso <- comparative.data(
+#'     perissodactyla.tree, perissodactyla.data, Binomial,
+#'     na.omit = FALSE
+#' ))
 #' na.omit(perisso)
-#'
+#' @export
 NULL
-
-
-
 
 
 #' Generic model methods for 'pgls' models.
@@ -275,17 +259,17 @@ NULL
 #' @examples
 #'
 #' data(shorebird)
-#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv = TRUE, vcv.dim = 3)
+#' shorebird <- comparative.data(
+#'     shorebird.tree, shorebird.data, Species,
+#'     vcv = TRUE, vcv.dim = 3
+#' )
 #' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird)
 #' print(mod1)
 #'
 #' mod1.sum <- summary(mod1)
 #' print(mod1.sum)
-#'
+#' @export
 NULL
-
-
-
 
 
 #' Example dataset for the caper package
@@ -310,10 +294,8 @@ NULL
 #' ability and the evolution of egg size in shorebirds. Biology Letters 2, 206
 #' - 208
 #' @keywords datasets
+#' @export
 NULL
-
-
-
 
 
 #' The syrphidae dataset of Katzourakis et al. 2001
@@ -332,6 +314,7 @@ NULL
 #' effect of using higher-level taxa in studies of biodiversity, and correlates
 #' of species richness. Journal of Evolutionary Biology, 14:219-227.
 #' @keywords datasets
+#' @export
 NULL
 
 

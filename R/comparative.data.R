@@ -108,7 +108,7 @@
 #' shorebird[, 2:3]
 #' shorebird[1:15, ]
 #' shorebird[1:15, 2:3]
-#' 
+#' @export
 comparative.data <- function(phy, data, names.col, vcv = FALSE, vcv.dim = 2,
                              na.omit = TRUE, force.root = FALSE,
                              warn.dropped = FALSE, scope = NULL) {

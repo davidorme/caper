@@ -99,7 +99,7 @@
 #' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
 #' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird, lambda='ML')
 #' mod2 <- pgls(log(Egg.Mass) ~ log(M.Mass), data=shorebird, lambda='ML', delta='ML')
-#' 
+#' @export
 pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
                  param.CI = 0.95, control = list(fnscale = -1),
                  bounds = NULL) {

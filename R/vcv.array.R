@@ -56,7 +56,7 @@
 #'
 #' # a kappa transformation of 0.5
 #' apply(tree.VCVA^0.5, c(1, 2), sum, na.rm = TRUE)
-#'
+#' @export
 VCV.array <- function(phy, dim = 2, compact = TRUE) {
     ## turns a phylogeny into a 3d array similar to a VCV matrix
     ## but keeping each beanch length separate. This is useful for

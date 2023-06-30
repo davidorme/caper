@@ -1,7 +1,7 @@
 #' Comparative analysis using the crunch algorithm.
-#' 
+#'
 #' Calculate a linear model using the crunch algorithm.
-#' 
+#'
 #' This function implements the 'crunch' algorithm for modelling the
 #' relationship between variables that are phylogenetically non-independent.
 #' The method was first described by Felsenstein (1985) and subsequently
@@ -9,7 +9,7 @@
 #' This method was previously implemented in the Mac Classic computer programs
 #' CAIC, written by Andy Purvis, Andy Rambaut (Purvis and Rambaut, 1995) and
 #' updated by Nick Isaac and Paul-Michael Agapow.
-#' 
+#'
 #' The user provides a comparative dataset. The formula specifies the model to
 #' be fitted and contrasts are calculated in those variables. The specified
 #' reference variable is used to ensure that contrasts for multivariate models
@@ -19,11 +19,11 @@
 #' Missing data can be present in the explanatory variables: the algorithm
 #' makes use of the complete data available at each node as was the case with
 #' CAIC.
-#' 
+#'
 #' The resulting table of contrasts is then used to fit the specified model -
 #' note that the intercept is automatically dropped from the model if present,
 #' following REF HERE.
-#' 
+#'
 #' Contrasts at polytomies are calculated following Pagel (1992). The
 #' descendants from the node are split into two groups based on whether they
 #' are above or below the group mean in the reference variable. If there is no
@@ -31,7 +31,7 @@
 #' means in the variables are then calculated for each subgroup and a contrast
 #' is calculated between these values using an arbitrary internal branch
 #' length.
-#' 
+#'
 #' @aliases crunch contrCalc
 #' @param formula A model formula.
 #' @param data An 'comparative.data' object. Alternatively, a data frame.
@@ -75,27 +75,27 @@
 #' @seealso \code{\link{caic-class}} for 'caic' object structure and methods.
 #' @references Felsenstein, J.  (1985).  Phylogenies and the comparative
 #' method.  Am. Nat.  125, 1-15
-#' 
+#'
 #' Pagel, M. D. (1992). A method for the analysis of comparative data.  J.
 #' theor. Biol. 156, 431-442.
-#' 
+#'
 #' Purvis, A. and Rambaut, A. (1995) Comparative analysis by independent
 #' contrasts (CAIC): an Apple Macintosh application for analysing comparative
 #' data.  Computer Appl. Biosciences 11, 247-251.
 #' @keywords models regression
 #' @examples
-#' 
+#'
 #' data(shorebird)
 #' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
-#' crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, data=shorebird)
+#' crunchMod <- crunch(Egg.Mass ~ F.Mass + M.Mass, data = shorebird)
 #' summary(crunchMod)
 #' # plot the contrasts
 #' crunchTab <- caic.table(crunchMod)
 #' plot(Egg.Mass ~ F.Mass, crunchTab)
 #' # for the actual model diagnostics
-#' par(mfrow=c(3,2))
+#' par(mfrow = c(3, 2))
 #' caic.diagnostics(crunchMod)
-#' 
+#' @export
 crunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
                    robust = Inf, ref.var = NULL, node.depth = NULL,
                    polytomy.brlen = 0, equal.branch.length = FALSE,

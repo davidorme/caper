@@ -1,13 +1,13 @@
 #' Identify tips descended from a node
-#' 
+#'
 #' Obtains a vector of the tips subtending from either one node or all nodes in
 #' a phylogeny.
-#' 
+#'
 #' The function \code{clade.members.list} runs \code{clade.members} over each
 #' node in the phylogeny, possibly including the external nodes as indicated by
 #' the tips argument, and returns a list of vectors showing the members of the
 #' clade defined by each node.
-#' 
+#'
 #' @aliases clade.members clade.members.list
 #' @param x A integer identifying the node for which a list of tips is
 #' required.
@@ -28,15 +28,15 @@
 #' @author David Orme, Lynsey McInnes
 #' @keywords manip utilities
 #' @examples
-#' 
+#'
 #' data(perissodactyla)
 #' # use comparative.data to add node labels
-#' perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit=FALSE)
-#' plot(perisso$phy, show.node.label=TRUE)
-#' clade.members(22, perisso$phy, tip.labels=TRUE)
-#' clade.members.list(perisso$phy, tip.labels=FALSE)
-#' 
-#' 
+#' perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit = FALSE)
+#' plot(perisso$phy, show.node.label = TRUE)
+#' clade.members(22, perisso$phy, tip.labels = TRUE)
+#' clade.members.list(perisso$phy, tip.labels = FALSE)
+#'
+#' @export
 clade.members <- function(x, phy, tip.labels = FALSE,
                           include.nodes = FALSE) {
     # NEW2OLD: CONVERTED...

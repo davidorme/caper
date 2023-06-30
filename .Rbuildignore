@@ -6,3 +6,5 @@ benchmarks
 DataSources
 Testing
 
+^.*\.Rproj$
+^\.Rproj\.user$

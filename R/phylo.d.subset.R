@@ -1,18 +1,18 @@
 #' Calculates the phylogenetic D statistic across clades within a phylogeny
-#' 
+#'
 #' Calculates the D value, a measure of phylogenetic signal in a binary trait,
 #' and tests the estimated D value for significant departure from both random
 #' association and the clumping expected under a Brownian evolution threshold
 #' model. Does this across clades within a phylogeny.
-#' 
+#'
 #' A wrapper function for \code{\link{phylo.d}}, calculating D values for
 #' clades within a given dataset. These clades can be filtered according to the
 #' number of species and nodes using the arguments above. See
 #' \code{\link{phylo.d}} for more details on the method itself.
-#' 
+#'
 #' Any clades for which there is no variation in the binary variable have
 #' \code{NA} values for all of the below slots.
-#' 
+#'
 #' @aliases phylo.d.subset print.phylo.d.subset summary.phylo.d.subset
 #' @param data A 'comparative.data' or 'data.frame' object.
 #' @param phy An object of class 'phylo', required when data is not a
@@ -54,15 +54,15 @@
 #' strength in binary traits. Conservation Biology, 24(4):1042-1051.
 #' @keywords utilities htest
 #' @examples
-#' 
+#'
 #' data(BritishBirds)
 #' BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
 #' # Look at big clades only
 #' \dontrun{
-#' bigClades <- phylo.d.subset(BritishBirds, binvar=Red_list, verbose=TRUE, min.tips=10, min.nodes=5)
+#' bigClades <- phylo.d.subset(BritishBirds, binvar = Red_list, verbose = TRUE, min.tips = 10, min.nodes = 5)
 #' print(bigClades)
 #' }
-#' 
+#' @export
 phylo.d.subset <- function(data, phy, names.col, binvar, permut = 1000,
                            rnd.bias = NULL, min.tips = 1,
                            max.tips = length(data$phy$tip.label),

@@ -153,7 +153,7 @@
 #' # A basic tree of age 4 time units, output as a 'comparative.data' object
 #' tree <- growTree(halt = expression(clade.age >= 4), grain = Inf)
 #' plot(tree$phy)
-#'
+#' @export
 growTree <- function(b = 1, d = 0, halt = 20, grain = 0.1, linObj = NULL,
                      ct.start = NULL, ct.change = NULL, ct.var = NULL,
                      dt.rates = NULL, inheritance = NULL, trace.events = FALSE,

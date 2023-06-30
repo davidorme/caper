@@ -429,8 +429,11 @@ plot(mod.l); plot(mod.d); plot(mod.k)
 par(mar=c(4.5,3,1,1), mfrow=c(1,3), mgp=c(1.8,0.8,0), tcl=-0.2)
 plot(mod.l); plot(mod.d); plot(mod.k)
 @
-    \caption{Likelihood surfaces of $\lambda$, $\kappa$ and $\delta$ for a simple model (\texttt{log(Egg.Mass) \~ log(M.Mass)}) on the \dtidx{shorebird} dataset. The ML estimate has only been fitted for $\lambda$ and so this is the only plot that shows confidence limits.}
-    \label{lambdaOptPlot}
+    \caption{Likelihood surfaces of \ensuremath{\lambda},
+    \ensuremath{\kappa} and \ensuremath{\delta} for a simple model
+    (\texttt{log(Egg.Mass) \~ log(M.Mass)}) on the \dtidx{shorebird} dataset.
+    The ML estimate has only been fitted for \ensuremath{\lambda} and so this is
+    the only plot that shows confidence limits.} \label{lambdaOptPlot}
   \end{center}
 \end{figure}
 

@@ -450,7 +450,7 @@ The \caper{} package provides standard generic methods for examining \texttt{pgl
 par(mfrow=c(2,2), mar=c(3,3,1,1), mgp=c(2,0.7,0), tcl=-0.2)
 plot(mod)
 @    
-\caption{Model diagnostic plots for a simple model (\texttt{log(Egg.Mass) \~ log(M.Mass)}) on the \dtidx{shorebird} dataset.}
+\caption[PGLS model diagnostics]{Model diagnostic plots for a simple model (\texttt{log(Egg.Mass) \~ log(M.Mass)}) on the \dtidx{shorebird} dataset.}
     \label{pglsPlotCmd}
   \end{center}
 \end{figure}

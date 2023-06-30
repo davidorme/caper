@@ -8,7 +8,7 @@ VCV.array <- function(phy, dim = 2, compact = TRUE) {
 
     # an extended version that could replace vcv.phylo.array and vcv.phylo (~ 3x faster than it for one thing)
 
-    if (inherits(phy, "phylo")) {
+    if (!inherits(phy, "phylo")) {
         stop("object \"phy\" is not of class \"phylo\"")
     }
 

@@ -52,7 +52,7 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          build_args: 'c("--compact-vignettes=gs+pdf")'
+          build_args: 'c("--compact-vignettes=gs+qpdf")'
 
       #- name: Build docs
       #  run: |

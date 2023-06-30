@@ -46,10 +46,15 @@
 <<setup, print=FALSE, echo=FALSE>>=
 	library(caper)
 	## whilst code is being tested, load most recent versions from the pkg repository
-	for(f in dir('../../R', full=TRUE)) (source(f))
+	for(f in dir('R', full=TRUE)) (source(f))
 @
 
-This vignette documents the use of the \caper{} package for R \citep{R-Development-Core-Team.2011.a} in carrying out a range of comparative analysis methods for phylogenetic data. The \caper{} package, and the code in this vignette, requires the \texttt{ape} package \citep{Paradis.Claude.ea.2004.a} along with the packages \texttt{mvtnorm} and \texttt{MASS}.
+This vignette documents the use of the \caper{} package for R
+\citep{R-Development-Core-Team.2011.a} in carrying out a range of comparative
+analysis methods for phylogenetic data. The \caper{} package, and the code in
+this vignette, requires the \texttt{ape} package
+\citep{Paradis.Claude.ea.2004.a} along with the packages \texttt{mvtnorm} and
+\texttt{MASS}.
 
 %% compressed ToC slightly to avoid spilling over page
 \linespread{0.95}
@@ -57,16 +62,22 @@ This vignette documents the use of the \caper{} package for R \citep{R-Developme
 \linespread{1}
 
 %% add more space between paragraphs at this point
-\addtolength{\parskip}{\baselineskip}
-\section{Background}
-Comparing the traits of species (or of groups of species of higher taxonomic rank) can produce deep insights into evolutionary processes. However, all such analyses should take into account the degree to which species are related and hence do not provide independent data on a hypothesis. This can lead both to situations in which apparently strong relationships rest on relatively few truly independent events (Fig. \ref{whycaper}a) or where strong relationships within groups are masked by phylogenetic differences between groups (Fig. \ref{whycaper}b). 
+\addtolength{\parskip}{\baselineskip} \section{Background} Comparing the traits
+of species (or of groups of species of higher taxonomic rank) can produce deep
+insights into evolutionary processes. However, all such analyses should take
+into account the degree to which species are related and hence do not provide
+independent data on a hypothesis. This can lead both to situations in which
+apparently strong relationships rest on relatively few truly independent events
+(Fig. \ref{whycaper}a) or where strong relationships within groups are masked by
+phylogenetic differences between groups (Fig. \ref{whycaper}b). 
 
 \begin{figure}[htbp]
   \begin{center}
 <<whycaper, echo= false, fig=true, width=6, height=6>>=
 par(mfrow=c(2,2), mar=c(3,3,1,1), mgp=c(2,0.7,0))
 
-plot(c(0,13),c(0,10), typ="n", bty="n", xaxt="n",yaxt="n", xlab="", ylab="", xaxs="i",yaxs="i")
+plot(c(0,13),c(0,10), typ="n", bty="n", xaxt="n",
+     yaxt="n", xlab="", ylab="", xaxs="i",yaxs="i")
 lines(c(0,7), c(5,8.5))
 lines(c(0,7), c(5,1.5))
 lines(c(3.5,7), c(3.25,5))
@@ -92,10 +103,13 @@ dat <- data.frame(x = rnorm(120, mean= rep(2:4, each=40), sd=0.5),
 plot(y~x, col=unclass(tx), data=dat, xaxt="n", xlab="", ylab="")
 axis(1, col.axis="red")
 abline(lm(y~x, data=dat))
-for(sub in split(dat, dat$tx)) abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1], lty=2) 
+for(sub in split(dat, dat$tx)) {
+  abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1], lty=2) 
+}
 
 
-plot(c(0,13),c(0,10), typ="n", bty="n", xaxt="n",yaxt="n", xlab="", ylab="", xaxs="i",yaxs="i")
+plot(c(0,13),c(0,10), typ="n", bty="n", xaxt="n",
+     yaxt="n", xlab="", ylab="", xaxs="i",yaxs="i")
 lines(c(0,7), c(5,8.5))
 lines(c(0,7), c(5,1.5))
 lines(c(3.5,7), c(3.25,5))
@@ -125,55 +139,104 @@ dat$y <- dat$x - rnorm(120, mean= rep(0:2, each=40), sd=0.5)
 plot(y~x, col=unclass(tx), data=dat, xaxt="n", xlab="", ylab="")
 axis(1, col.axis="red")
 abline(lm(y~x, data=dat))
-for(sub in split(dat, dat$tx)) abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1], lty=2) 
-
+for(sub in split(dat, dat$tx)) {
+  abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1], lty=2)
+}
 @ 
-    \caption{Phylogenetic autocorrelation in action. a) Simple regression (solid line) suggests a strong relationship between two variables; the phylogeny shows that within the three main groups, there is no consistent relationship (dashed lines) and the apparent relationship stems from only two linked shifts in the means of the traits early in the evolution of the clade. b) Simple regression (solid line) suggests a weak positive relationship between the two variables; the phylogeny shows that there are strong positive relationships between the traits within each of the three main groups but this is masked by early shifts in the mean value of the red trait.}
+    \caption{Phylogenetic autocorrelation in action. a) Simple regression (solid
+    line) suggests a strong relationship between two variables; the phylogeny
+    shows that within the three main groups, there is no consistent relationship
+    (dashed lines) and the apparent relationship stems from only two linked
+    shifts in the means of the traits early in the evolution of the clade. b)
+    Simple regression (solid line) suggests a weak positive relationship between
+    the two variables; the phylogeny shows that there are strong positive
+    relationships between the traits within each of the three main groups but
+    this is masked by early shifts in the mean value of the red trait.}
     \label{whycaper}
   \end{center}
 \end{figure}
 
-The \caper{} package implements two methods that account for this phylogenetic autocorrelation. The first, originally described by \citet{Felsenstein.1985.a}, is to recognize that the differences between taxa on either side of a bifurcating node represent independent evolutionary trajectories and that these differences (`independent contrasts') can be used to test hypotheses in a way that accounts for the phylogenetic autocorrelation between the taxa. \citet{Pagel.1992.a} extended this method to permit contrasts to be calculated at polytomies. The second, described by [refs], is to include the phylogenetic structure as a covariance matrix in a linear model. 
+The \caper{} package implements two methods that account for this phylogenetic
+autocorrelation. The first, originally described by \citet{Felsenstein.1985.a},
+is to recognize that the differences between taxa on either side of a
+bifurcating node represent independent evolutionary trajectories and that these
+differences (`independent contrasts') can be used to test hypotheses in a way
+that accounts for the phylogenetic autocorrelation between the taxa.
+\citet{Pagel.1992.a} extended this method to permit contrasts to be calculated
+at polytomies. The second, described by [refs], is to include the phylogenetic
+structure as a covariance matrix in a linear model. 
 
-The \caper{} package also provides a number of other phylogenetic comparative methods, along with a flexible method for simulating trait evolution on phylogenies.
+The \caper{} package also provides a number of other phylogenetic comparative
+methods, along with a flexible method for simulating trait evolution on
+phylogenies.
 
 %% COMPARATIVE DATASETS
 
 \section{Comparative datasets}
 
-\subsection{The \fnidx{comparative.data} class and objects.}
-The majority of functions in \caper{} require both a phylogeny and data set of traits for the taxa at the tips of that phylogeny. Crucially, the rows of data need to be matched carefully to the tips to ensure that the phylogenetic structure in the variables is represented correctly: \caper{} provides the function \fnidx{comparative.data} to facilitate this. The following simple example shows the basic operation:
+\subsection{The \fnidx{comparative.data} class and objects.} The majority of
+functions in \caper{} require both a phylogeny and data set of traits for the
+taxa at the tips of that phylogeny. Crucially, the rows of data need to be
+matched carefully to the tips to ensure that the phylogenetic structure in the
+variables is represented correctly: \caper{} provides the function
+\fnidx{comparative.data} to facilitate this. The following simple example shows
+the basic operation:
 
 <<comparative.data>>=
 phy <- read.tree(text='(((B:2,A:2):1,D:3):1,(C:1,E:1):3);')
-dat <- data.frame(taxa=c("A","B","C","D","E"), n.species=c(5,9,12,1,13), mass=c(4.1,4.5,5.9,3.0,6.0))
+dat <- data.frame(
+  taxa=c("A","B","C","D","E"), 
+  n.species=c(5,9,12,1,13), 
+  mass=c(4.1,4.5,5.9,3.0,6.0)
+)
 cdat <- comparative.data(data=dat, phy=phy, names.col="taxa")
 
 print(cdat)
 @
 
-In order to make it easier to use contrast methods, where values are estimated at internal nodes, the \fnidx{comparative.data} function and contrast methods use internal node labels to identify values. Creating a comparative data object will not replace existing labels but will insert simple numeric labels for unlabelled nodes. The \fnidx{comparative.data} class has a number of generic methods that allow users to extract a subset of taxa and the relevant linked data from within a \fnidx{comparative.data} object.
+In order to make it easier to use contrast methods, where values are estimated
+at internal nodes, the \fnidx{comparative.data} function and contrast methods
+use internal node labels to identify values. Creating a comparative data object
+will not replace existing labels but will insert simple numeric labels for
+unlabelled nodes. The \fnidx{comparative.data} class has a number of generic
+methods that allow users to extract a subset of taxa and the relevant linked
+data from within a \fnidx{comparative.data} object.
 
-\subsubsection{\texttt{na.omit}\index{Functions!comparative.data!na.omit}}
- This method returns a subset of the object containing only those taxa for which the data are complete (i.e no \texttt{NA} values). By default, the \fnidx{comparative.data} function drops incomplete rows, but this can be altered. The examples below show the function in use on the \dtidx{perissodactyla} dataset.
+\subsubsection{\texttt{na.omit}\index{Functions!comparative.data!na.omit}} This
+method returns a subset of the object containing only those taxa for which the
+data are complete (i.e no \texttt{NA} values). By default, the
+\fnidx{comparative.data} function drops incomplete rows, but this can be
+altered. The examples below show the function in use on the
+\dtidx{perissodactyla} dataset.
 
 <<na.omit>>=
 data(perissodactyla)
-(perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial))
+(perisso <- comparative.data(
+  perissodactyla.tree, perissodactyla.data, Binomial)
+)
 # but this can be turned off
-(perissoFull <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit=FALSE))
+(perissoFull <- comparative.data(
+  perissodactyla.tree, perissodactyla.data, Binomial, na.omit=FALSE)
+)
 na.omit(perisso)
 @
 
-The \texttt{scope} argument uses a model formula to indicate which variables to consider when reducing a comparative data object to complete rows and can be used directly by \texttt{na.omit}\index{Functions!comparative.data!na.omit} or indirectly through \fnidx{comparative.data}.
+The \texttt{scope} argument uses a model formula to indicate which variables to
+consider when reducing a comparative data object to complete rows and can be
+used directly by \texttt{na.omit}\index{Functions!comparative.data!na.omit} or
+indirectly through \fnidx{comparative.data}.
 
 <<na.omit2>>=
-comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, scope= log.female.wt ~ log.gestation.length)
+comparative.data(perissodactyla.tree,
+ perissodactyla.data, Binomial, scope= log.female.wt ~ log.gestation.length)
 na.omit(perissoFull, scope=log.female.wt ~ log.gestation.length + Territoriality)
 @
 
-\subsubsection{\texttt{subset}\index{Functions!comparative.data!subset}}
- This method functions like the \texttt{subset} function for data frames: the \texttt{subset} argument is used to specify a logical subset of rows using one or more of the data columns; the \texttt{select} argument can be used to choose which variables to include in the subset.
+\subsubsection{\texttt{subset}\index{Functions!comparative.data!subset}} This
+method functions like the \texttt{subset} function for data frames: the
+\texttt{subset} argument is used to specify a logical subset of rows using one
+or more of the data columns; the \texttt{select} argument can be used to choose
+which variables to include in the subset.
 
 <<subset>>=
 subset(perissoFull, subset=! is.na(Territoriality))
@@ -200,11 +263,27 @@ Far more functionality for creating and manipulating comparative datasets is pro
 The examples in this vignette make use of the following datasets:
 
 \begin{description}
-  \item[\dtidx{shorebird}] This dataset includes a phylogeny of 71 species of shorebirds along with data on male and female body mass, egg mass, clutch size and mating system \citep{Lislevand.Thomas.2006.a}.
-  \item[\dtidx{syrphidae}] This dataset includes a phylogeny of 204 genera of hoverfly along with data on the species richness of each of those genera \citep{Katzourakis.Purvis.ea.2001.a}.
-  \item[\dtidx{perissodactyla}] This dataset includes a phylogeny of 18 perissodactyl species and a data frame of female and neonatal mass, gestation length and territoriality for 13 of those species. The data frame contains missing data and the dataset was provided as an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
-  \item[\dtidx{IsaacEtAl}] The datafile contains  species level phylogenies and data sets of nine variables for each of four mammalian orders (Primates, Carnivora, Chiroptera and Marsupialia). The data were published in supplementary material for \citet{Isaac.Jones.ea.2005.a}. The variables are body mass, age at sexual maturity, gestation length, interbirth interval, litter size , population density, group size, mass dimorphism and length.dimorphism. The data sets all contain missing data and all the variables have been natural log transformed.
-  \item[\dtidx{British Birds}] The datafile contains a species level phylogeny for 249 species of British birds (some represented by congeneric surrogates) and a data set on the conservation status of 181 of those species \citep{Thomas.2008.a}.
+  \item[\dtidx{shorebird}] This dataset includes a phylogeny of 71 species of
+  shorebirds along with data on male and female body mass, egg mass, clutch size
+  and mating system \citep{Lislevand.Thomas.2006.a}. \item[\dtidx{syrphidae}]
+  This dataset includes a phylogeny of 204 genera of hoverfly along with data on
+  the species richness of each of those genera
+  \citep{Katzourakis.Purvis.ea.2001.a}. \item[\dtidx{perissodactyla}] This
+  dataset includes a phylogeny of 18 perissodactyl species and a data frame of
+  female and neonatal mass, gestation length and territoriality for 13 of those
+  species. The data frame contains missing data and the dataset was provided as
+  an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
+  \item[\dtidx{IsaacEtAl}] The datafile contains  species level phylogenies and
+  data sets of nine variables for each of four mammalian orders (Primates,
+  Carnivora, Chiroptera and Marsupialia). The data were published in
+  supplementary material for \citet{Isaac.Jones.ea.2005.a}. The variables are
+  body mass, age at sexual maturity, gestation length, interbirth interval,
+  litter size , population density, group size, mass dimorphism and
+  length.dimorphism. The data sets all contain missing data and all the
+  variables have been natural log transformed. \item[\dtidx{British Birds}] The
+  datafile contains a species level phylogeny for 249 species of British birds
+  (some represented by congeneric surrogates) and a data set on the conservation
+  status of 181 of those species \citep{Thomas.2008.a}.
 \end{description}
 
 %%%%%%%%%%
@@ -217,7 +296,13 @@ The examples in this vignette make use of the following datasets:
 %% METHODS
 %%%%%%%%%%
 
-The \caper{} package provides two broad sets of methods of accounting for phylogenetic autocorrelation in analyses. One is the use of phylogenetic independent contrasts \citep{Felsenstein.1985.a}, the other is the use of a phylogenetic variance-covariance matrix within a standard linear model \citep{Freckleton.Harvey.ea.2002.a} [other refs]. These two approaches are basically equivalent, although small differences may arise from the way in which polytomies are handled.
+The \caper{} package provides two broad sets of methods of accounting for
+phylogenetic autocorrelation in analyses. One is the use of phylogenetic
+independent contrasts \citep{Felsenstein.1985.a}, the other is the use of a
+phylogenetic variance-covariance matrix within a standard linear model
+\citep{Freckleton.Harvey.ea.2002.a} [other refs]. These two approaches are
+basically equivalent, although small differences may arise from the way in which
+polytomies are handled.
 
 <<pglsSetup, echo=FALSE>>=
 ## demo tree
@@ -234,10 +319,19 @@ V <- VCV.array(z)
 
 \subsubsection{Phylogenetic linear models}
 
-In a basic linear regression, the response variable ($y$) is modelled as the product of the estimated coefficients ($\beta$) and the explanatory variables ($\mathbf{X}$), plus residual variation ($\epsilon$): $y = \beta\mathbf{X} + \epsilon$. If the cases in the model are related taxa, then the values in $y$
-and $\mathbf{X}$ are no longer independent: each value will be more similar to some values (closer relatives) than others (distant relatives). 
+In a basic linear regression, the response variable ($y$) is modelled as the
+product of the estimated coefficients ($\beta$) and the explanatory variables
+($\mathbf{X}$), plus residual variation ($\epsilon$): $y = \beta\mathbf{X} +
+\epsilon$. If the cases in the model are related taxa, then the values in $y$
+and $\mathbf{X}$ are no longer independent: each value will be more similar to
+some values (closer relatives) than others (distant relatives). 
 
-The \fnidx{pgls} function addresses this problem by incorporating the covariance between taxa into the calculation of estimated coefficients: this is a generalized least squares (GLS) model. The covariance matrix ($\mathbf{V}$), showing the expected covariance between each pair of tips is calculated using the branch lengths of a phylogeny showing how the taxa are related (Fig. \ref{vcvFig}). 
+The \fnidx{pgls} function addresses this problem by incorporating the covariance
+between taxa into the calculation of estimated coefficients: this is a
+generalized least squares (GLS) model. The covariance matrix ($\mathbf{V}$),
+showing the expected covariance between each pair of tips is calculated using
+the branch lengths of a phylogeny showing how the taxa are related (Fig.
+\ref{vcvFig}). 
 
 \begin{figure}[htbp]
   \begin{center}
@@ -281,12 +375,21 @@ plot(z, no.margin=TRUE, cex=0.6, label.offset=0.3, edge.col=ec)
 	\end{array}
 	\hspace{1mm}\right]$}
 	\end{minipage}%}
-    \caption{A phylogenetic tree of 10 taxa and the variance covariance matrix ($\mathbf{V}$) of that phylogeny. The diagonal of the matrix (bold values) shows the path length from each tip to the root (example in red). Off diagonal values show the shared path length for a given pair of tips (example in blue).}
-    \label{vcvFig}
+    \caption{A phylogenetic tree of 10 taxa and the variance covariance matrix
+    ($\mathbf{V}$) of that phylogeny. The diagonal of the matrix (bold values)
+    shows the path length from each tip to the root (example in red). Off
+    diagonal values show the shared path length for a given pair of tips
+    (example in blue).} \label{vcvFig}
   \end{center}
 \end{figure}
 
-The initial covariance matrix ($\mathbf{V}$) taken from an ultrametric phylogeny assumes a Brownian model of evolution: that variation between tips accumulates along all branches of the tree at a rate proportional to the length of the branches. However, not all variables necessarily correspond to this assumption and likelihood methods can be used to find transformations of $\mathbf{V}$ that improve the fit of the model to the data. Three transformations are implemented in the \fnidx{pgls} function (Fig. \ref{bltrans}):
+The initial covariance matrix ($\mathbf{V}$) taken from an ultrametric phylogeny
+assumes a Brownian model of evolution: that variation between tips accumulates
+along all branches of the tree at a rate proportional to the length of the
+branches. However, not all variables necessarily correspond to this assumption
+and likelihood methods can be used to find transformations of $\mathbf{V}$ that
+improve the fit of the model to the data. Three transformations are implemented
+in the \fnidx{pgls} function (Fig. \ref{bltrans}):
 
 \begin{description}
 	\item[lambda ($\lambda$)]{The internal branch lengths of the phylogeny are multiplied by a constant. When $\lambda = 0$, internal branch lengths are all zero and all the variation in the data is modelled as a function of the independent evolution along the branches leading to the tips. If $\lambda > 1$, then the data shows more covariance than expected under a Brownian model.

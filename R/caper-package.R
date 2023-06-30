@@ -329,6 +329,7 @@ if (getRversion() >= "2.15.1") {
         "Nnode", "id", "nTip", "nLin", "tip",
         "N1", "N2", "B", "m", "M", "S.odd", "w", # fusco
         "len", "nSp", "ED", "ED.cor", # pd.calc
-        "edge.length" # contrCalc
+        "edge.length", # contrCalc
+        "Territoriality"
     ))
 }

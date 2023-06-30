@@ -2,6 +2,7 @@
 .vscode
 .github
 .Rproj
+build_notes.md
 TODO.txt
 www
 benchmarks

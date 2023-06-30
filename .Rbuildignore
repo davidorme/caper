@@ -1,5 +1,7 @@
 .lintr
 .vscode
+.github
+.Rproj
 TODO.txt
 www
 benchmarks

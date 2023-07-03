@@ -49,7 +49,12 @@
 	for(f in dir('../../R', full=TRUE)) (source(f))
 @
 
-This vignette documents the use of the \caper{} package for R \citep{R-Development-Core-Team.2011.a} in carrying out a range of comparative analysis methods for phylogenetic data. The \caper{} package, and the code in this vignette, requires the \texttt{ape} package \citep{Paradis.Claude.ea.2004.a} along with the packages \texttt{mvtnorm} and \texttt{MASS}.
+This vignette documents the use of the \caper{} package for R
+\citep{R-Development-Core-Team.2011.a} in carrying out a range of comparative
+analysis methods for phylogenetic data. The \caper{} package, and the code in
+this vignette, requires the \texttt{ape} package
+\citep{Paradis.Claude.ea.2004.a} along with the packages \texttt{mvtnorm} and
+\texttt{MASS}.
 
 %% compressed ToC slightly to avoid spilling over page
 \linespread{0.95}
@@ -57,9 +62,14 @@ This vignette documents the use of the \caper{} package for R \citep{R-Developme
 \linespread{1}
 
 %% add more space between paragraphs at this point
-\addtolength{\parskip}{\baselineskip}
-\section{Background}
-Comparing the traits of species (or of groups of species of higher taxonomic rank) can produce deep insights into evolutionary processes. However, all such analyses should take into account the degree to which species are related and hence do not provide independent data on a hypothesis. This can lead both to situations in which apparently strong relationships rest on relatively few truly independent events (Fig. \ref{whycaper}a) or where strong relationships within groups are masked by phylogenetic differences between groups (Fig. \ref{whycaper}b). 
+\addtolength{\parskip}{\baselineskip} \section{Background} Comparing the traits
+of species (or of groups of species of higher taxonomic rank) can produce deep
+insights into evolutionary processes. However, all such analyses should take
+into account the degree to which species are related and hence do not provide
+independent data on a hypothesis. This can lead both to situations in which
+apparently strong relationships rest on relatively few truly independent events
+(Fig. \ref{whycaper}a) or where strong relationships within groups are masked by
+phylogenetic differences between groups (Fig. \ref{whycaper}b). 
 
 \begin{figure}[htbp]
   \begin{center}
@@ -128,34 +138,72 @@ abline(lm(y~x, data=dat))
 for(sub in split(dat, dat$tx)) abline(lm(y~x,  data=sub), col=unclass(sub$tx)[1], lty=2) 
 
 @ 
-    \caption{Phylogenetic autocorrelation in action. a) Simple regression (solid line) suggests a strong relationship between two variables; the phylogeny shows that within the three main groups, there is no consistent relationship (dashed lines) and the apparent relationship stems from only two linked shifts in the means of the traits early in the evolution of the clade. b) Simple regression (solid line) suggests a weak positive relationship between the two variables; the phylogeny shows that there are strong positive relationships between the traits within each of the three main groups but this is masked by early shifts in the mean value of the red trait.}
+    \caption{Phylogenetic autocorrelation in action. a) Simple regression (solid
+    line) suggests a strong relationship between two variables; the phylogeny
+    shows that within the three main groups, there is no consistent relationship
+    (dashed lines) and the apparent relationship stems from only two linked
+    shifts in the means of the traits early in the evolution of the clade. b)
+    Simple regression (solid line) suggests a weak positive relationship between
+    the two variables; the phylogeny shows that there are strong positive
+    relationships between the traits within each of the three main groups but
+    this is masked by early shifts in the mean value of the red trait.}
     \label{whycaper}
   \end{center}
 \end{figure}
 
-The \caper{} package implements two methods that account for this phylogenetic autocorrelation. The first, originally described by \citet{Felsenstein.1985.a}, is to recognize that the differences between taxa on either side of a bifurcating node represent independent evolutionary trajectories and that these differences (`independent contrasts') can be used to test hypotheses in a way that accounts for the phylogenetic autocorrelation between the taxa. \citet{Pagel.1992.a} extended this method to permit contrasts to be calculated at polytomies. The second, described by [refs], is to include the phylogenetic structure as a covariance matrix in a linear model. 
+The \caper{} package implements two methods that account for this phylogenetic
+autocorrelation. The first, originally described by \citet{Felsenstein.1985.a},
+is to recognize that the differences between taxa on either side of a
+bifurcating node represent independent evolutionary trajectories and that these
+differences (`independent contrasts') can be used to test hypotheses in a way
+that accounts for the phylogenetic autocorrelation between the taxa.
+\citet{Pagel.1992.a} extended this method to permit contrasts to be calculated
+at polytomies. The second, described by [refs], is to include the phylogenetic
+structure as a covariance matrix in a linear model. 
 
-The \caper{} package also provides a number of other phylogenetic comparative methods, along with a flexible method for simulating trait evolution on phylogenies.
+The \caper{} package also provides a number of other phylogenetic comparative
+methods, along with a flexible method for simulating trait evolution on
+phylogenies.
 
 %% COMPARATIVE DATASETS
 
 \section{Comparative datasets}
 
 \subsection{The \fnidx{comparative.data} class and objects.}
-The majority of functions in \caper{} require both a phylogeny and data set of traits for the taxa at the tips of that phylogeny. Crucially, the rows of data need to be matched carefully to the tips to ensure that the phylogenetic structure in the variables is represented correctly: \caper{} provides the function \fnidx{comparative.data} to facilitate this. The following simple example shows the basic operation:
+
+The majority of functions in \caper{} require both a phylogeny and data set of
+traits for the taxa at the tips of that phylogeny. Crucially, the rows of data
+need to be matched carefully to the tips to ensure that the phylogenetic
+structure in the variables is represented correctly: \caper{} provides the
+function \fnidx{comparative.data} to facilitate this. The following simple
+example shows the basic operation:
 
 <<comparative.data>>=
 phy <- read.tree(text='(((B:2,A:2):1,D:3):1,(C:1,E:1):3);')
-dat <- data.frame(taxa=c("A","B","C","D","E"), n.species=c(5,9,12,1,13), mass=c(4.1,4.5,5.9,3.0,6.0))
+dat <- data.frame(
+  taxa=c("A","B","C","D","E"), 
+  n.species=c(5,9,12,1,13), mass=c(4.1,4.5,5.9,3.0,6.0)
+)
 cdat <- comparative.data(data=dat, phy=phy, names.col="taxa")
 
 print(cdat)
 @
 
-In order to make it easier to use contrast methods, where values are estimated at internal nodes, the \fnidx{comparative.data} function and contrast methods use internal node labels to identify values. Creating a comparative data object will not replace existing labels but will insert simple numeric labels for unlabelled nodes. The \fnidx{comparative.data} class has a number of generic methods that allow users to extract a subset of taxa and the relevant linked data from within a \fnidx{comparative.data} object.
+In order to make it easier to use contrast methods, where values are estimated
+at internal nodes, the \fnidx{comparative.data} function and contrast methods
+use internal node labels to identify values. Creating a comparative data object
+will not replace existing labels but will insert simple numeric labels for
+unlabelled nodes. The \fnidx{comparative.data} class has a number of generic
+methods that allow users to extract a subset of taxa and the relevant linked
+data from within a \fnidx{comparative.data} object.
 
 \subsubsection{\texttt{na.omit}\index{Functions!comparative.data!na.omit}}
- This method returns a subset of the object containing only those taxa for which the data are complete (i.e no \texttt{NA} values). By default, the \fnidx{comparative.data} function drops incomplete rows, but this can be altered. The examples below show the function in use on the \dtidx{perissodactyla} dataset.
+
+This method returns a subset of the object containing only those taxa for which
+the data are complete (i.e no \texttt{NA} values). By default, the
+\fnidx{comparative.data} function drops incomplete rows, but this can be
+altered. The examples below show the function in use on the
+\dtidx{perissodactyla} dataset.
 
 <<na.omit>>=
 data(perissodactyla)
@@ -165,7 +213,10 @@ data(perissodactyla)
 na.omit(perisso)
 @
 
-The \texttt{scope} argument uses a model formula to indicate which variables to consider when reducing a comparative data object to complete rows and can be used directly by \texttt{na.omit}\index{Functions!comparative.data!na.omit} or indirectly through \fnidx{comparative.data}.
+The \texttt{scope} argument uses a model formula to indicate which variables to
+consider when reducing a comparative data object to complete rows and can be
+used directly by \texttt{na.omit}\index{Functions!comparative.data!na.omit} or
+indirectly through \fnidx{comparative.data}.
 
 <<na.omit2>>=
 comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, scope= log.female.wt ~ log.gestation.length)
@@ -173,7 +224,11 @@ na.omit(perissoFull, scope=log.female.wt ~ log.gestation.length + Territoriality
 @
 
 \subsubsection{\texttt{subset}\index{Functions!comparative.data!subset}}
- This method functions like the \texttt{subset} function for data frames: the \texttt{subset} argument is used to specify a logical subset of rows using one or more of the data columns; the \texttt{select} argument can be used to choose which variables to include in the subset.
+
+ This method functions like the \texttt{subset} function for data frames: the
+ \texttt{subset} argument is used to specify a logical subset of rows using one
+ or more of the data columns; the \texttt{select} argument can be used to choose
+ which variables to include in the subset.
 
 <<subset>>=
 subset(perissoFull, subset=! is.na(Territoriality))
@@ -181,7 +236,12 @@ subset(perissoFull, subset=log.female.wt > 5.5, select=c(log.female.wt, log.gest
 @
 
 \subsubsection{\texttt{\char91}\index{Functions!comparative.data!\texttt{\char91}}}
- This method treats the dataset as the rows (taxa) and columns (variables) of a matrix. The first index allows taxa to be specified by name or by their position in the sequence of tip labels for the phylogeny. The second index selects variables in the same way as in the extract method (\texttt{\char91}.data.frame) for a data frame.
+
+ This method treats the dataset as the rows (taxa) and columns (variables) of a
+ matrix. The first index allows taxa to be specified by name or by their
+ position in the sequence of tip labels for the phylogeny. The second index
+ selects variables in the same way as in the extract method
+ (\texttt{\char91}.data.frame) for a data frame.
 
 <<squarebracket>>=
 horses <- grep('Equus', perissoFull$phy$tip.label)
@@ -189,7 +249,9 @@ perissoFull[horses,]
 perissoFull[horses, 2:3]
 @
 
-Far more functionality for creating and manipulating comparative datasets is provided by the \texttt{phylobase} package. It is intended to incorporate this functionality into \caper{}.
+Far more functionality for creating and manipulating comparative datasets is
+provided by the \texttt{phylobase} package. It is intended to incorporate this
+functionality into \caper{}.
 
 %%
 %% EXAMPLE DATASETS
@@ -200,11 +262,33 @@ Far more functionality for creating and manipulating comparative datasets is pro
 The examples in this vignette make use of the following datasets:
 
 \begin{description}
-  \item[\dtidx{shorebird}] This dataset includes a phylogeny of 71 species of shorebirds along with data on male and female body mass, egg mass, clutch size and mating system \citep{Lislevand.Thomas.2006.a}.
-  \item[\dtidx{syrphidae}] This dataset includes a phylogeny of 204 genera of hoverfly along with data on the species richness of each of those genera \citep{Katzourakis.Purvis.ea.2001.a}.
-  \item[\dtidx{perissodactyla}] This dataset includes a phylogeny of 18 perissodactyl species and a data frame of female and neonatal mass, gestation length and territoriality for 13 of those species. The data frame contains missing data and the dataset was provided as an example with the original CAIC program  \citep{Purvis.Rambaut.1995.a}.
-  \item[\dtidx{IsaacEtAl}] The datafile contains  species level phylogenies and data sets of nine variables for each of four mammalian orders (Primates, Carnivora, Chiroptera and Marsupialia). The data were published in supplementary material for \citet{Isaac.Jones.ea.2005.a}. The variables are body mass, age at sexual maturity, gestation length, interbirth interval, litter size , population density, group size, mass dimorphism and length.dimorphism. The data sets all contain missing data and all the variables have been natural log transformed.
-  \item[\dtidx{British Birds}] The datafile contains a species level phylogeny for 249 species of British birds (some represented by congeneric surrogates) and a data set on the conservation status of 181 of those species \citep{Thomas.2008.a}.
+  \item[\dtidx{shorebird}] This dataset includes a phylogeny of 71 species of
+  shorebirds along with data on male and female body mass, egg mass, clutch size
+  and mating system \citep{Lislevand.Thomas.2006.a}.
+  
+  \item[\dtidx{syrphidae}] This dataset includes a phylogeny of 204 genera of
+  hoverfly along with data on the species richness of each of those genera
+  \citep{Katzourakis.Purvis.ea.2001.a}.
+  
+  \item[\dtidx{perissodactyla}] This dataset includes a phylogeny of 18
+  perissodactyl species and a data frame of female and neonatal mass, gestation
+  length and territoriality for 13 of those species. The data frame contains
+  missing data and the dataset was provided as an example with the original CAIC
+  program  \citep{Purvis.Rambaut.1995.a}.
+  
+  \item[\dtidx{IsaacEtAl}] The datafile contains  species level phylogenies and
+  data sets of nine variables for each of four mammalian orders (Primates,
+  Carnivora, Chiroptera and Marsupialia). The data were published in
+  supplementary material for \citet{Isaac.Jones.ea.2005.a}. The variables are
+  body mass, age at sexual maturity, gestation length, interbirth interval,
+  litter size , population density, group size, mass dimorphism and
+  length.dimorphism. The data sets all contain missing data and all the
+  variables have been natural log transformed.
+  
+  \item[\dtidx{British Birds}] The datafile contains a species level phylogeny
+  for 249 species of British birds (some represented by congeneric surrogates)
+  and a data set on the conservation status of 181 of those species
+  \citep{Thomas.2008.a}.
 \end{description}
 
 %%%%%%%%%%
@@ -217,7 +301,13 @@ The examples in this vignette make use of the following datasets:
 %% METHODS
 %%%%%%%%%%
 
-The \caper{} package provides two broad sets of methods of accounting for phylogenetic autocorrelation in analyses. One is the use of phylogenetic independent contrasts \citep{Felsenstein.1985.a}, the other is the use of a phylogenetic variance-covariance matrix within a standard linear model \citep{Freckleton.Harvey.ea.2002.a} [other refs]. These two approaches are basically equivalent, although small differences may arise from the way in which polytomies are handled.
+The \caper{} package provides two broad sets of methods of accounting for
+phylogenetic autocorrelation in analyses. One is the use of phylogenetic
+independent contrasts \citep{Felsenstein.1985.a}, the other is the use of a
+phylogenetic variance-covariance matrix within a standard linear model
+\citep{Freckleton.Harvey.ea.2002.a} [other refs]. These two approaches are
+basically equivalent, although small differences may arise from the way in which
+polytomies are handled.
 
 <<pglsSetup, echo=FALSE>>=
 ## demo tree
@@ -234,22 +324,33 @@ V <- VCV.array(z)
 
 \subsubsection{Phylogenetic linear models}
 
-In a basic linear regression, the response variable ($y$) is modelled as the product of the estimated coefficients ($\beta$) and the explanatory variables ($\mathbf{X}$), plus residual variation ($\epsilon$): $y = \beta\mathbf{X} + \epsilon$. If the cases in the model are related taxa, then the values in $y$
-and $\mathbf{X}$ are no longer independent: each value will be more similar to some values (closer relatives) than others (distant relatives). 
+In a basic linear regression, the response variable ($y$) is modelled as the
+product of the estimated coefficients ($\beta$) and the explanatory variables
+($\mathbf{X}$), plus residual variation ($\epsilon$): $y = \beta\mathbf{X} +
+\epsilon$. If the cases in the model are related taxa, then the values in $y$
+and $\mathbf{X}$ are no longer independent: each value will be more similar to
+some values (closer relatives) than others (distant relatives). 
 
-The \fnidx{pgls} function addresses this problem by incorporating the covariance between taxa into the calculation of estimated coefficients: this is a generalized least squares (GLS) model. The covariance matrix ($\mathbf{V}$), showing the expected covariance between each pair of tips is calculated using the branch lengths of a phylogeny showing how the taxa are related (Fig. \ref{vcvFig}). 
+The \fnidx{pgls} function addresses this problem by incorporating the covariance
+between taxa into the calculation of estimated coefficients: this is a
+generalized least squares (GLS) model. The covariance matrix ($\mathbf{V}$),
+showing the expected covariance between each pair of tips is calculated using
+the branch lengths of a phylogeny showing how the taxa are related (Fig.
+\ref{vcvFig}). 
 
 \begin{figure}[htbp]
   \begin{center}
 	%\framebox{  
 	\begin{minipage}[c]{0.3\linewidth}
 	\raggedleft
+
 <<vcvFig, fig=TRUE, echo=FALSE, print=FALSE, height=2.13, width=1.5>>=
 ec <- rep('grey50', 18)
 ec[c(1,5,7)] <- 'red'
 ec[c(8,14)] <- 'blue'
 plot(z, no.margin=TRUE, cex=0.6, label.offset=0.3, edge.col=ec)
 @
+
 	\end{minipage}%}
 	%\hfill
 	%\framebox{
@@ -280,19 +381,46 @@ plot(z, no.margin=TRUE, cex=0.6, label.offset=0.3, edge.col=ec)
 	0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 5.7 & 5.7 & 7.9 & \mathbf{9.0} \\ 
 	\end{array}
 	\hspace{1mm}\right]$}
-	\end{minipage}%}
-    \caption{A phylogenetic tree of 10 taxa and the variance covariance matrix ($\mathbf{V}$) of that phylogeny. The diagonal of the matrix (bold values) shows the path length from each tip to the root (example in red). Off diagonal values show the shared path length for a given pair of tips (example in blue).}
-    \label{vcvFig}
+	\end{minipage}
+    \caption{A phylogenetic tree of 10 taxa and the variance covariance matrix
+    ($\mathbf{V}$) of that phylogeny. The diagonal of the matrix (bold values)
+    shows the path length from each tip to the root (example in red). Off
+    diagonal values show the shared path length for a given pair of tips
+    (example in blue).} \label{vcvFig}
   \end{center}
 \end{figure}
 
-The initial covariance matrix ($\mathbf{V}$) taken from an ultrametric phylogeny assumes a Brownian model of evolution: that variation between tips accumulates along all branches of the tree at a rate proportional to the length of the branches. However, not all variables necessarily correspond to this assumption and likelihood methods can be used to find transformations of $\mathbf{V}$ that improve the fit of the model to the data. Three transformations are implemented in the \fnidx{pgls} function (Fig. \ref{bltrans}):
+The initial covariance matrix ($\mathbf{V}$) taken from an ultrametric phylogeny
+assumes a Brownian model of evolution: that variation between tips accumulates
+along all branches of the tree at a rate proportional to the length of the
+branches. However, not all variables necessarily correspond to this assumption
+and likelihood methods can be used to find transformations of $\mathbf{V}$ that
+improve the fit of the model to the data. Three transformations are implemented
+in the \fnidx{pgls} function (Fig. \ref{bltrans}):
 
 \begin{description}
-	\item[lambda ($\lambda$)]{The internal branch lengths of the phylogeny are multiplied by a constant. When $\lambda = 0$, internal branch lengths are all zero and all the variation in the data is modelled as a function of the independent evolution along the branches leading to the tips. If $\lambda > 1$, then the data shows more covariance than expected under a Brownian model.
-	 Note that a \fnidx{pgls} model with a lambda of 0 will not be the same as a standard linear model if the tree is not ultrametric: although the covariance terms will all be zero, the variances of the tips will differ.}
-	\item[delta ($\delta$)]{In this case, all the values in the $\mathbf{V}$ matrix are raised to the power of $\delta$. This is a transformation of the sum of the length of the shared branches between two tips {$l$}: $\sum{\left(l\right)}^\delta$.}
-	\item[kappa ($\kappa$)]{All branch lengths in the phylogeny are raised to the power $\kappa$ --- the elements of the $\mathbf{V}$ are the sum of the individually transformed branch lengths $\sum{\left(l^\kappa\right)}$. As $\kappa$ decrease towards zero, all branches will become of equal length, representing an evolutionary model where variation accumulates only when two clades diverge.}
+
+  \item[lambda ($\lambda$)]{The internal branch lengths of the phylogeny are
+  multiplied by a constant. When $\lambda = 0$, internal branch lengths are all
+  zero and all the variation in the data is modelled as a function of the
+  independent evolution along the branches leading to the tips. If $\lambda >
+  1$, then the data shows more covariance than expected under a Brownian model.
+
+  Note that a \fnidx{pgls} model with a lambda of 0 will not be the same as a
+  standard linear model if the tree is not ultrametric: although the covariance
+  terms will all be zero, the variances of the tips will differ.}
+
+   \item[delta ($\delta$)]{In this case, all the values in the $\mathbf{V}$
+   matrix are raised to the power of $\delta$. This is a transformation of the
+   sum of the length of the shared branches between two tips {$l$}:
+   $\sum{\left(l\right)}^\delta$.}
+
+   \item[kappa ($\kappa$)]{All branch lengths in the phylogeny are raised to the
+   power $\kappa$ --- the elements of the $\mathbf{V}$ are the sum of the
+   individually transformed branch lengths $\sum{\left(l^\kappa\right)}$. As
+   $\kappa$ decrease towards zero, all branches will become of equal length,
+   representing an evolutionary model where variation accumulates only when two
+   clades diverge.}
 \end{description}
 
 \begin{figure}[htbp]
@@ -429,7 +557,13 @@ plot(mod.l); plot(mod.d); plot(mod.k)
 par(mar=c(4.5,3,1,1), mfrow=c(1,3), mgp=c(1.8,0.8,0), tcl=-0.2)
 plot(mod.l); plot(mod.d); plot(mod.k)
 @
-    \caption{Likelihood surfaces of $\lambda$, $\kappa$ and $\delta$ for a simple model (\texttt{log(Egg.Mass) \~ log(M.Mass)}) on the \dtidx{shorebird} dataset. The ML estimate has only been fitted for $\lambda$ and so this is the only plot that shows confidence limits.}
+    \caption[Likelihood surfaces]{Likelihood surfaces of \ensuremath{\lambda},
+    \ensuremath{\kappa} and \ensuremath{\delta} for a simple model
+    (\ensuremath{\log \textrm{Egg.Mass} ~ \log \textrm{M.Mass}}) 
+    on the \dtidx{shorebird} dataset.
+    The ML estimate has only been fitted for \ensuremath{\lambda} and so this is
+    the only plot that shows confidence limits.
+    } 
     \label{lambdaOptPlot}
   \end{center}
 \end{figure}
@@ -444,7 +578,7 @@ The \caper{} package provides standard generic methods for examining \texttt{pgl
 par(mfrow=c(2,2), mar=c(3,3,1,1), mgp=c(2,0.7,0), tcl=-0.2)
 plot(mod)
 @    
-\caption{Model diagnostic plots for a simple model (\texttt{log(Egg.Mass) \~ log(M.Mass)}) on the \dtidx{shorebird} dataset.}
+\caption[PGLS model diagnostics]{Model diagnostic plots for a simple model (\texttt{log(Egg.Mass) \~ log(M.Mass)}) on the \dtidx{shorebird} dataset.}
     \label{pglsPlotCmd}
   \end{center}
 \end{figure}
@@ -525,8 +659,10 @@ plot(perisso$phy,  'cladogram', use.edge.length=FALSE, label.offset=0.4, show.no
 points(rep(8.25,9), 1:9, pch=ifelse(perisso$data$Terr=='Yes', 1,19))
 text(rep(8.5,9), 1:9, perisso$phy$tip.label, font=3, adj=0)
 @
-    \caption{Location of \fnidx{brunch} contrasts for territoriality in the \dtidx{perissodactyla} dataset. Branches in bold show the tips contributing to each contrast. See also the output of \fnidx{caic.table} in the main text.}
-    \label{brunchPlot}
+    \caption[Brunch contrast locations]{Location of \fnidx{brunch} contrasts for
+    territoriality in the \dtidx{perissodactyla} dataset. Branches in bold show
+    the tips contributing to each contrast. See also the output of
+    \fnidx{caic.table} in the main text.} \label{brunchPlot}
   \end{center}
 \end{figure}
 
@@ -594,8 +730,11 @@ with(redPD$Parameters, axis(3, at=c(MeanBrownian, Observed, MeanRandom), labels=
 mtext(expression(italic(D)==phantom(x)), side=3, at=25, line=1.2)
 
 @
-    \caption{Scaling of $D$ values for the observed sum of character change from the distributions of simulated sums of character change under models of random association (blue line) and a Brownian process (red line). The distributions of the simulations are used to test the significance of departures from either model.}
-    \label{phylodScale}
+    \caption[D value scalings]{Scaling of $D$ values for the observed sum of
+    character change from the distributions of simulated sums of character
+    change under models of random association (blue line) and a Brownian process
+    (red line). The distributions of the simulations are used to test the
+    significance of departures from either model.} \label{phylodScale}
   \end{center}
 \end{figure}
 
@@ -657,7 +796,9 @@ x <- caic.diagnostics(crunchMod)
 crunchMod2 <- crunch(lgEgg.Mass ~  lgM.Mass, data=shorebird)
 x <- caic.diagnostics(crunchMod2)
 @
-    \caption{Diagnostic plots for contrasts in male shorebird mass for contrast models on unlogged (top row, poorly distributed with one serious outlier) and logged (bottom row) data.}
+    \caption[Crunch diagnostics]{Diagnostic plots for contrasts in male
+    shorebird mass for contrast models on unlogged (top row, poorly distributed
+    with one serious outlier) and logged (bottom row) data.}
     \label{caicDiagExamplePlot}
   \end{center}
 \end{figure}
@@ -702,7 +843,12 @@ crunchModRobust <- caic.robust(crunchMod)
 x <-caic.diagnostics(crunchModRobust, outlier=2)
 @
 
-    \caption{Diagnostic plots and \fnidx{caic.robust}: the upper row shows diagnostic plots for the full model, highlighting a single point with an absolute studentized residual $> 3$. The lower row shows the same plots after applying \fnidx{caic.robust}: the highlighted point has been excluded and the argument \texttt{outlier} has been used to reveal points with absolute residuals $> 2$.}
+    \caption[Crunch diagnostics and robust models]{Diagnostic plots and
+    \fnidx{caic.robust}: the upper row shows diagnostic plots for the full
+    model, highlighting a single point with an absolute studentized residual $>
+    3$. The lower row shows the same plots after applying \fnidx{caic.robust}:
+    the highlighted point has been excluded and the argument \texttt{outlier}
+    has been used to reveal points with absolute residuals $> 2$.}
     \label{caicRobustExamplePlot}
   \end{center}
 \end{figure}
@@ -861,8 +1007,9 @@ par(mar=c(3,3,1,1))
 plot(density(rand), main='', xlab= 'TBL values for red listed British birds.')
 abline(v=obs, col='red')
 @
-    \caption{Illustration of the different measures of phylogenetic diversity available and a plot of observed (red) and randomized (black) TBL for red listed British birds}
-    \label{pdMeasurePlot}
+    \caption{Illustration of the different measures of phylogenetic diversity
+    available and a plot of observed (red) and randomized (black) TBL for red
+    listed British birds} \label{pdMeasurePlot}
   \end{center}
 \end{figure}
 
@@ -925,7 +1072,12 @@ par(usr=c(0,1,0,1))
 text(0.1, 0.9, "c)", cex=1.2)
 
 @
-    \caption{a) Calculation of ED scores. Edge labels show the calculation of ED contributions (below branch) from the branch length and number of descendent species (above branch). Tip labels show species ED scores and the component contribution values are highlighted for two species. b) The distribution of ED scores for a phylogeny of primate species (c). The paths leading to the species with the highest ED values (red arrow) are shown on the phylogeny.}
+    \caption{a) Calculation of ED scores. Edge labels show the calculation of ED
+    contributions (below branch) from the branch length and number of descendent
+    species (above branch). Tip labels show species ED scores and the component
+    contribution values are highlighted for two species. b) The distribution of
+    ED scores for a phylogeny of primate species (c). The paths leading to the
+    species with the highest ED values (red arrow) are shown on the phylogeny.}
     \label{edExamplePlots}
   \end{center}
 \end{figure}
@@ -976,9 +1128,11 @@ plot(densityDependence$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(
 plot(increasingExtinction$phy, root.edge=TRUE); axis(1); par(usr=c(0,1,0,1)); text(0.1,0.06,"f)")
 
 @
-   \caption{Simple simulations using \fnidx{growTree}. See the code example for a) \texttt{basicTree}, b) \texttt{extendTree}, c) \texttt{timeLimit}, d) \texttt{extinctTree}, e) \texttt{densityDependence} and f) \texttt{increasingExtinction}.}
-    \label{simpleGrowTreePlots}
-  \end{center}
+   \caption{growTree simulations}{Simple simulations using \fnidx{growTree}. See
+   the code example for a) \texttt{basicTree}, b) \texttt{extendTree}, c)
+   \texttt{timeLimit}, d) \texttt{extinctTree}, e) \texttt{densityDependence}
+   and f) \texttt{increasingExtinction}.} \label{simpleGrowTreePlots}
+   \end{center}
 \end{figure}
 
 \subsubsection{Simulating continuous characters.}
@@ -1058,9 +1212,10 @@ plot(logBodyMass ~ logLitterSize, data=vtips, xlim=lims[,2], ylim=lims[,1])
 plot(logBodyMass ~ logLitterSize, data=cvtips, xlim=lims[,2], ylim=lims[,1])
 
 @
-   \caption{Simulated values for two continuous traits using a) only starting mean values (\texttt{simpleBrownian}), b) means and variances (\texttt{varBrownian}) and c) means and covariances (\texttt{covarBrownian}).}
-    \label{contTraitPlots}
-  \end{center}
+   \caption[growTree continuous traits]{Simulated values for two continuous
+   traits using a) only starting mean values (\texttt{simpleBrownian}), b) means
+   and variances (\texttt{varBrownian}) and c) means and covariances
+   (\texttt{covarBrownian}).} \label{contTraitPlots} \end{center}
 \end{figure}
 
 
@@ -1099,9 +1254,9 @@ with(lastPP, points(xx + 0.06, yy,  pch=21, col=unclass(traitsByNode$flight), xp
 with(lastPP, points(xx + 0.12, yy,  pch=22, col=unclass(traitsByNode$trophic), xpd=NA, cex=0.6))
 
 @
-   \caption{Simulated values for two discrete traits: \texttt{flight} (circles) and \texttt{trophic} (squares).}
-    \label{discreteTraitPlot}
-  \end{center}
+   \caption[growTree discrete traits]{Simulated values for two discrete traits:
+   \texttt{flight} (circles) and \texttt{trophic} (squares).}
+   \label{discreteTraitPlot} \end{center}
 \end{figure}
 
 
@@ -1158,9 +1313,17 @@ plot(latTraitTree$phy, no.margin=TRUE, cex=0.8, show.tip=FALSE)
 # arrows(rightEdge-bm/20, tips, rightEdge+bm/20, tips, code=0, col='red', xpd=NA, lwd=2, lend=2)
 
 @
-   \caption{Simulations using expressions. a) Simulated extinction and speciation rates. Extinction (black) shows senescence and speciation shows latency. For the first simulation (b: \texttt{latencyTree}), speciation is determined entirely by lineage age and there are relatively few extant basal species and few rapid sequences of speciation along branches. For the second (c: \texttt{latTraitTree}), there are again few rapid sequence of speciation and simulated body mass (red bars) is predominantly smaller than the ancestral average (width of the grey bar). The dashed red lines in a) show the speciation rate for species with simulated log body mass 2 units higher and lower than the ancestral mean.}
-    \label{patencyPlot}
-  \end{center}
+   \caption[growTree and expressions]{Simulations using expressions. a)
+   Simulated extinction and speciation rates. Extinction (black) shows
+   senescence and speciation shows latency. For the first simulation (b:
+   \texttt{latencyTree}), speciation is determined entirely by lineage age and
+   there are relatively few extant basal species and few rapid sequences of
+   speciation along branches. For the second (c: \texttt{latTraitTree}), there
+   are again few rapid sequence of speciation and simulated body mass (red bars)
+   is predominantly smaller than the ancestral average (width of the grey bar).
+   The dashed red lines in a) show the speciation rate for species with
+   simulated log body mass 2 units higher and lower than the ancestral mean.}
+   \label{patencyPlot} \end{center}
 \end{figure}
 
 \subsubsection{Inheritance rules.}
@@ -1226,9 +1389,13 @@ arrows(rightEdge-bm/sc, tips, rightEdge+bm/sc, tips, code=0, col='red', xpd=NA, 
 plot(biogeogTree$phy, edge.col= unclass(biogeogTree$data$region), show.tip.label=FALSE, root.edge=TRUE)
 plot(epochTree3$phy, show.tip.label=FALSE)
 @
-   \caption{Inheritance rules and epochs. a)  Simulation showing divergent evolution of a continuous trait at speciation. b) A biogeographic simulation with sympatric speciation within single regions (red, green) and allopatric speciation of species occurring in both regions (black). Colours show the region at daughter node of an edge and do not show transitions along the edge. c) Use of epochs to simulate a mass extinction event.}
-    \label{inheritancePlots}
-  \end{center}
+   \caption[growTree and inheritance rules]{Inheritance rules and epochs. a)
+   Simulation showing divergent evolution of a continuous trait at speciation.
+   b) A biogeographic simulation with sympatric speciation within single regions
+   (red, green) and allopatric speciation of species occurring in both regions
+   (black). Colours show the region at daughter node of an edge and do not show
+   transitions along the edge. c) Use of epochs to simulate a mass extinction
+   event.} \label{inheritancePlots} \end{center}
 \end{figure}
 
 

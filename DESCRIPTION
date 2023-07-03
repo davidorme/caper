@@ -1,7 +1,7 @@
 Package: caper
 Type: Package
 Title: Comparative Analyses of Phylogenetics and Evolution in R
-Version: 1.0.2
+Version: 1.0.2-9000
 Date: 2023-06-28
 Authors@R: c(
     person('David', 'Orme', email='d.orme@imperial.ac.uk', role=c('aut','cre'),

@@ -3,6 +3,7 @@
 .github
 .Rproj
 build_notes.md
+cran-comments.md
 TODO.txt
 www
 benchmarks

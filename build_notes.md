@@ -237,7 +237,7 @@ Rscript -e " pkgdown::clean_site()"
 Rscript -e " pkgdown::build_site()"
 
 cd ../
-R CMD BUILD caper --compact-vignettes=both
+R CMD BUILD caper --compact-vignettes=gs+qpdf
 
 # 3) Identify the version name that just got built and check it for CRAN
 VERSION=$(sed -n -e '4p' caper/DESCRIPTION  | cut -d " "  -f 2)

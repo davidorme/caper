@@ -1,3 +1,18 @@
+Version 1.0.3
+
+  Removed outdated details in caper-package documentation
+  Bug fix for incorrectly calculated phylogenetic residuals (hat tip, Emma Mellor,
+  Vikki Neville and Shinichi Nakagawa).
+
+Version 1.0.2
+
+  Updated (partway!) package structure to more modern approaches.
+
+Version 1.0.1
+
+  Moved caper from R-Forge to GitHub, fixing issues with vignette building
+  Further fixes to S3 methods documentation
+
 Version 1.0.0
 
   Maintenance update to register S3methods() correctly and import standard packages to

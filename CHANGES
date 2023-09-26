@@ -6,7 +6,9 @@ Version 1.0.3
 
 Version 1.0.2
 
-  Updated (partway!) package structure to more modern approaches.
+  Updated (partway!) package structure to more modern approaches, including:
+  * github actions workflow for package checking
+  * build notes for new process
 
 Version 1.0.1
 

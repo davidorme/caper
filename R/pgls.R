@@ -7,7 +7,26 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
 
     ## pgls replaces lik.lambda - exactly the same as a null model
 
-    ## all the internal functions that were here are now farmed out to externally accessible functions
+    ## all the internal functions that were here are now farmed out to
+    ## external methods - the one below should also be moved out but doesn't
+    ## have an obvious generic method, so will need documenting separately?
+
+    phylo.residuals.scale <- function(V) {
+        # This function uses a variance covariance matrix, possibly with branch
+        # length transformations, and returns a scaling matrix used to calculate
+        # the phylogenetic residuals associated with a pgls model.
+
+        # Before version 1.0.3, the phlyogenetic residuals were calculated
+        # incorrectly, due to an incorrect transpose of the `v` element of the SVD
+        # decomposition: https://github.com/davidorme/caper/pull/2
+
+        iV <- solve(V, tol = .Machine$double.eps)
+        svdV <- La.svd(iV)
+        D <- svdV$u %*% diag(sqrt(svdV$d)) %*% svdV$v
+        return(t(D))
+    }
+
+
 
     ## think about this - allow old data + V use?
     if (!inherits(data, "comparative.data")) stop("data is not a 'comparative' data object.")
@@ -235,24 +254,6 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
 
     return(RET)
 }
-
-
-
-phylo.residuals.scale <- function(Cmat) {
-    # This function uses a variance covariance matrix, possibly with branch
-    # length transformations, and returns a scaling matrix used to calculate
-    # the phylogenetic residuals associated with a pgls model.
-
-    # Before version 1.0.3, the phlyogenetic residuals were calculated
-    # incorrectly, due to an incorrect transpose of the `v` element of the SVD
-    # decomposition: https://github.com/davidorme/caper/pull/2
-
-    iCmat <- solve(Cmat, tol = .Machine$double.eps)
-    svdCmat <- La.svd(iCmat)
-    D <- svdCmat$u %*% diag(sqrt(svdCmat$d)) %*% svdCmat$v
-    return(t(D))
-}
-
 
 pgls.profile <- function(pgls, which = c("lambda", "kappa", "delta"), N = 50, param.CI = NULL) {
     ## takes a pgls model and profiles one of the branch length transformations

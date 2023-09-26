@@ -11,12 +11,17 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0,  delta= 1.0,
 	## all the internal functions that were here are now farmed out to externally accessible functions
 	## - except Dfun because I don't know what it does!
 	
-	Dfun <- function(Cmat) {
-		iCmat <- solve(Cmat,  tol = .Machine$double.eps)
-		svdCmat <- La.svd(iCmat)
-		D <- svdCmat$u %*% diag(sqrt( svdCmat$d )) %*% t(svdCmat$v)
-		return( t(D) )
-	}
+  
+  #from Emma Mellor: Suggested correction (from Vikki Neville and Shinichi Nakagawa) to suspected bug:
+  #"the 'v' matrix returned by the La.svd function is the transpose of 'v' and so we don't think that 
+  #it needs to be transposed when being used to calculate 'D'." 
+  Dfun <- function(Cmat) {
+    iCmat <- solve(Cmat,  tol = .Machine$double.eps)
+    svdCmat <- La.svd(iCmat)
+    D <- svdCmat$u %*% diag(sqrt( svdCmat$d )) %*% svdCmat$v
+    return( t(D) )
+  }
+  
 
 	## think about this - allow old data + V use?
 	if(! inherits(data, 'comparative.data')) stop("data is not a 'comparative' data object.")

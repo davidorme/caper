@@ -274,7 +274,7 @@ You then need to upload that file to `win-builder`. The python script
 automating the process of using FTP to upload the current version for checking
 under both R stable and R devel. Note that `win-builder` communicates by email
 with the package maintainer (whoever has the `cre` flag in the `authors` section
-of the `DESCRIPTION` file.
+of the `DESCRIPTION` file).
 
 ```sh
 python build_scripts/upload_to_win-builder.py

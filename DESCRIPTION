@@ -1,11 +1,15 @@
 Package: caper
 Type: Package
 Title: Comparative Analyses of Phylogenetics and Evolution in R
-Version: 1.0.4
+Version: 1.0.5
 Date: 2025-08-28
 Authors@R: c(
-    person('David', 'Orme', email='d.orme@imperial.ac.uk', role=c('aut','cre'),
-	       comment=c(ORCID='0000-0002-7005-1394')),
+    person(
+        'David', 'Orme', 
+        email='d.orme@imperial.ac.uk', 
+        role=c('aut','cre'),
+	    comment=c(ORCID='0000-0002-7005-1394')
+    ),
     person('Rob', 'Freckleton', role=c('aut')),
     person('Gavin', 'Thomas', role=c('aut')),
     person('Thomas', 'Petzoldt', role=c('aut')),
@@ -28,3 +32,4 @@ License: GPL (>= 2)
 RoxygenNote: 7.3.2
 Encoding: UTF-8
 URL: https://davidorme.github.io/caper
+LazyData: true

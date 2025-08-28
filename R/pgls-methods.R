@@ -57,12 +57,12 @@
 #'
 #' mod1.sum <- summary(mod1)
 #' print(mod1.sum)
-#' @export
 NULL
 
 
 
 #' @describeIn pgls-methods Extract a summary object from a pgls model
+#' @export
 summary.pgls <- function(object, ...) {
     ## call and return object
     ans <- list(call = object$call)
@@ -112,6 +112,7 @@ summary.pgls <- function(object, ...) {
 }
 
 #' @describeIn pgls-methods Print a pgls model summary object.
+#' @export
 print.summary.pgls <- function(x, digits = max(3, getOption("digits") - 3),
                                ...) {
     cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"),
@@ -177,6 +178,7 @@ print.summary.pgls <- function(x, digits = max(3, getOption("digits") - 3),
 }
 
 #' @describeIn pgls-methods Print a pgls model
+#' @export
 print.pgls <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"),
         "\n\n",
@@ -192,6 +194,7 @@ print.pgls <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 }
 
 #' @describeIn pgls-methods Extract model coefficients from a pgls model
+#' @export
 coef.pgls <- function(object, ...) {
     cf <- object$model$coef
     nm <- rownames(cf)
@@ -200,6 +203,7 @@ coef.pgls <- function(object, ...) {
 }
 
 #' @describeIn pgls Extract residuals from a pgls model
+#' @export
 residuals.pgls <- function(object, phylo = FALSE, ...) {
     ret <- NULL
     if (phylo == FALSE) {
@@ -211,12 +215,14 @@ residuals.pgls <- function(object, phylo = FALSE, ...) {
 }
 
 #' @describeIn pgls-methods Extract fitted values from a pgls model
+#' @export
 fitted.pgls <- function(object, ...) {
     ret <- object$fitted
     return(ret)
 }
 
 #' @describeIn pgls-methods Extract predicted values from a pgls model
+#' @export
 predict.pgls <- function(object, newdata = NULL, ...) {
     # pull the data from the model if no new data is provided
     if (is.null(newdata)) {
@@ -236,6 +242,7 @@ predict.pgls <- function(object, newdata = NULL, ...) {
 }
 
 #' @describeIn pgls-methods Extract the log likelihood from a pgls model
+#' @export
 logLik.pgls <- function(object, REML = FALSE, ...) {
     val <- object$model$log.lik
 
@@ -247,6 +254,7 @@ logLik.pgls <- function(object, REML = FALSE, ...) {
 }
 
 #' @describeIn pgls-methods Extract the number of observations from a pgls model
+#' @export
 nobs.pgls <- function(object, ...) length(resid(object))
 
 
@@ -398,6 +406,7 @@ anova.pgls <- function(object, ...) {
 }
 
 #' @describeIn anova.pgls Calculate an ANOVA table for a list of pgls models.
+#' @export
 anova.pglslist <- function(object, ..., scale = 0, test = "F") {
     objects <- list(object, ...)
 

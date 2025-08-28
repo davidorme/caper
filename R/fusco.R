@@ -1,5 +1,5 @@
 #' Imbalance statistics using Fusco and Cronk's method.
-#' 
+#'
 #' Fusco and Cronk (1995) described a method for testing the imbalance of
 #' phylogenetic trees based on looking at the distribution of I. I is
 #' calculated using the number of tips descending from each side of a
@@ -14,14 +14,14 @@
 #' phylogeny and can therefore be used to distinguish between an unbalanced
 #' topology and the unbalanced distribution of diversity at the tips of a
 #' phylogeny.
-#' 
+#'
 #' Purvis et al. (2002) demonstrated that I is not independent of the node size
 #' S, resulting in a bias to the expected median of 0.5. They proposed a
 #' modification (I') that corrects this to give a statistic with an expected
 #' median of 0.5 regardless of node size. The defaults in this function perform
 #' testing of imbalance using I', but it is also possible to use the original
 #' measure proposed by Fusco and Cronk (1995).
-#' 
+#'
 #' I is calculated only at bifurcating nodes giving rise to more than 3 tips
 #' (or more than 3 species at the tips): nodes with three or fewer descendants
 #' have no variation in I and are not informative in assessing imbalance. The
@@ -34,9 +34,9 @@
 #' distribution decreases. The plot method incorporates a correction, described
 #' by Fusco and Cronk (1995), that uses the distribution of all possible splits
 #' at each node to characterize and correct for the departure from uniformity.
-#' 
+#'
 #' The randomization option generates confidence intervals around the mean I'.
-#' 
+#'
 #' @aliases fusco.test summary.fusco print.fusco plot.fusco
 #' @param phy An object of class 'comparative.data' or of class 'phylo'.
 #' @param data A data frame containing species richness values. Not required if
@@ -64,35 +64,52 @@
 #' as dim an option as it sounds.
 #' @param ... Further arguments to generic methods
 #' @return The function \code{fusco.test} produces an object of class 'fusco'
-#' containing: \item{observed}{A data frame of informative nodes showing nodal
-#' imbalance statistics. If the phylogeny has labelled nodes, then the node
-#' names are also returned in this data frame.} \item{median}{The median value
-#' of I.} \item{qd}{The quartile deviation of I.} \item{tipsAsSpecies}{A
-#' logical indicating whether the tips of the trees were treated as species or
-#' higher taxa.} \item{nInformative}{The number of informative nodes.}
+#' containing:
+#'
+#' \item{observed}{
+#'      A data frame of informative nodes showing nodal imbalance statistics.
+#'      If the phylogeny has labelled nodes, then the node names are also
+#'      returned in this data frame.
+#' }
+#' \item{median}{The median value of I.}
+#' \item{qd}{The quartile deviation of I.}
+#' \item{tipsAsSpecies}{
+#'      A logical indicating whether the tips of the trees were treated as
+#'      species or higher taxa.
+#' }
+#' \item{nInformative}{The number of informative nodes.}
 #' \item{nSpecies}{The number of species distributed across the tips.}
-#' \item{nTips}{The number of tips.} \item{reps}{The number of replicates used
-#' in randomization.} \item{conf.int}{The confidence levels used in
-#' randomization.} If \code{randomise.Iprime} is TRUE, or the user calls
-#' \code{fusco.randomize} on a 'fusco' object, then the following are also
-#' present.  \item{randomised}{A data frame of mean I' from the randomized
-#' observed values.} \item{rand.mean}{A vector of length 2 giving confidence
-#' intervals in mean I'.}
+#' \item{nTips}{The number of tips.}
+#' \item{reps}{The number of replicates used in randomization.}
+#' \item{conf.int}{The confidence levels used in randomization.}
+#'
+#'  If \code{randomise.Iprime} is TRUE, or the user calls \code{fusco.randomize}
+#' on a 'fusco' object, then the following are also present:
+#'
+#' \item{randomised}{
+#'      A data frame of mean I' from the randomized observed values.
+#' }
+#' \item{rand.mean}{
+#'      A vector of length 2 giving confidence intervals in mean I'.
+#' }
+#'
 #' @author David Orme, Andy Purvis
 #' @references Fusco, G. & Cronk, Q.C.B. (1995) A New Method for Evaluating the
 #' Shape of Large Phylogenies. J. theor. Biol. 175, 235-243
-#' 
+#'
 #' Purvis A., Katzourakis A. & Agapow, P-M (2002) Evaluating Phylogenetic Tree
 #' Shape: Two Modifications to Fusco & Cronk's Method. J. theor. Biol. 214,
 #' 93-103.
 #' @keywords utilities htest
 #' @examples
-#' 
+#'
 #' data(syrphidae)
-#' syrphidae <- comparative.data(phy=syrphidaeTree, dat=syrphidaeRich, names.col=genus)
-#' summary(fusco.test(syrphidae, rich=nSpp))
-#' summary(fusco.test(syrphidae, tipsAsSpecies=TRUE))
-#' plot(fusco.test(syrphidae, rich=nSpp))
+#' syrphidae <- comparative.data(
+#'     phy = syrphidaeTree, dat = syrphidaeRich, names.col = genus
+#' )
+#' summary(fusco.test(syrphidae, rich = nSpp))
+#' summary(fusco.test(syrphidae, tipsAsSpecies = TRUE))
+#' plot(fusco.test(syrphidae, rich = nSpp))
 #' @export
 fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
                        randomise.Iprime = TRUE, reps = 1000, conf.int = 0.95) {
@@ -237,11 +254,12 @@ fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
     return(ret)
 }
 
-
+#' @describeIn fusco.test Print the nodal imbalance data for a Fusco test
 print.fusco <- function(x, ...) {
     print(x$observed)
 }
 
+#' @describeIn fusco.test Print a statistical summary of a Fusco test
 summary.fusco <- function(object, ...) {
     cat("Fusco test for phylogenetic imbalance\n\n")
 
@@ -287,6 +305,7 @@ summary.fusco <- function(object, ...) {
     print(wilcox.test(object$observed$I.prime, mu = 0.5))
 }
 
+#' @describeIn fusco.test Plot an node imbalance histogram for a Fusco test
 plot.fusco <- function(x, correction = TRUE, nBins = 10, right = FALSE,
                        I.prime = TRUE, plot = TRUE, ...) {
     breaks <- seq(0, 1, length = nBins + 1)

@@ -792,14 +792,8 @@ growTree <- function(b = 1, d = 0, halt = 20, grain = 0.1, linObj = NULL,
     return(RET)
 }
 
-as.comparative.data <- function(x, ...) {
-    if (inherits(x, "comparative.data")) {
-        return(x)
-    } else {
-        UseMethod("as.comparative.data")
-    }
-}
 
+#' @describeIn growTree Convert a growTree object to a comparative data object
 as.comparative.data.growTree <- function(x, ...) {
     lineages <- x$lineages
     clade <- x$clade

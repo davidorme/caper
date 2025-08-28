@@ -1,8 +1,8 @@
 #' Comparative dataset creation
-#' 
+#'
 #' A simple tool to combine phylogenies with datasets and ensure consistent
 #' structure and ordering for use in functions.
-#' 
+#'
 #' The function matches rows in a data frame to tips on a phylogeny and ensures
 #' correct ordering of the data with respect to the tips. It also can add a
 #' variance covariance representation of the phylogeny. Mismatched rows and
@@ -13,7 +13,7 @@
 #' show a venn diagram of the data shared and dropped from each source. Node
 #' labels are preserved but must be unique - unlabelled nodes will be assigned
 #' numeric codes.
-#' 
+#'
 #' The 'na.omit' and 'subset' methods provide simple ways to clean up and
 #' extract parts of the comparative dataset. In particular, 'subset' acts
 #' exclusively with the data component of the object and, like subset on a data
@@ -22,7 +22,7 @@
 #' with the 'comparative.data' object into either pruningwise or cladewise
 #' order. This uses code from the 'ape' library: see
 #' \code{\link{reorder.phylo}}.
-#' 
+#'
 #' The '[' method allows subsets to be taken of the data. There are no replace
 #' methods ('[<-'). If only one index is specified (e.g. x[2]), then this is
 #' interpreted as extracting data columns from the object. Otherwise (e.g.
@@ -33,16 +33,16 @@
 #' Character vectors will be matched to the names of the object (or for
 #' matrices/arrays, the dimnames): see 'Character indices' below for further
 #' details.
-#' 
+#'
 #' The function 'caicStyleArgs' handles turning 'phy', 'data' and 'names.col'
 #' arguments into a 'comparative.data' object when they are provided separately
 #' to a function. This argument structure was used in older versions of many
 #' functions.
-#' 
+#'
 #' All of these functions are in part a substitute for the considerably more
 #' sophisticated handling of such data in the package 'phylobase', which will
 #' be integrated into later releases.
-#' 
+#'
 #' @aliases comparative.data print.comparative.data na.omit.comparative.data
 #' subset.comparative.data reorder.comparative.data [.comparative.data
 #' as.comparative.data caicStyleArgs
@@ -89,21 +89,21 @@
 #' @seealso \code{\link{crunch}},\code{\link{pgls}}
 #' @keywords utilities
 #' @examples
-#' 
+#'
 #' data(shorebird)
-#' shorebird <- comparative.data(shorebird.tree, shorebird.data, 'Species')
+#' shorebird <- comparative.data(shorebird.tree, shorebird.data, "Species")
 #' print(shorebird)
-#' 
-#' subset(shorebird, subset=Mat.syst == 'MO')
-#' 
-#' sandpipers <- grep('Calidris', shorebird$phy$tip.label)
+#'
+#' subset(shorebird, subset = Mat.syst == "MO")
+#'
+#' sandpipers <- grep("Calidris", shorebird$phy$tip.label)
 #' shorebird[-sandpipers, ]
-#' 
-#' sandpipers <- grep('Calidris', shorebird$phy$tip.label, value=TRUE)
+#'
+#' sandpipers <- grep("Calidris", shorebird$phy$tip.label, value = TRUE)
 #' shorebird[sandpipers, ]
-#' 
+#'
 #' shorebird[]
-#' shorebird[,]
+#' shorebird[, ]
 #' shorebird[2:3]
 #' shorebird[, 2:3]
 #' shorebird[1:15, ]
@@ -255,7 +255,7 @@ comparative.data <- function(phy, data, names.col, vcv = FALSE, vcv.dim = 2,
     return(RET)
 }
 
-# some useful generics
+#' @describeIn comparative.data Print a comparative data object
 print.comparative.data <- function(x, ...) {
     # basic summary data
     cat("Comparative dataset of", nrow(x$data), "taxa:\n")
@@ -294,6 +294,7 @@ print.comparative.data <- function(x, ...) {
     }
 }
 
+#' @describeIn comparative.data Drop NA data from a comparative data object
 na.omit.comparative.data <- function(object, scope = NULL, ...) {
     # strips data rows, tips and vcv row/columns for a comparative.data object
     if (!is.null(scope)) {
@@ -341,6 +342,7 @@ na.omit.comparative.data <- function(object, scope = NULL, ...) {
     return(object)
 }
 
+#' @describeIn comparative.data Subset a comparative data object
 subset.comparative.data <- function(x, subset, select, ...) {
     ## ripping out the innards of subset.data.frame
     if (missing(subset)) {
@@ -390,6 +392,7 @@ subset.comparative.data <- function(x, subset, select, ...) {
     return(x)
 }
 
+#' @describeIn comparative.data Extract parts of a comparative data object
 "[.comparative.data" <- function(x, i, j) {
     # how many args?
     # 2 and missing(i) = x[] --> return x untouched
@@ -487,6 +490,7 @@ subset.comparative.data <- function(x, subset, select, ...) {
     return(x)
 }
 
+#' @describeIn comparative.data Phylogenetic reordering of comparative data objects
 reorder.comparative.data <- function(x, order = "cladewise", ...) {
     # Uses ape reorder code
     order <- match.arg(order, c("cladewise", "pruningwise"))
@@ -534,6 +538,7 @@ reorder.comparative.data <- function(x, order = "cladewise", ...) {
     return(x)
 }
 
+#' @describeIn comparative.data Handle legacy argument names to functions.
 caicStyleArgs <- function(phy, data, names.col, warn.dropped = FALSE) {
     # general function to handle old style non-'comparative.data' use of
     # crunch, brunch, macrocaic, phylo.d functions
@@ -574,76 +579,11 @@ caicStyleArgs <- function(phy, data, names.col, warn.dropped = FALSE) {
     return(data)
 }
 
+#' @describeIn comparative.data Convert objects to comparative data objects
 as.comparative.data <- function(x, ...) {
     if (inherits(x, "comparative.data")) {
         return(x)
     } else {
         UseMethod("as.comparative.data")
     }
-}
-
-as.comparative.data.growTree <- function(x, ...) {
-    lineages <- x$lineages
-    clade <- x$clade
-
-    # get a phylo object
-
-    if (dim(lineages)[1] > 1) {
-        # extract information (excluding root node)
-        linNoR <- lineages[-1, ]
-
-        # now need to coerce the numbering into ape style
-        parentMap <- data.frame(
-            linPar = unique(linNoR$parent.id),
-            apePar = with(clade, (nTip + 1):nLin)
-        )
-        childMap <- data.frame(
-            linPar = with(linNoR, id[tip]),
-            apePar = with(clade, 1:nTip)
-        )
-        nodeMap <- rbind(parentMap, childMap)
-        linNoR$pnode <- nodeMap$apePar[match(linNoR$parent.id, nodeMap$linPar)]
-        linNoR$node <- nodeMap$apePar[match(linNoR$id, nodeMap$linPar)]
-
-        edge <- as.matrix(linNoR[, c("pnode", "node")])
-        dimnames(edge) <- NULL
-
-        # lets be honest... the caic.code column is really only there as a cheap
-        # route to a cladewise sorting of the edge matrix!
-        ord <- order(linNoR$caic.code)
-        edge <- edge[ord, ]
-        edge.length <- linNoR$lin.age[ord]
-
-        phy <- list(
-            edge = edge, edge.length = edge.length, tip.label = 1:clade$nTip,
-            Nnode = with(clade, nLin - nTip), root.edge = lineages$lin.age[1]
-        )
-        class(phy) <- "phylo"
-    } else {
-        # have an unspeciated root so put in slightly  as a single
-        # tip with a root edge of zero
-        phy <- list(
-            edge = matrix(c(1, 2), ncol = 2), edge.length = lineages$lin.age[1],
-            tip.label = 1, root.edge = 0, Nnode = 1
-        )
-        class(phy) <- "phylo"
-    }
-
-    # sort out comparative data
-    lastRules <- x$epochRules[[length(x$epochRules)]]
-    datCol <- c(
-        "node", "lin.age", "birth.time", "death.time", "extinct", "tip",
-        names(lastRules$ct.set$ct.start), names(lastRules$dt.rates)
-    )
-    dat <- linNoR[, datCol]
-
-    # get tip data set without tips flag
-    tipData <- dat[dat$tip, -6]
-    nodeData <- dat[!dat$tip, -5:-6]
-    com <- comparative.data(phy, tipData, "node", na.omit = FALSE)
-    com$node.data <- nodeData
-    com$epochRules <- x$epochRules
-    attr(com, "growTree") <- TRUE
-
-    return(com)
 }

@@ -24,7 +24,23 @@ this vignette, requires the `ape` package
  within groups are masked by phylogenetic differences between groups (Fig.
  \ref{whycaper}b). 
 
-```{r whycaper, echo= false, fig=true, width=6, height=6}
+```{r whycaper, echo=FALSE, fig=TRUE, width=6, height=6}
+#| fig.alt: >
+#|  The figure shows 2 cases of how the distribution of data on phylogenies can
+#|  lead ordinary least squares regression to either fail to detect real signal
+#|  or suggest a signal is present when there is none.
+#| fig.cap: >
+#|  Phylogenetic autocorrelation in action. a) Simple regression (solid
+#|  line) suggests a strong relationship between two variables; the phylogeny
+#|  shows that within the three main groups, there is no consistent relationship
+#|  (dashed lines) and the apparent relationship stems from only two linked
+#|  shifts in the means of the traits early in the evolution of the clade. b)
+#|  Simple regression (solid line) suggests a weak positive relationship between
+#|  the two variables; the phylogeny shows that there are strong positive
+#|  relationships between the traits within each of the three main groups but
+#|  this is masked by early shifts in the mean value of the red trait.
+#|  \label{whycaper}
+
 par(mfrow = c(2, 2), mar = c(3, 3, 1, 1), mgp = c(2, 0.7, 0))
 
 plot(c(0, 13), c(0, 10),
@@ -110,17 +126,6 @@ for (sub in split(dat, dat$tx)) {
     abline(lm(y ~ x, data = sub), col = unclass(sub$tx)[1], lty = 2)
 }
 ```
-
-Phylogenetic autocorrelation in action. a) Simple regression (solid
-line) suggests a strong relationship between two variables; the phylogeny
-shows that within the three main groups, there is no consistent relationship
-(dashed lines) and the apparent relationship stems from only two linked
-shifts in the means of the traits early in the evolution of the clade. b)
-Simple regression (solid line) suggests a weak positive relationship between
-the two variables; the phylogeny shows that there are strong positive
-relationships between the traits within each of the three main groups but
-this is masked by early shifts in the mean value of the red trait.
-\label{whycaper}
 
 The `caper` package implements two methods that account for this phylogenetic
 autocorrelation. The first, originally described by \citet{Felsenstein.1985.a},
@@ -1444,7 +1449,7 @@ from the PanTHERIA database of mammalian life-history traits
 the values at the tips of each simulation are shown in Fig.
 \ref{contTraitPlots}.
 
-```{r setSeed, echo=FALSE, print=FALSE}
+```{r setSeed2, echo=FALSE, print=FALSE}
 # reasonable run time and reasonable results (on my Mac,
 # no idea if this will carry on to R-Forge.)
 set.seed(421)

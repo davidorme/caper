@@ -41,13 +41,24 @@
 #' @param object An object of class 'phylo.d.subset'
 #' @param list() Further arguments to print and summary methods
 #' @return Returns an object of class 'phylo.d.subset', which is a list of the
-#' following: \item{raw}{A list of the raw output from \code{\link{phylo.d}}
-#' for each clade} \item{DEstimate}{A vector of the estimated D values}
-#' \item{Pval1}{A vector of p values, giving the result of testing whether D is
-#' significantly different from one, for each clade} \item{Pval0}{A vector of p
-#' values, giving the result of testing whether D is significantly different
-#' from zero, for each clade} \item{phy.depth}{A numeric vector giving the age
-#' of the clade for which each value was calculated}
+#' following:
+#'
+#' \item{raw}{
+#'      A list of the raw output from \code{\link{phylo.d}} for each clade
+#' }
+#' \item{DEstimate}{A vector of the estimated D values}
+#' \item{Pval1}{
+#'      A vector of p values, giving the result of testing whether D is
+#'      significantly different from one, for each clade
+#' }
+#' \item{Pval0}{
+#'      A vector of p values, giving the result of testing whether D is
+#'      significantly different from zero, for each clade
+#' }
+#' \item{phy.depth}{
+#'      A numeric vector giving the age of the clade for which each value was
+#'      calculated
+#' }
 #' @author Susanne Fritz (SFritz@@bio.ku.dk), Will Pearse and David Orme
 #' @references Fritz, S. A. and Purvis, A. (2010). Selectivity in mammalian
 #' extinction risk and threat types: a new measure of phylogenetic signal
@@ -56,10 +67,15 @@
 #' @examples
 #'
 #' data(BritishBirds)
-#' BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
+#' BritishBirds <- comparative.data(
+#'     BritishBirds.tree, BritishBirds.data, binomial
+#' )
 #' # Look at big clades only
 #' \dontrun{
-#' bigClades <- phylo.d.subset(BritishBirds, binvar = Red_list, verbose = TRUE, min.tips = 10, min.nodes = 5)
+#' bigClades <- phylo.d.subset(
+#'     BritishBirds,
+#'     binvar = Red_list, verbose = TRUE, min.tips = 10, min.nodes = 5
+#' )
 #' print(bigClades)
 #' }
 #' @export
@@ -206,6 +222,7 @@ print.phylo.d.subset <- function(x, ...) {
 ## ADD IN PLOTS OF D vs. PHYLOGENETIC DEPTH
 ##############################################
 
+#' @describeIn phylo.d.subset Print a summary of phylo.d.subset object
 summary.phylo.d.subset <- function(object, ...) {
     cat(
         "\nCalculation of D statistic for the ",

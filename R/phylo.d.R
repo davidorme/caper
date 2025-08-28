@@ -53,23 +53,42 @@
 #' @param bw The bandwidth to be used for the density plots
 #' @param list() Further arguments to print and summary methods
 #' @return Returns an object of class 'phylo.d', which is a list of the
-#' following: \item{DEstimate}{The estimated D value} \item{Pval1}{A p value,
-#' giving the result of testing whether D is significantly different from one}
-#' \item{Pval0}{A p value, giving the result of testing whether D is
-#' significantly different from zero} \item{Parameters}{A list of the Observed,
-#' MeanRandom and MeanBrownian sums of sister-clade differences}
-#' \item{Permutations}{A list with elements random and brownian, containing the
-#' sums of sister-clade differences from random permutations and simulations of
-#' Brownian evolution under a threshold model} \item{NodalVals}{A list with the
-#' elements observed, random and brownian, containing the nodal values
-#' estimated for the observed trait and permutations. The values are as
-#' matrices with rows labelled by the node names in the comparative data
-#' object.} \item{binvar}{The binary variable used} \item{phyName}{The name of
-#' the phylogeny object used} \item{dsName}{The name of the dataframe used}
-#' \item{nPermut}{The number of permutations used} \item{rnd.bias}{If a bias
-#' was introduced to the calculation of the random distribution, the bias used,
-#' else \code{NULL}}
-#' @author Susanne Fritz <Susanne.Fritz@@senckenberg.de> and David Orme
+#' following:
+#'
+#' \item{DEstimate}{The estimated D value}
+#' \item{Pval1}{
+#'      A p value, giving the result of testing whether D is significantly
+#'      different from one
+#' }
+#' \item{Pval0}{
+#'      A p value, giving the result of testing whether D is significantly
+#'      different from zero
+#' }
+#' \item{Parameters}{
+#'      A list of the Observed, MeanRandom and MeanBrownian sums of sister-clade
+#'      differences
+#' }
+#' \item{Permutations}{
+#'      A list with elements random and brownian, containing the sums of
+#'      sister-clade differences from random permutations and simulations of
+#'      Brownian evolution under a threshold model
+#' }
+#' \item{NodalVals}{
+#'      A list with the elements observed, random and brownian, containing the
+#'      nodal values estimated for the observed trait and permutations. The
+#'      values are as matrices with rows labelled by the node names in the
+#'      comparative data object.
+#' }
+#' \item{binvar}{The binary variable used}
+#' \item{phyName}{The name of the phylogeny object used}
+#' \item{dsName}{The name of the dataframe used}
+#' \item{nPermut}{The number of permutations used}
+#' \item{rnd.bias}{
+#'      If a bias was introduced to the calculation of the random distribution,
+#'      the bias used, else \code{NULL}
+#' }
+#'
+#' @author Susanne Fritz <Susanne.Fritz@senckenberg.de> and David Orme
 #' @references Fritz, S. A. and Purvis, A. (2010). Selectivity in mammalian
 #' extinction risk and threat types: a new measure of phylogenetic signal
 #' strength in binary traits. Conservation Biology, 24(4):1042-1051.
@@ -77,7 +96,9 @@
 #' @examples
 #'
 #' data(BritishBirds)
-#' BritishBirds <- comparative.data(BritishBirds.tree, BritishBirds.data, binomial)
+#' BritishBirds <- comparative.data(
+#'     BritishBirds.tree, BritishBirds.data, binomial
+#' )
 #' redPhyloD <- phylo.d(BritishBirds, binvar = Red_list)
 #' print(redPhyloD)
 #' plot(redPhyloD)
@@ -246,10 +267,12 @@ phylo.d <- function(data, phy, names.col, binvar,
     return(dvals)
 }
 
+#' @describeIn phylo.d Print a summary of a phylo.d object
 print.phylo.d <- function(x, ...) {
     summary(x)
 }
 
+#' @describeIn phylo.d Print a summary of a phylo.d object
 summary.phylo.d <- function(object, ...) {
     cat(
         "\nCalculation of D statistic for the phylogenetic ",
@@ -285,6 +308,7 @@ summary.phylo.d <- function(object, ...) {
     cat("\n\n")
 }
 
+#' @describeIn phylo.d Plot a phylo.d object
 plot.phylo.d <- function(x, bw = 0.02, ...) {
     brownian <- x$Permutations$brownian
     random <- x$Permutations$random

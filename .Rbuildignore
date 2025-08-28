@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .lintr
 .vscode
 TODO.txt
@@ -8,3 +9,18 @@ Testing
 
 ^.*\.Rproj$
 ^\.Rproj\.user$
+=======
+.github
+.lintr
+.python-version
+.Rproj
+.vscode
+benchmarks
+build_notes.md
+docs
+cran-comments.md
+DataSources
+Testing
+TODO.txt
+www
+>>>>>>> develop

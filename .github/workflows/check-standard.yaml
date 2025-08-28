@@ -29,7 +29,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+      - uses: r-lib/actions/setup-tinytex@v2
+        env:
+          # install massive overblown full CTAN - array package is tricky now.
+          TINYTEX_INSTALLER: TinyTeX-2
+      # - name: Install additional LaTeX packages
+      #   run: |
+      #     tlmgr install caption array colortbl xcolor
+      #     tlmgr list --only-installed
+
       - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-r@v2
@@ -43,6 +51,8 @@ jobs:
           extra-packages: rcmdcheck, pkgdown
 
       - uses: r-lib/actions/check-r-package@v2
+        with:
+          build_args: 'c("--compact-vignettes=gs+qpdf")'
 
       - name: Build docs
         run: |

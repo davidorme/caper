@@ -13,10 +13,9 @@
 #' contrasts for the response. The species richness contrasts are either the
 #' relative rate difference (RRD) or proportion dominance index (PDI):
 #'
-#' \deqn{RRD = \ln\left(\frac{N_1}{N_2}\right)} RRD = ln(N_1/N_2)
+#' \deqn{RRD = \ln\left(\frac{N_1}{N_2}\right)}
 #'
-#' \deqn{PDI = \left(\frac{N_1}{N_1+N_2}\right)-0.5} PDI = (N_1/(N_1 +
-#' N_2))-0.5
+#' \deqn{PDI = \left(\frac{N_1}{N_1+N_2}\right)-0.5}
 #'
 #' The values \eqn{N_1} and \eqn{N_2} are the species richness of the two
 #' daughter nodes and \eqn{N_1} is the species richness of the clade with the
@@ -58,7 +57,10 @@
 #' @examples
 #'
 #' data(IsaacEtAl)
-#' primates <- comparative.data(primates.tree, primates.data, binomial, na.omit = FALSE)
+#' primates <- comparative.data(
+#'     primates.tree, primates.data, binomial,
+#'     na.omit = FALSE
+#' )
 #' primatesBodySize <- macrocaic(species.rich ~ body.mass, data = primates)
 #' summary(primatesBodySize)
 #'

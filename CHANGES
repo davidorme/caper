@@ -9,34 +9,48 @@ Version 1.1.0
   - Moved from manual Rd files to roxygen from docstrings
   - Added Github actions for CI and to maintain the package website on GH.
 
+Version 1.0.4
+
+  Fixes to Rd files picked up by more recent R CMD CHECK runs on CRAN.
+
+Version 1.0.3
+
+  Removed outdated details in caper-package documentation
+  Bug fix for incorrectly calculated phylogenetic residuals (hat tip, Emma
+  Mellor, Vikki Neville and Shinichi Nakagawa).
+
+Version 1.0.2
+
+  Updated (partway!) package structure to more modern approaches, including:
+  * github actions workflow for package checking
+  * build notes for new process
+
 Version 1.0.1
 
-  Maintenance update to register S3methods() correctly and import standard packages to
-  pass build process on CRAN. Since the package has been used in the wild without change
-  for several years, I've pushed the version number to 1.0.0 to reflect that it is a mature,
-  stable version. Also:
-
-  - bugfix to summary.pgls() for factor predictors.
-
+  Moved caper from R-Forge to GitHub, fixing issues with vignette building
+  Further fixes to S3 methods documentation
 
 Version 1.0.0
 
-  Maintenance update to register S3methods() correctly and import standard packages to
-  pass build process on CRAN. Since the package has been used in the wild without change
-  for several years, I've pushed the version number to 1.0.0 to reflect that it is a mature,
-  stable version. Also:
+  Maintenance update to register S3methods() correctly and import standard
+  packages to pass build process on CRAN. Since the package has been used in the
+  wild without change for several years, I've pushed the version number to 1.0.0
+  to reflect that it is a mature, stable version. Also:
 
   - bugfix to summary.pgls() for factor predictors.
 
 Version 0.5.2
 
-  Undocumented changes! Or at least, everything is there on R-Forge, but it has been a while and
-  I don't recall everything that happened between 0.4 and 0.5.2
+  Undocumented changes! Or at least, everything is there on R-Forge, but it has
+  been a while and  I don't recall everything that happened between 0.4 and
+  0.5.2 
+
 Version 0.4
   
   Resolving build problems on CRAN:
   - Renamed vcv.array to VCV.array to avoid ape vcv generic
-  - Cached pgls benchmark tests in an rda file to avoid machine specific optim problems during package builds.
+  - Cached pgls benchmark tests in an rda file to avoid machine specific optim
+    problems during package builds. 
   
   Resubmitted to CRAN and fixed as tagged version 0.4 (rev 68)
 
@@ -47,13 +61,18 @@ Version 0.3
   
 Version 0.2
   
-  Added in PD and ED calculations and documentation. Added in benchmark data and vignette.
+  Added in PD and ED calculations and documentation. Added in benchmark data and
+  vignette. 
   
   Fixed as a tagged version 0.2 (rev 56).
   
 Version 0.1
   
-  Contains reworked, documented versions of the main functions in the CAIC package. Common interfaces and generic methods for the main independent contrast and PGLS models and rationalisation of the PGLS code down to a smaller set of more flexible commands. 
+  Contains reworked, documented versions of the main functions in the CAIC
+  package. Common interfaces and generic methods for the main independent
+  contrast and PGLS models and rationalisation of the PGLS code down to a
+  smaller set of more flexible commands.  
   
-  Fixed as a tagged version 0.1 (rev 31) and sent out to a small set of users for first comments.
+  Fixed as a tagged version 0.1 (rev 31) and sent out to a small set of users
+  for first comments. 
   

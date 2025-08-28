@@ -21,7 +21,7 @@
 #' to include. The 'reorder' method is use to restructure all the components
 #' with the 'comparative.data' object into either pruningwise or cladewise
 #' order. This uses code from the 'ape' library: see
-#' \code{\link{reorder.phylo}}.
+#' \code{\link[ape]{reorder.phylo}}.
 #'
 #' The '[' method allows subsets to be taken of the data. There are no replace
 #' methods ('[<-'). If only one index is specified (e.g. x[2]), then this is
@@ -73,7 +73,7 @@
 #' @param select An expression, indicating columns to select from the data
 #' frame.
 #' @param order One of 'cladewise' or 'pruningwise'. See
-#' \code{\link{reorder.phylo}}.
+#' \code{\link[ape]{reorder.phylo}}.
 #' @param i,j Indices specifying tips or data columns to extract. See details.
 #' @param ... Further arguments to functions.
 #' @return A list of class 'comparative.data': \item{phy}{An object of class

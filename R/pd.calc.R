@@ -5,19 +5,30 @@
 #' given size. The ed.calc function calculates a related species-level
 #' measurement of evolutionary distinctness.
 #'
-#' There are five implemented PD measures: \describe{ \item{Total Branch Length
-#' (TBL)}{The sum of all the edge lengths in the subtree given by the tip
-#' subset. This measure can be partitioned into the two next measures.}
-#' \item{Shared Branch Length (SBL)}{The sum of all edges in the subtree that
-#' are shared by more than one tip.} \item{Unique Evolutionary History
-#' (UEH)}{The sum of the edge lengths that give rise to only one tip in the
-#' subtree.} \item{Length of tip branch lengths (TIPS)}{Length of tip branch
-#' lengths (TIPS)}Unlike UEH, this measure does not use the unique paths to
-#' each tips on the \strong{subtree} and instead gives the sum of the unique
-#' branches leading to the tips on the \strong{complete tree}.  \item{Minimum
-#' Spanning Tree (MST)}{The sum of the lengths of the edges for the smallest
-#' tree that links the subset tips, excluding any edges below the node of the
-#' most recent common ancestor.}}
+#' There are five implemented PD measures:
+#'
+#' \item{Total Branch Length (TBL)}{
+#'      The sum of all the edge lengths in the subtree given by the tip subset.
+#'      This measure can be partitioned into the two next measures.
+#' }
+#' \item{Shared Branch Length (SBL)}{
+#'      The sum of all edges in the subtree that are shared by more than one
+#'      tip.
+#' }
+#' \item{Unique Evolutionary History (UEH)}{
+#'      The sum of the edge lengths that give rise to only one tip in the
+#'      subtree.
+#' }
+#' \item{Length of tip branch lengths (TIPS)}{
+#'      Unlike UEH, this measure does not use the unique paths to each tips on
+#'      the \strong{subtree} and instead gives the sum of the unique branches
+#'      leading to the tips on the \strong{complete tree}
+#' }.
+#' \item{Minimum Spanning Tree (MST)}{
+#'      The sum of the lengths of the edges for the smallest tree that links the
+#'      subset tips, excluding any edges below the node of the most recent
+#'      common ancestor.
+#' }
 #'
 #' These options are illustrated in the caper package vignette. The pd.calc
 #' function returns the PD value for a given set of tips, whereas the

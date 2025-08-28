@@ -1,31 +1,31 @@
 #' Phylogenetic generalized linear models
-#' 
+#'
 #' Fits a linear model, taking into account phylogenetic non-independence
 #' between data points. The strength and type of the phylogenetic signal in the
 #' data matrix can also be accounted for by adjusting branch length
 #' transformations (lambda, delta and kappa). These transformations can also be
 #' optimised to find the maximum likelihood transformation given the data and
 #' the model.
-#' 
+#'
 #' This function fits a linear model controlling for the non-independence
 #' between cases resulting from phylogenetic structure in the data. The
 #' stucture of the phylogenetic signal can be controlled by altering the
 #' parameters lambda, delta and kappa (see the 'caper' vignette for details).
 #' The implementation of the method is currently as described in Freckleton et
 #' al (2002).
-#' 
+#'
 #' The branch length transformations can be optimised between bounds using
 #' maximum likelihood by setting the value for a transformation to 'ML'. The
 #' default bounds are: lambda = c(1e-6,1), kappa = c(1e-6,3) and
 #' delta=c(1e-6,3). These defaults may be overridden by passing a named list
 #' with new elements to the bounds argument - only the bounds to be changed
 #' need to be provided (e.g. bounds=list(lambda=c(0,3))).
-#' 
+#'
 #' The 'pgls.likelihood' and 'pgls.blenTransform' methods are not primarily
 #' intended to be called by users. The 'pgls.likelihood' function provides a
 #' general method to calculate the likelihood of a model, given the covariance
 #' matrix, response, design matrix and branch length parameters.
-#' 
+#'
 #' @aliases pgls pgls.likelihood pgls.blenTransform
 #' @param formula A model formula
 #' @param data A 'comparative.data' object containing the covariance matrix and
@@ -50,7 +50,7 @@
 #' function 'uniroot' strips names from vectors.
 #' @return The 'pgls' function returns an object of class \code{pgls}
 #' containing the following:
-#' 
+#'
 #' "na.action" "param.CI" \item{call}{The original call to the 'pgls' function}
 #' \item{model }{A summary of the fitted model containing:} \item{formula}{The
 #' model formula supplied.} \item{data}{The comparative data object provided.}
@@ -94,11 +94,11 @@
 #' Naturalist, 160:712-726, 2002.
 #' @keywords models regression
 #' @examples
-#' 
+#'
 #' data(shorebird)
-#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
-#' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird, lambda='ML')
-#' mod2 <- pgls(log(Egg.Mass) ~ log(M.Mass), data=shorebird, lambda='ML', delta='ML')
+#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv = TRUE, vcv.dim = 3)
+#' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird, lambda = "ML")
+#' mod2 <- pgls(log(Egg.Mass) ~ log(M.Mass), data = shorebird, lambda = "ML", delta = "ML")
 #' @export
 pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
                  param.CI = 0.95, control = list(fnscale = -1),
@@ -384,11 +384,11 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
 
 
 #' Likelihood profiles and confidence intervals for 'pgls' models.
-#' 
+#'
 #' These functions create likelihood profiles for branch length transformations
 #' in phylogenetic generalised least squares models and fit confidence
 #' intervals to estimated branch length parameters.
-#' 
+#'
 #' The 'pgls.profile' function calculates the likelihood of a 'pgls' model
 #' under different values of branch length transformations. A single parameter
 #' is chosen from 'lambda', 'kappa' or 'delta' to be profiled and the model
@@ -396,17 +396,17 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
 #' bounds used in the model. If the model contains a maximum likelihood
 #' estimate of the parameter (or if param.CI is not null) then the resulting
 #' 'pgls.profile' object will contain estimated confidence intervals.
-#' 
+#'
 #' Only one parameter is profiled at a time and the other branch length
 #' parameters will be held at the fixed or ML estimates used to fit the model.
 #' The 'pgls.confint' function is used by either 'pgls' or 'pgls.profile' to
 #' find confidence intervals around a maximum likelihood estimate of a given
 #' branch length. The model must contain an ML estimate of the parameter for
 #' confidence intervals to be calculated.
-#' 
+#'
 #' The plot method simply draws an annotated profile plot, showing the location
 #' of the ML estimate and confidence intervals if present.
-#' 
+#'
 #' @aliases pgls.profile plot.pgls.profile pgls.confint
 #' @param pgls A \code{pgls} object.
 #' @param which A choice of which branch length transformation ('lambda',
@@ -422,10 +422,10 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
 #' parameter being profiled.} \item{pars}{The value of the other fixed
 #' parameters.} \item{dname}{The name of the 'comparative.data' object used to
 #' fit the model.} \item{formula}{The formula of the model being profiled}
-#' 
+#'
 #' If the model contains an ML estimate of the parameter being profiled, then
 #' the 'pgls.profile' object will also contain the output of 'pgls.confint':
-#' 
+#'
 #' \item{opt}{The maximum likelihood value of the parameter.}
 #' \item{bounds.val}{The values of the bounds on the parameter.}
 #' \item{bounds.p}{The p value of the likelihood at the bounds, given the ML
@@ -435,15 +435,14 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
 #' @seealso \code{\link{pgls}}
 #' @keywords util stats
 #' @examples
-#' 
+#'
 #' data(shorebird)
-#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
-#' mod <- pgls(log(Egg.Mass) ~ log(M.Mass), shorebird, lambda='ML')
-#' mod.l <- pgls.profile(mod, 'lambda')
+#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv = TRUE, vcv.dim = 3)
+#' mod <- pgls(log(Egg.Mass) ~ log(M.Mass), shorebird, lambda = "ML")
+#' mod.l <- pgls.profile(mod, "lambda")
 #' plot(mod.l)
-#' pgls.confint(mod, 'lambda')
-#' 
-#' 
+#' pgls.confint(mod, "lambda")
+#'
 pgls.profile <- function(pgls, which = c("lambda", "kappa", "delta"),
                          N = 50, param.CI = NULL) {
     ## takes a pgls model and profiles one of the branch length transformations
@@ -682,27 +681,27 @@ pgls.blenTransform <- function(V, fixedPar) {
 
 
 #' Diagnostic plots for 'pgls' models.
-#' 
+#'
 #' The function generates four diagnostics plots for 'pgls' models.
-#' 
+#'
 #' The first two plots show the fit of the phylogenetic residuals from the
 #' model to a normal distribution: a density plot of the residuals and a normal
 #' Q-Q plot. The second two plots scatterplots show pattern in the distribution
 #' of the fitted values against the observed and residual values.
-#' 
+#'
 #' @param x An object of class 'pgls'.
 #' @param ... Additional arguments to plot functions.
 #' @author Rob Freckleton, David Orme
 #' @seealso \code{\link{pgls}}
 #' @keywords utils graphics
 #' @examples
-#' 
+#'
 #' data(shorebird)
-#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv = TRUE, vcv.dim = 3)
 #' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird)
-#' par(mfrow=c(2,2))
+#' par(mfrow = c(2, 2))
 #' plot(mod1)
-#' 
+#'
 plot.pgls <- function(x, ...) {
     res <- residuals(x, phylo = TRUE)
     res <- res / sqrt(var(res))[1]
@@ -900,17 +899,17 @@ nobs.pgls <- function(object, ...) length(resid(object))
 
 
 #' Anova and AIC tables for 'pgls' models.
-#' 
+#'
 #' The 'anova' function creates ANOVA tables for a 'pgls' models using
 #' sequential sums of squares.
-#' 
+#'
 #' The sequential sums of squares are calculated by refitting the model in the
 #' order of the terms of the formula and so can take a little time to
 #' calculate. Branch length transformations are held at the values of the
 #' initial object. The 'logLik.pgls' provides a simple accessor function that
 #' allows the use of AIC model comparisons. Note that the generic AIC methods
 #' do no checking to ensure that sensible models are being compared.
-#' 
+#'
 #' @aliases anova.pgls anova.pglslist logLik.pgls
 #' @param object A 'pgls' model object.
 #' @param \dots Additional 'pgls' models.
@@ -927,20 +926,20 @@ nobs.pgls <- function(object, ...) length(resid(object))
 #' @seealso \code{\link{pgls}}
 #' @keywords utils stats
 #' @examples
-#' 
+#'
 #' data(shorebird)
-#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
-#' 
-#' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird) 
+#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv = TRUE, vcv.dim = 3)
+#'
+#' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird)
 #' anova(mod1)
-#' 
-#' mod2 <- pgls(log(Egg.Mass) ~ log(M.Mass) + log(F.Mass), shorebird)  
-#' mod3 <- pgls(log(Egg.Mass) ~ log(M.Mass) , shorebird)
+#'
+#' mod2 <- pgls(log(Egg.Mass) ~ log(M.Mass) + log(F.Mass), shorebird)
+#' mod3 <- pgls(log(Egg.Mass) ~ log(M.Mass), shorebird)
 #' mod4 <- pgls(log(Egg.Mass) ~ 1, shorebird)
-#' 
+#'
 #' anova(mod1, mod2, mod3, mod4)
 #' AIC(mod1, mod2, mod3, mod4)
-#' 
+#'
 anova.pgls <- function(object, ...) {
     ## SEQUENTIAL SUMS OF SQUARES.
     ## ASSUMES ORDER OF TERMS PRESERVE MARGINALITY

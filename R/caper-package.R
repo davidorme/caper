@@ -19,8 +19,8 @@
 #' @docType package
 #' @author David Orme Maintainer: David Orme <d.orme@@imperial.ac.uk>
 #' @seealso \code{\link[ape:ape-package]{ape}}
-#' @keywords package
-NULL
+#' @keywords internal
+"_PACKAGE"
 
 #' Datasets used for benchmarking caper
 #'

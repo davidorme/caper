@@ -1,4 +1,7 @@
 linters: linters_with_defaults(
-    object_name_linter(styles = c("symbols", "CamelCase", "camelCase", "snake_case", "dotted.case", "lowercase"))
+    object_name_linter(styles = c("symbols", "CamelCase", "camelCase", "snake_case", "dotted.case", "lowercase")),
+    indentation_linter(indent = 4L) 
   )
+
+
 

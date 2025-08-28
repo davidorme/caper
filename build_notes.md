@@ -124,7 +124,7 @@ Github Pages package website at:
 
 The website files themselves are _not_ part of the continuous integration of the
 package and having to build and then commit changes within `docs` is untidy. The
-`safedata` package therefore includes `docs` in the `.gitignore` file: you can
+`caper` package therefore includes `docs` in the `.gitignore` file: you can
 have a local copy of the website but it is not managed by git.
 
 Instead, a GitHub Action has been configured to run `pkgdown` - when a new

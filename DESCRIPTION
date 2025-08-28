@@ -25,3 +25,4 @@ Suggests:
     knitr
 Description: Functions for performing phylogenetic comparative analyses.
 License: GPL (>= 2)
+RoxygenNote: 7.3.2

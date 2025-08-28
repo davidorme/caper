@@ -27,7 +27,10 @@ caicStyleArgs(phy, data, names.col, warn.dropped=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{data}{A data frame containing variables that can be attributed to the taxa at the tips of a phylogeny.}
+  \item{data}{
+    A data frame containing variables that can be attributed to the taxa at 
+    the tips of a phylogeny.
+  }
   \item{phy}{A phylogeny (class 'phylo') to be matched to the data above.}
   \item{names.col}{The name of a column in the provided data frame that will be used to match data rows to phylogeny tips.}
   \item{vcv}{A logical value indicating whether to include a variance covariance array representing the phylogeny within the comparative dataset.}
@@ -40,23 +43,51 @@ caicStyleArgs(phy, data, names.col, warn.dropped=FALSE)
   \item{object}{An object of class 'comparative.data'.}
   \item{subset}{A logical expression indicating rows of data to keep: missing values are taken as false.}
   \item{select}{An expression, indicating columns to select from the data frame.}
-  \item{order}{One of 'cladewise' or 'pruningwise'. See \code{\link{reorder.phylo}}.}
+  \item{order}{One of 'cladewise' or 'pruningwise'. See \code{\link[ape]{reorder.phylo}}.}
   \item{i,j}{Indices specifying tips or data columns to extract. See details.}
   \item{...}{Further arguments to functions.}
 }
 
 
 \details{
-The function matches rows in a data frame to tips on a phylogeny and ensures correct ordering of the data with respect to the tips. It also can add a variance covariance representation of the phylogeny. Mismatched rows and tips are removed and the taxon labels of these are stored in the 'dropped'  slot of the 'comparative.data' object. The 'print' method displays a brief summary of the dataset contents and the names of the original 'phylo' and 'data.frame' objects. If any rows or tips were dropped, 'print' will also show a venn diagram of the data shared and dropped from each source. Node labels are preserved but must be unique - unlabelled nodes will be assigned numeric codes.
+The function matches rows in a data frame to tips on a phylogeny and ensures 
+correct ordering of the data with respect to the tips. It also can add a 
+variance covariance representation of the phylogeny. Mismatched rows and tips 
+are removed and the taxon labels of these are stored in the 'dropped'  slot of 
+the 'comparative.data' object. The 'print' method displays a brief summary of 
+the dataset contents and the names of the original 'phylo' and 'data.frame' 
+objects. If any rows or tips were dropped, 'print' will also show a venn diagram
+of the data shared and dropped from each source. Node labels are preserved but
+must be unique - unlabelled nodes will be assigned numeric codes.
 
-The 'na.omit' and 'subset' methods provide simple ways to clean up and extract parts of the comparative dataset. In particular, 'subset' acts exclusively with the data component of the object and, like subset on a data frame, expects the subset argument to produce a logical vector of data rows to include. The 'reorder' method is use to restructure all the components with the 'comparative.data' object into either pruningwise or cladewise order. This uses code from the 'ape' library: see \code{\link{reorder.phylo}}.
+The 'na.omit' and 'subset' methods provide simple ways to clean up and extract 
+parts of the comparative dataset. In particular, 'subset' acts exclusively with
+the data component of the object and, like subset on a data frame, expects the 
+subset argument to produce a logical vector of data rows to include. The 
+'reorder' method is use to restructure all the components with the 
+'comparative.data' object into either pruningwise or cladewise order. This uses
+code from the 'ape' library: see \code{\link[ape]{reorder.phylo}}.
 
-The '[' method allows subsets to be taken of the data. There are no replace methods ('[<-'). If only one index is specified (e.g. x[2]), then this is interpreted as extracting data columns from the object. Otherwise (e.g. x[2,], x[1,1]), the first index will specify tips to extract and the second index will specify columns. Indices for tips are permitted to be numeric, logical or character vectors or empty (missing) or NULL. Numeric values are coerced to integer as by as.integer (and hence truncated towards zero). Character vectors will be matched to the names of the object (or for matrices/arrays, the dimnames): see 'Character indices' below for further details.
+The '[' method allows subsets to be taken of the data. There are no replace 
+methods ('[<-'). If only one index is specified (e.g. x[2]), then this is 
+interpreted as extracting data columns from the object. Otherwise (e.g. x[2,], 
+x[1,1]), the first index will specify tips to extract and the second index will 
+specify columns. Indices for tips are permitted to be numeric, logical or 
+character vectors or empty (missing) or NULL. Numeric values are coerced to 
+integer as by as.integer (and hence truncated towards zero). Character vectors 
+will be matched to the names of the object (or for matrices/arrays, the 
+dimnames): see 'Character indices' below for further details.
 
-The function 'caicStyleArgs' handles turning 'phy', 'data' and 'names.col' arguments into a 'comparative.data' object when they are provided separately to a function. This argument structure was used in older versions of many functions.
+The function 'caicStyleArgs' handles turning 'phy', 'data' and 'names.col' 
+arguments into a 'comparative.data' object when they are provided separately to
+a function. This argument structure was used in older versions of many 
+functions.
 
-All of these functions are in part a substitute for the considerably more sophisticated handling of such data in the package 'phylobase', which will be integrated into later releases.
+All of these functions are in part a substitute for the considerably more 
+sophisticated handling of such data in the package 'phylobase', which will be 
+integrated into later releases.
 }
+
 \value{
 A list of class 'comparative.data':
 \item{phy}{An object of class 'phylo'}

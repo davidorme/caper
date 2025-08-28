@@ -28,10 +28,8 @@ macrocaic(formula, data, phy, names.col, macroMethod = "RRD",
 The 'macrocaic' function fits a regression to the formula provided using 'crunch' contrasts for continuous explanatory variables and species richness contrasts for the response. The species richness contrasts are either the relative rate difference (RRD) or proportion dominance index (PDI):
 
 \deqn{RRD = \ln\left(\frac{N_1}{N_2}\right)}
-     {RRD = ln(N_1/N_2)}
 
 \deqn{PDI = \left(\frac{N_1}{N_1+N_2}\right)-0.5}
-     {PDI = (N_1/(N_1 + N_2))-0.5}
 
 The values \eqn{N_1} and \eqn{N_2} are the species richness of the two daughter nodes and \eqn{N_1} is the species richness of the clade with the larger value of the reference variable. Species richness contrasts are not calculated at polytomies. Nodal values for species richness are calculated as the sum of the richness of the daughter nodes.
 }

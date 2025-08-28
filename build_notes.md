@@ -124,7 +124,7 @@ Github Pages package website at:
 
 The website files themselves are _not_ part of the continuous integration of the
 package and having to build and then commit changes within `docs` is untidy. The
-`safedata` package therefore includes `docs` in the `.gitignore` file: you can
+`caper` package therefore includes `docs` in the `.gitignore` file: you can
 have a local copy of the website but it is not managed by git.
 
 Instead, a GitHub Action has been configured to run `pkgdown` - when a new
@@ -274,7 +274,7 @@ You then need to upload that file to `win-builder`. The python script
 automating the process of using FTP to upload the current version for checking
 under both R stable and R devel. Note that `win-builder` communicates by email
 with the package maintainer (whoever has the `cre` flag in the `authors` section
-of the `DESCRIPTION` file.
+of the `DESCRIPTION` file).
 
 ```sh
 python build_scripts/upload_to_win-builder.py

@@ -1,3 +1,7 @@
+Version 1.0.4
+
+  Fixes to Rd files picked up by more recent R CMD CHECK runs on CRAN.
+
 Version 1.0.3
 
   Removed outdated details in caper-package documentation

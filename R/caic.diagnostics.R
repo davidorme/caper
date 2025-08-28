@@ -78,9 +78,12 @@
 #' @param action One of 'replace', 'append' or 'insert'.
 #' @param tips A logical indicating whether to modify the tip labels of the
 #' phylogeny in addition to the internal node labels.
-#' @return \describe{ \item{list("caic.table")}{A data frame of contrasts and
-#' other nodal values.} \item{list("caic.diagnostics")}{An array of slope
-#' coefficients for each test (rows) and for each term (depth).}
+#' @return \describe{
+#' \item{list("caic.table")}{A data frame of contrasts and other nodal values.}
+#' \item{list("caic.diagnostics")}{
+#'      An array of slope coefficients for each test (rows) and for each
+#'      term (depth).
+#' }
 #' \item{list("caic.robust")}{A 'caic' object with a model omitting outliers.}
 #' \item{list("caic.labels")}{A 'phylo' object with modified labels.} }
 #' @author David Orme
@@ -90,7 +93,10 @@
 #'
 #' data(shorebird)
 #' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species)
-#' crunchMod <- crunch(log(Egg.Mass) ~ log(M.Mass) + log(F.Mass), data = shorebird)
+#' crunchMod <- crunch(
+#'     log(Egg.Mass) ~ log(M.Mass) + log(F.Mass),
+#'     data = shorebird
+#' )
 #' caic.diagnostics(crunchMod)
 #' @export
 caic.diagnostics <- function(caicObj, which.terms = NULL,
@@ -266,6 +272,7 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
     return(slopes)
 }
 
+#' @describeIn caic.diagnostics Print a CAIC diagnostics object
 print.caic.diagnostics <- function(x, ...) {
     robust <- attr(x, "robust")
     nNonrobust <- attr(x, "nNonrobust")
@@ -301,6 +308,7 @@ print.caic.diagnostics <- function(x, ...) {
     invisible(x)
 }
 
+#' @describeIn caic.diagnostics Refit a CAIC model omitting contrasts with large residuals
 caic.robust <- function(caicObj, robust = 3) {
     # Hmm - this is rather tricky because the contrast data is _not_ present
     # in the global environment, which means that the refitting runs foul of
@@ -345,6 +353,7 @@ caic.robust <- function(caicObj, robust = 3) {
     return(caicObj)
 }
 
+#' @describeIn caic.diagnostics Relabel a phylogeny with CAIC node labels.
 caic.label <- function(phy, charset = NULL, action = "insert",
                        style = "CAIC", tips = FALSE) {
     # OLD2NEW STATUS: CONVERTED...
@@ -417,6 +426,7 @@ caic.label <- function(phy, charset = NULL, action = "insert",
     return(phy)
 }
 
+#' @describeIn caic.diagnostics Extract a contrast table from a CAIC object.
 caic.table <- function(caicObj, validNodes = TRUE, nodalValues = FALSE,
                        ultrametric.tol = 0.0001, CAIC.codes = FALSE,
                        style = "CAIC") {

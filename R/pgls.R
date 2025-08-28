@@ -417,27 +417,37 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
 #' @param x A 'pgls.profile' object to plot.
 #' @param ... Further arguments to plot functions.
 #' @return The 'pgls.profile' function returns a list containing:
+#'
 #' \item{x}{Parameter values at which the likelihood has been calculated.}
-#' \item{logLik}{The likelihood value at each value.} \item{which}{The
-#' parameter being profiled.} \item{pars}{The value of the other fixed
-#' parameters.} \item{dname}{The name of the 'comparative.data' object used to
-#' fit the model.} \item{formula}{The formula of the model being profiled}
+#' \item{logLik}{The likelihood value at each value.}
+#' \item{which}{The parameter being profiled.}
+#' \item{pars}{The value of the other fixed parameters.}
+#' \item{dname}{
+#'      The name of the 'comparative.data' object used to fit the model.
+#' }
+#' \item{formula}{The formula of the model being profiled}
 #'
 #' If the model contains an ML estimate of the parameter being profiled, then
 #' the 'pgls.profile' object will also contain the output of 'pgls.confint':
 #'
 #' \item{opt}{The maximum likelihood value of the parameter.}
 #' \item{bounds.val}{The values of the bounds on the parameter.}
-#' \item{bounds.p}{The p value of the likelihood at the bounds, given the ML
-#' value.} \item{ci.val}{The values of the parameter at the confidence
-#' intervals.} \item{ci}{The confidence interval value used.}
+#' \item{bounds.p}{
+#'      The p value of the likelihood at the bounds, given the ML value.
+#' }
+#' \item{ci.val}{The values of the parameter at the confidence intervals.}
+#' \item{ci}{The confidence interval value used.}
+#'
 #' @author David Orme
 #' @seealso \code{\link{pgls}}
 #' @keywords util stats
 #' @examples
 #'
 #' data(shorebird)
-#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv = TRUE, vcv.dim = 3)
+#' shorebird <- comparative.data(
+#'     shorebird.tree, shorebird.data, Species,
+#'     vcv = TRUE, vcv.dim = 3
+#' )
 #' mod <- pgls(log(Egg.Mass) ~ log(M.Mass), shorebird, lambda = "ML")
 #' mod.l <- pgls.profile(mod, "lambda")
 #' plot(mod.l)
@@ -481,6 +491,7 @@ pgls.profile <- function(pgls, which = c("lambda", "kappa", "delta"),
     return(RET)
 }
 
+#' @describeIn pgls.profile Plot a pgls model profile object
 plot.pgls.profile <- function(x, ...) {
     xlab <- as.expression(x$which)
     xsub <- sprintf(
@@ -499,6 +510,7 @@ plot.pgls.profile <- function(x, ...) {
     }
 }
 
+#' @describeIn pgls Calculate confidence intervals on a pgls branch model transform
 pgls.confint <- function(pgls, which = c("lambda", "kappa", "delta"),
                          param.CI = 0.95) {
     # Are we dealing with a same confidence interval
@@ -590,6 +602,7 @@ pgls.confint <- function(pgls, which = c("lambda", "kappa", "delta"),
         ci = param.CI
     ))
 }
+
 
 pgls.likelihood <- function(optimPar, fixedPar, y, x, V,
                             optim.output = TRUE, names.optim = NULL) {
@@ -697,7 +710,10 @@ pgls.blenTransform <- function(V, fixedPar) {
 #' @examples
 #'
 #' data(shorebird)
-#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv = TRUE, vcv.dim = 3)
+#' shorebird <- comparative.data(
+#'     shorebird.tree, shorebird.data, Species,
+#'     vcv = TRUE, vcv.dim = 3
+#' )
 #' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird)
 #' par(mfrow = c(2, 2))
 #' plot(mod1)
@@ -715,6 +731,7 @@ plot.pgls <- function(x, ...) {
     plot(x$y, fitted(x), xlab = "Observed value", ylab = "Fitted value")
 }
 
+#' @describeIn pgls Extract a summary object from a pgls model
 summary.pgls <- function(object, ...) {
     ## call and return object
     ans <- list(call = object$call)
@@ -763,6 +780,7 @@ summary.pgls <- function(object, ...) {
     return(ans)
 }
 
+#' @describeIn pgls Print a pgls model summary object.
 print.summary.pgls <- function(x, digits = max(3, getOption("digits") - 3),
                                ...) {
     cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"),
@@ -827,6 +845,7 @@ print.summary.pgls <- function(x, digits = max(3, getOption("digits") - 3),
     )
 }
 
+#' @describeIn pgls Print a pgls model
 print.pgls <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"),
         "\n\n",
@@ -841,6 +860,7 @@ print.pgls <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\n")
 }
 
+#' @describeIn pgls Extract model coefficients from a pgls model
 coef.pgls <- function(object, ...) {
     cf <- object$model$coef
     nm <- rownames(cf)
@@ -848,6 +868,7 @@ coef.pgls <- function(object, ...) {
     return(cf)
 }
 
+#' @describeIn pgls Extract residuals from a pgls model
 residuals.pgls <- function(object, phylo = FALSE, ...) {
     ret <- NULL
     if (phylo == FALSE) {
@@ -858,12 +879,13 @@ residuals.pgls <- function(object, phylo = FALSE, ...) {
     return(ret)
 }
 
+#' @describeIn pgls Extract fitted values from a pgls model
 fitted.pgls <- function(object, ...) {
     ret <- object$fitted
     return(ret)
 }
 
-
+#' @describeIn pgls Extract predicted values from a pgls model
 predict.pgls <- function(object, newdata = NULL, ...) {
     # pull the data from the model if no new data is provided
     if (is.null(newdata)) {
@@ -1001,6 +1023,7 @@ anova.pgls <- function(object, ...) {
     }
 }
 
+#' @describeIn anova.pgls Calculate an ANOVA table for a list of pgls models.
 anova.pglslist <- function(object, ..., scale = 0, test = "F") {
     objects <- list(object, ...)
 

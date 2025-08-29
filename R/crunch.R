@@ -93,7 +93,7 @@
 #' crunchTab <- caic.table(crunchMod)
 #' plot(Egg.Mass ~ F.Mass, crunchTab)
 #' # for the actual model diagnostics
-#' par(mfrow = c(3, 2))
+#' graphics::par(mfrow = c(3, 2))
 #' caic.diagnostics(crunchMod)
 #' @export
 crunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
@@ -200,22 +200,22 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
 
 
     # ditch the intercept, if present
-    formula <- update(formula, . ~ . - 1)
+    formula <- stats::update(formula, . ~ . - 1)
 
     # now we have the union of the phylogeny and data
     # get the model frame, matrix and response
     # these show the values at the tips for each term
-    mf <- model.frame(formula, data, na.action = na.pass)
+    mf <- stats::model.frame(formula, data, na.action = stats::na.pass)
 
     # is there enough data in the model
     # TODO - think whether this check is always sufficient.
-    mfComplete <- complete.cases(mf)
+    mfComplete <- stats::complete.cases(mf)
     if (sum(mfComplete) < 2) {
         stop("Fewer than two taxa contain complete data for this analysis")
     }
 
     # get the design matrix
-    md <- model.matrix(formula, mf)
+    md <- stats::model.matrix(formula, mf)
 
     # sort out the reference variable
     if (is.null(ref.var)) {
@@ -228,14 +228,14 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
     }
 
     # MODEL RESPONSE
-    mr <- model.response(mf)
+    mr <- stats::model.response(mf)
     # turn into a column matrix
     mr <- as.matrix(mr)
     colnames(mr) <- as.character(formula[2])
     # now that we have the model response for CAIC style contrasts
     # we can substitute the reference variable
     # for empty models (i.e. models specified as X~1)
-    if (is.empty.model(formula)) ref.var <- colnames(mr)
+    if (stats::is.empty.model(formula)) ref.var <- colnames(mr)
     # add to the design matrix - this strips the assign and
     # contrast attributes so save...
     attrMD <- attributes(md)
@@ -275,7 +275,7 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
     # gather the row ids of NA nodes to drop from the model
     validNodes <- with(
         ContrObj$contr,
-        complete.cases(explanatory) & complete.cases(response)
+        stats::complete.cases(explanatory) & stats::complete.cases(response)
     )
 
     # enforce any node depth requirement
@@ -301,7 +301,7 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
         attr(contrMD, "contrasts") <- attr(ContrObj, "contrasts")
     }
 
-    mod <- lm.fit(contrMD, contrRS)
+    mod <- stats::lm.fit(contrMD, contrRS)
     class(mod) <- "lm"
 
     # assemble the output
@@ -318,7 +318,7 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
         as.data.frame(cbind(response, explanatory))
     )
     contrData <- contrData[validNodes, , drop = FALSE]
-    RET$mod$call <- substitute(lm(FORM, data = contrData), list(FORM = formula))
+    RET$mod$call <- substitute(stats::lm(FORM, data = contrData), list(FORM = formula))
     RET$mod$terms <- attr(mf, "terms")
 
     # put the model.frame in to the lm object so that predict, etc. calls work
@@ -326,7 +326,7 @@ crunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
     attr(RET$mod$model, "terms") <- attr(mf, "terms")
 
     ## Add studentized residuals: need to use matching in case of invalid nodes
-    stRes <- rstudent(mod)
+    stRes <- stats::rstudent(mod)
     SRallNodes <- rep(NA, length(RET$contrast.data$validNodes))
     names(SRallNodes) <- names(RET$contrast.data$contrVar)
     SRallNodes[match(names(stRes), names(SRallNodes))] <- stRes

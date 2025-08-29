@@ -86,7 +86,7 @@ summary.pgls <- function(object, ...) {
     se <- object$sterr
     t <- cf / se
 
-    coef <- cbind(cf, se, t, 2 * (1 - pt(abs(t), rdf)))
+    coef <- cbind(cf, se, t, 2 * (1 - stats::pt(abs(t), rdf)))
     colnames(coef) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)")
     ans$coefficients <- coef
 
@@ -120,7 +120,7 @@ print.summary.pgls <- function(x, digits = max(3, getOption("digits") - 3),
         sep = ""
     )
 
-    r <- zapsmall(quantile(x$resid), digits + 1)
+    r <- zapsmall(stats::quantile(x$resid), digits + 1)
     names(r) <- c("Min", "1Q", "Median", "3Q", "Max")
     cat("Residuals:\n")
     print(r, digits = digits)
@@ -151,13 +151,13 @@ print.summary.pgls <- function(x, digits = max(3, getOption("digits") - 3),
 
 
     cat("\nCoefficients:\n")
-    printCoefmat(x$coef)
+    stats::printCoefmat(x$coef)
 
     cat("\nResidual standard error:", format(signif(
         x$sigma,
         digits
     )), "on", x$df[2L], "degrees of freedom\n")
-    if (nzchar(mess <- naprint(x$na.action))) {
+    if (nzchar(mess <- stats::naprint(x$na.action))) {
         cat("  (", mess, ")\n", sep = "")
     }
     cat("Multiple R-squared:", formatC(x$r.squared, digits = digits))
@@ -168,7 +168,7 @@ print.summary.pgls <- function(x, digits = max(3, getOption("digits") - 3),
             digits = digits
         ), "on", x$fstatistic[2L], "and",
         x$fstatistic[3L], "DF,  p-value:", format.pval(
-            pf(x$fstatistic[1L],
+            stats::pf(x$fstatistic[1L],
                 x$fstatistic[2L], x$fstatistic[3L],
                 lower.tail = FALSE
             ),
@@ -186,7 +186,7 @@ print.pgls <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     )
 
     cat("Coefficients:\n")
-    print.default(format(coef(x), digits = digits),
+    print.default(format(stats::coef(x), digits = digits),
         print.gap = 2,
         quote = FALSE
     )
@@ -231,12 +231,12 @@ predict.pgls <- function(object, newdata = NULL, ...) {
 
     # turn that into a design matrix
     # need to drop the response from the formula
-    dmat <- model.matrix(delete.response(terms(formula(object))),
+    dmat <- stats::model.matrix(stats::delete.response(stats::terms(stats::formula(object))),
         data = newdata
     )
 
     # multiply through by the coefficients
-    mu <- as.matrix(coef(object))
+    mu <- as.matrix(stats::coef(object))
     ret <- dmat %*% mu
     return(ret)
 }
@@ -255,7 +255,7 @@ logLik.pgls <- function(object, REML = FALSE, ...) {
 
 #' @describeIn pgls-methods Extract the number of observations from a pgls model
 #' @export
-nobs.pgls <- function(object, ...) length(resid(object))
+nobs.pgls <- function(object, ...) length(stats::resid(object))
 
 
 
@@ -281,20 +281,20 @@ nobs.pgls <- function(object, ...) length(resid(object))
 #'     vcv = TRUE, vcv.dim = 3
 #' )
 #' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird)
-#' par(mfrow = c(2, 2))
+#' graphics::par(mfrow = c(2, 2))
 #' plot(mod1)
 #'
 plot.pgls <- function(x, ...) {
-    res <- residuals(x, phylo = TRUE)
-    res <- res / sqrt(var(res))[1]
-    plot(density(res))
-    qqnorm(res)
-    qqline(res)
-    plot(fitted(x), res,
+    res <- stats::residuals(x, phylo = TRUE)
+    res <- res / sqrt(stats::var(res))[1]
+    plot(stats::density(res))
+    stats::qqnorm(res)
+    stats::qqline(res)
+    plot(stats::fitted(x), res,
         xlab = "Fitted value",
         ylab = "Residual value (corrected for phylogeny)"
     )
-    plot(x$y, fitted(x), xlab = "Observed value", ylab = "Fitted value")
+    plot(x$y, stats::fitted(x), xlab = "Observed value", ylab = "Fitted value")
 }
 
 
@@ -353,7 +353,7 @@ anova.pgls <- function(object, ...) {
         return(anova.pglslist(object, ...))
     } else {
         data <- object$data
-        tlabels <- attr(terms(object$formula), "term.labels")
+        tlabels <- attr(stats::terms(object$formula), "term.labels")
         k <- object$k
         n <- object$n
         NR <- length(tlabels) + 1
@@ -382,7 +382,7 @@ anova.pgls <- function(object, ...) {
         df <- c(abs(diff(resdf)), n - k)
         ms <- ss / df
         fval <- ms / ms[NR]
-        P <- pf(fval, df, df[NR], lower.tail = FALSE)
+        P <- stats::pf(fval, df, df[NR], lower.tail = FALSE)
 
         table <- data.frame(df, ss, ms, f = fval, P)
         table[length(P), 4:5] <- NA
@@ -399,7 +399,7 @@ anova.pgls <- function(object, ...) {
                         "delta = %0.2f, kappa = %0.2f\n"
                     ), lm, dl, kp
                 ),
-                paste("Response:", deparse(formula(object)[[2L]]))
+                paste("Response:", deparse(stats::formula(object)[[2L]]))
             ),
             class = c("anova", "data.frame")
         )
@@ -413,7 +413,7 @@ anova.pglslist <- function(object, ..., scale = 0, test = "F") {
 
     ## check the models use the same response
     responses <- as.character(
-        lapply(objects, function(x) deparse(terms(x$formula)[[2L]]))
+        lapply(objects, function(x) deparse(stats::terms(x$formula)[[2L]]))
     )
     sameresp <- responses == responses[1L]
     if (!all(sameresp)) {
@@ -449,7 +449,7 @@ anova.pglslist <- function(object, ..., scale = 0, test = "F") {
         -diff(resdev)
     ))
     variables <- lapply(objects, function(x) {
-        paste(deparse(formula(x)),
+        paste(deparse(stats::formula(x)),
             collapse = "\n"
         )
     })

@@ -235,13 +235,13 @@ predict.caic <- function(object, ...) {
     } else {
         nD <- dots[[newdataProv]]
     }
-    predict(object$mod, newdata = nD)
+    stats::predict(object$mod, newdata = nD)
 }
 
 #' @describeIn anova.caic Extract the log likelihood from a CAIC model
 #' @export
 logLik.caic <- function(object, ...) {
-    logLik(object$mod, ...)
+    stats::logLik(object$mod, ...)
 }
 
 #' @describeIn anova.caic Plot a CAIC model
@@ -253,11 +253,11 @@ plot.caic <- function(x, ...) {
 #' @describeIn anova.caic Extract residuals from a CAIC model
 #' @export
 residuals.caic <- function(object, ...) {
-    residuals(object$mod, ...)
+    stats::residuals(object$mod, ...)
 }
 
 #' @describeIn anova.caic Extract model coefficients from a CAIC model
 #' @export
 coef.caic <- function(object, ...) {
-    coef(object$mod, ...)
+    stats::coef(object$mod, ...)
 }

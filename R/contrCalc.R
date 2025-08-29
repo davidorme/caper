@@ -89,7 +89,7 @@ contrCalc <- function(vals, phy, ref.var, picMethod,
         # of children nodes in order to have a consistent set of branch lengths
         # used in calculations - must use complete cases rather than dealing
         # with the available data for each variable
-        compChild <- complete.cases(vals)
+        compChild <- stats::complete.cases(vals)
         nChild[parent] <- sum(compChild)
 
         # get the values of the reference variable
@@ -136,7 +136,7 @@ contrCalc <- function(vals, phy, ref.var, picMethod,
 
                         # is there any (meaningful) variance in the
                         # reference variable?
-                        if (var(rv) < .Machine$double.eps) {
+                        if (stats::var(rv) < .Machine$double.eps) {
                             # compare first to the rest (as in CAIC)
                             group <- c(TRUE, rep(FALSE, length(rv) - 1))
                         } else {
@@ -202,7 +202,7 @@ contrCalc <- function(vals, phy, ref.var, picMethod,
                     }
 
                     # Any (meaningful) variance in the reference variable?
-                    if (var(rv) < .Machine$double.eps) {
+                    if (stats::var(rv) < .Machine$double.eps) {
                         # compare first to the rest (as in CAIC)
                         group <- c(TRUE, rep(FALSE, length(rv) - 1))
                     } else {
@@ -261,7 +261,7 @@ contrCalc <- function(vals, phy, ref.var, picMethod,
                         # if there are, make a contrast and then pass NA vals
                         # to the nodal values otherwise don't make a contrast
                         # and pass a weighted average...
-                        if (var(rv) == 0) {
+                        if (stats::var(rv) == 0) {
                             currContr <- NA
                         } else {
                             currContr <- diff(compVals[order(rv), ])
@@ -274,7 +274,7 @@ contrCalc <- function(vals, phy, ref.var, picMethod,
                     }
 
                     if (sum(compChild) > 2) {
-                        if (var(rv) == 0) { # weighted average of data
+                        if (stats::var(rv) == 0) { # weighted average of data
                             currContr <- NA
                             currNV <- colSums(compVals * (1 / bl)) / sum(1 / bl)
                             currBlAdj <- 1 / (sum(1 / bl))
@@ -353,7 +353,7 @@ contrCalc <- function(vals, phy, ref.var, picMethod,
                         # if there are, make a contrast and then pass NA
                         # vals to the nodal values otherwise don't make a
                         # contrast and pass a weighted average...
-                        if (var(rv) == 0) {
+                        if (stats::var(rv) == 0) {
                             currContr <- NA
                         } else {
                             currContr <- diff(compVals[order(rv), ])
@@ -366,7 +366,7 @@ contrCalc <- function(vals, phy, ref.var, picMethod,
                     }
 
                     if (sum(compChild) > 2) {
-                        if (var(rv) == 0) { # weighted average of data
+                        if (stats::var(rv) == 0) { # weighted average of data
                             currContr <- NA
                             currNV <- colSums(compVals * (1 / bl)) / sum(1 / bl)
                             currBlAdj <- 1 / (sum(1 / bl))

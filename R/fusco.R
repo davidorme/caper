@@ -152,7 +152,7 @@ fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
 
     # get into pruningwise order
     # method dispatch works on either 'phylo' or 'comparative.data'
-    phy <- ape::reorder(phy, "pruningwise")
+    phy <- reorder(phy, "pruningwise")
     if (tipsAsSpecies) {
         rich <- rep(1, length(phy$phy$tip.label))
     } else {
@@ -216,9 +216,9 @@ fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
 
     ret <- list(
         observed = observed,
-        median.I = median(observed$I),
+        median.I = stats::median(observed$I),
         mean.Iprime = mean(observed$I.prime),
-        qd = IQR(observed$I) / 2,
+        qd = stats::IQR(observed$I) / 2,
         tipsAsSpecies = tipsAsSpecies,
         nInformative = dim(observed)[1],
         nSpecies = nSpecies,
@@ -229,7 +229,7 @@ fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
 
     if (randomise.Iprime) {
         expFun <- function(x) {
-            y <- runif(length(x))
+            y <- stats::runif(length(x))
             rand.I.prime <- ifelse(y > 0.5, x, 1 - x)
             ret <- mean(rand.I.prime)
             return(ret)
@@ -239,7 +239,7 @@ fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
         randomised <- as.data.frame(randomised)
         names(randomised) <- "mean"
         rand.twotail <- c((1 - conf.int) / 2, 1 - (1 - conf.int) / 2)
-        rand.mean <- quantile(randomised$mean, rand.twotail)
+        rand.mean <- stats::quantile(randomised$mean, rand.twotail)
 
         ret <- c(
             ret,
@@ -304,7 +304,7 @@ summary.fusco <- function(object, ...) {
     }
     cat("\n")
 
-    print(wilcox.test(object$observed$I.prime, mu = 0.5))
+    print(stats::wilcox.test(object$observed$I.prime, mu = 0.5))
 }
 
 #' @describeIn fusco.test Plot an node imbalance histogram for a Fusco test
@@ -313,13 +313,13 @@ plot.fusco <- function(x, correction = TRUE, nBins = 10, right = FALSE,
                        I.prime = TRUE, plot = TRUE, ...) {
     breaks <- seq(0, 1, length = nBins + 1)
     if (I.prime) {
-        fuscoDist <- hist(x$observed$I.prime,
+        fuscoDist <- graphics::hist(x$observed$I.prime,
             breaks = breaks,
             plot = FALSE, right = right
         )
         xLab <- "Nodal imbalance score (I')"
     } else {
-        fuscoDist <- hist(x$observed$I,
+        fuscoDist <- graphics::hist(x$observed$I,
             breaks = breaks,
             plot = FALSE, right = right
         )
@@ -349,7 +349,7 @@ plot.fusco <- function(x, correction = TRUE, nBins = 10, right = FALSE,
         distrib <- sapply(
             distrib,
             function(x) {
-                hist(x, breaks = breaks, plot = FALSE, right = right)$density
+                graphics::hist(x, breaks = breaks, plot = FALSE, right = right)$density
             }
         )
         distrib <- distrib / nBins
@@ -392,11 +392,11 @@ plot.fusco <- function(x, correction = TRUE, nBins = 10, right = FALSE,
 
     if (plot) {
         if (I.prime) {
-            abline(v = x$mean.Iprime)
-            if (!is.null(x$rand.mean)) abline(v = x$rand.mean, col = "red")
+            graphics::abline(v = x$mean.Iprime)
+            if (!is.null(x$rand.mean)) graphics::abline(v = x$rand.mean, col = "red")
         } else {
-            abline(v = median(x$observed$I))
-            if (!is.null(x$sim.median)) abline(v = x$sim.median, col = "red")
+            graphics::abline(v = stats::median(x$observed$I))
+            if (!is.null(x$sim.median)) graphics::abline(v = x$sim.median, col = "red")
         }
     }
 

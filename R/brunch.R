@@ -74,7 +74,7 @@
 #' plot(log.female.wt ~ Territoriality, brunchTab)
 #'
 #' # for the actual model diagnostics
-#' par(mfrow = c(3, 1))
+#' graphics::par(mfrow = c(3, 1))
 #' caic.diagnostics(brunchMod)
 #' @export
 #'
@@ -144,15 +144,15 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
     # GET THE MODEL MATRIX and Model Response
 
     # ditch the intercept, if present
-    formula <- update(formula, . ~ . - 1)
+    formula <- stats::update(formula, . ~ . - 1)
 
     # now we have the union of the phylogeny and data
     # get the model frame, matrix and response
     # these show the values at the tips for each term
-    mf <- model.frame(formula, data, na.action = na.pass)
+    mf <- stats::model.frame(formula, data, na.action = stats::na.pass)
 
     # TODO - think whether this check is always sufficient...
-    mfComplete <- complete.cases(mf)
+    mfComplete <- stats::complete.cases(mf)
     if (sum(mfComplete) < 2) {
         stop("Fewer than two taxa contain complete data for this analysis")
     }
@@ -191,10 +191,10 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
 
     # refit the model frame with numericized data
     data <- as.data.frame(lapply(mf, as.numeric))
-    mf <- model.frame(formula, data, na.action = na.pass)
+    mf <- stats::model.frame(formula, data, na.action = stats::na.pass)
 
     # get the design matrix
-    md <- model.matrix(formula, mf)
+    md <- stats::model.matrix(formula, mf)
 
     # sort out the reference variable and check for multiple or no factors...
     if (sum(varLevels > 0) == 0) {
@@ -218,14 +218,14 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
     }
 
     # MODEL RESPONSE
-    mr <- model.response(mf)
+    mr <- stats::model.response(mf)
     # turn into a column matrix
     mr <- as.matrix(mr)
     colnames(mr) <- as.character(formula[2])
     # now that we have the model response for CAIC style contrasts we can
     # substitute the reference variable for empty models
     # (i.e. models specified as X~1)
-    if (is.empty.model(formula)) ref.var <- colnames(mr)
+    if (stats::is.empty.model(formula)) ref.var <- colnames(mr)
 
     # add to the design matrix - this strips the assign and contrast
     # attributes so save...
@@ -274,7 +274,7 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
 
     # gather the row ids of NA nodes to drop from the model
     validNodes <- with(
-        ContrObj$contr, complete.cases(explanatory) & complete.cases(response)
+        ContrObj$contr, stats::complete.cases(explanatory) & stats::complete.cases(response)
     )
 
     # enforce any node depth requirement
@@ -304,7 +304,7 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
         attr(contrMD, "contrasts") <- attr(ContrObj, "contrasts")
     }
 
-    mod <- with(ContrObj$contr, lm.fit(contrMD, contrRS))
+    mod <- with(ContrObj$contr, stats::lm.fit(contrMD, contrRS))
     class(mod) <- "lm"
 
     # assemble the output
@@ -317,7 +317,7 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
         ContrObj$contr, as.data.frame(cbind(response, explanatory))
     )
     contrData <- contrData[validNodes, , drop = FALSE]
-    RET$mod$call <- substitute(lm(FORM, data = contrData), list(FORM = formula))
+    RET$mod$call <- substitute(stats::lm(FORM, data = contrData), list(FORM = formula))
     RET$mod$terms <- attr(mf, "terms")
 
     # put the model.frame in to the lm object so that predict, etc. calls work
@@ -325,7 +325,7 @@ brunch <- function(formula, data, phy, names.col, stand.contr = TRUE,
     attr(RET$mod$model, "terms") <- attr(mf, "terms")
 
     ## Add studentized residuals: need to use matching in case of invalid nodes
-    stRes <- rstudent(mod)
+    stRes <- stats::rstudent(mod)
     SRallNodes <- rep(NA, length(RET$contrast.data$validNodes))
     names(SRallNodes) <- names(RET$contrast.data$contrVar)
     SRallNodes[match(names(stRes), names(SRallNodes))] <- stRes

@@ -17,7 +17,7 @@ Authors@R: c(
     person('Nick', 'Isaac', role=c('aut')),
     person('Will', 'Pearse', role=c('aut')))
 Maintainer: David Orme <d.orme@imperial.ac.uk>
-Imports: stats, graphics, utils, methods
+Imports: stats, graphics, utils
 Depends: 
     R (>= 2.10), 
     ape (>= 3.0-6) , 

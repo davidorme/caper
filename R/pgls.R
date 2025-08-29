@@ -154,7 +154,7 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
 
     ## check for missing data in the formula and replace the data
     # object with a complete version
-    miss <- model.frame(formula, data$data, na.action = na.pass)
+    miss <- stats::model.frame(formula, data$data, na.action = stats::na.pass)
     miss.na <- apply(miss, 1, function(X) (any(is.na(X))))
     if (any(miss.na)) {
         miss.names <- data$phy$tip.label[miss.na]
@@ -162,9 +162,9 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
     }
 
     # Get the design matrix, number of parameters and response variable
-    m <- model.frame(formula, data$data)
+    m <- stats::model.frame(formula, data$data)
     y <- m[, 1]
-    x <- model.matrix(formula, m)
+    x <- stats::model.matrix(formula, m)
     k <- ncol(x)
     namey <- names(m)[1]
 
@@ -172,7 +172,7 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
     # (thx to Sarah Dryhurst)
     # - will cause singularity - lm() filters for this and aliases variables
     #   but here we'll just fail for the time being
-    xVar <- apply(x, 2, var)[-1] # drop intercept
+    xVar <- apply(x, 2, stats::var)[-1] # drop intercept
     badCols <- xVar < .Machine$double.eps
     if (any(badCols)) {
         stop(
@@ -305,7 +305,7 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
         # TODO - could isolate single optimisations here to use optimise()
         # rather than optim() likelihood function swapped out for externally
         # visible one
-        optim.param.vals <- optim(optimPar,
+        optim.param.vals <- stats::optim(optimPar,
             fn = pgls.likelihood, # function and start vals
             method = "L-BFGS-B", control = control,
             upper = upper.b, lower = lower.b,

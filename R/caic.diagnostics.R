@@ -115,11 +115,11 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
     if (is.null(which.terms)) {
         # explanatory terms
         which.terms <- dimnames(
-            attr(terms(formula(caicObj$mod)), "factors")
+            attr(stats::terms(stats::formula(caicObj$mod)), "factors")
         )[[2]]
     } else {
         if (!all(which.terms %in% dimnames(
-            attr(terms(formula(caicObj$mod)), "factors")
+            attr(stats::terms(stats::formula(caicObj$mod)), "factors")
         )[[2]])) {
             stop("Not all specified terms were present in the model.")
         }
@@ -159,7 +159,7 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
     labels.id <- rownames(tab)
     text.id <- function(x, y, ind, cex = cex.id) {
         labpos <- ifelse(x > mean(range(x)), 2, 4)
-        text(x[ind], y[ind], labels.id[ind],
+        graphics::text(x[ind], y[ind], labels.id[ind],
             xpd = TRUE,
             pos = labpos, offset = 0.25, cex = cex
         )
@@ -188,10 +188,10 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
             x <- tab[, paste("nodal.", term, sep = "")]
 
             ## model it
-            mod <- lm(y ~ x)
+            mod <- stats::lm(y ~ x)
 
             ## extract the t-test on the slope
-            slopes["NV", , term] <- summary.lm(mod)$coef[2, ]
+            slopes["NV", , term] <- stats::summary.lm(mod)$coef[2, ]
 
             ## plot it and add the line, if requested, if the model is sane,
             # and if it is significant
@@ -204,7 +204,7 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
                 if (plot.signif &&
                     is.finite(slopes["NV", 3, term]) &&
                     slopes["NV", 4, term] <= alpha) {
-                    abline(mod, col = "red")
+                    graphics::abline(mod, col = "red")
                 }
             }
         }
@@ -214,10 +214,10 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
             x <- sqrt(tab$contrVar)
 
             ## model it
-            mod <- lm(y ~ x)
+            mod <- stats::lm(y ~ x)
 
             ## extract the t-test on the slope
-            slopes["SD", , term] <- summary.lm(mod)$coef[2, ]
+            slopes["SD", , term] <- stats::summary.lm(mod)$coef[2, ]
 
             ## plot it
             if (plot) {
@@ -231,7 +231,7 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
                 if (plot.signif &&
                     is.finite(slopes["NV", 3, term]) &&
                     slopes["SD", 4, term] <= alpha) {
-                    abline(mod, col = "red")
+                    graphics::abline(mod, col = "red")
                 }
             }
         }
@@ -241,10 +241,10 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
             x <- log(tab$nodeAge)
 
             ## model it
-            mod <- lm(y ~ x)
+            mod <- stats::lm(y ~ x)
 
             ## extract the t-test on the slope
-            slopes["AGE", , term] <- summary.lm(mod)$coef[2, ]
+            slopes["AGE", , term] <- stats::summary.lm(mod)$coef[2, ]
 
             ## plot it
             if (plot) {
@@ -258,7 +258,7 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
                 if (plot.signif &&
                     is.finite(slopes["NV", 3, term]) &&
                     slopes["AGE", 4, term] <= alpha) {
-                    abline(mod, col = "red")
+                    graphics::abline(mod, col = "red")
                 }
             }
         }
@@ -273,6 +273,7 @@ caic.diagnostics <- function(caicObj, which.terms = NULL,
 }
 
 #' @describeIn caic.diagnostics Print a CAIC diagnostics object
+#' @export
 print.caic.diagnostics <- function(x, ...) {
     robust <- attr(x, "robust")
     nNonrobust <- attr(x, "nNonrobust")
@@ -300,7 +301,7 @@ print.caic.diagnostics <- function(x, ...) {
                 ncol = 4, dimnames = list(rownames(x), colnames(x))
             )
         }
-        printCoefmat(cf, signif.legend = FALSE, ...)
+        stats::printCoefmat(cf, signif.legend = FALSE, ...)
         cat("\n")
     }
 
@@ -309,6 +310,7 @@ print.caic.diagnostics <- function(x, ...) {
 }
 
 #' @describeIn caic.diagnostics Refit a CAIC model omitting contrasts with large residuals
+#' @export
 caic.robust <- function(caicObj, robust = 3) {
     # Hmm - this is rather tricky because the contrast data is _not_ present
     # in the global environment, which means that the refitting runs foul of
@@ -335,7 +337,7 @@ caic.robust <- function(caicObj, robust = 3) {
         attr(contrMD, "contrasts") <- attr(caicObj$contrast.data, "contrasts")
     }
 
-    robustMod <- lm.fit(contrMD, contrRS)
+    robustMod <- stats::lm.fit(contrMD, contrRS)
     class(robustMod) <- "lm"
     robustMod$terms <- attr(caicObj$mod$model, "terms")
     robustMod$call <- caicObj$mod$call
@@ -343,7 +345,7 @@ caic.robust <- function(caicObj, robust = 3) {
     # put the model.frame in to the lm object so that predict, etc. calls work
     contrData <- as.data.frame(cbind(contrRS, contrMD))
     robustMod$mod$call <- substitute(
-        lm(FORM, data = contrData), list(FORM = formula)
+        stats::lm(FORM, data = contrData), list(FORM = formula)
     )
     robustMod$mod$model <- contrData
 
@@ -354,6 +356,7 @@ caic.robust <- function(caicObj, robust = 3) {
 }
 
 #' @describeIn caic.diagnostics Relabel a phylogeny with CAIC node labels.
+#' @export
 caic.label <- function(phy, charset = NULL, action = "insert",
                        style = "CAIC", tips = FALSE) {
     # OLD2NEW STATUS: CONVERTED...
@@ -427,6 +430,7 @@ caic.label <- function(phy, charset = NULL, action = "insert",
 }
 
 #' @describeIn caic.diagnostics Extract a contrast table from a CAIC object.
+#' @export
 caic.table <- function(caicObj, validNodes = TRUE, nodalValues = FALSE,
                        ultrametric.tol = 0.0001, CAIC.codes = FALSE,
                        style = "CAIC") {

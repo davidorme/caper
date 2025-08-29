@@ -166,7 +166,7 @@ growTree <- function(b = 1, d = 0, halt = 20, grain = 0.1, linObj = NULL,
         zero <- rates == 0
         inf <- rates == Inf
         rates[zero | inf] <- 1
-        wait <- rexp(length(rates), rates)
+        wait <- stats::rexp(length(rates), rates)
         wait[zero] <- Inf
         wait[inf] <- 0
 
@@ -794,6 +794,7 @@ growTree <- function(b = 1, d = 0, halt = 20, grain = 0.1, linObj = NULL,
 
 
 #' @describeIn growTree Convert a growTree object to a comparative data object
+#' @export
 as.comparative.data.growTree <- function(x, ...) {
     lineages <- x$lineages
     clade <- x$clade

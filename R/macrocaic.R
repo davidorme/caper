@@ -138,8 +138,8 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
 
     # drop any intercept from the formula, which has no effect if the interecept
     # is already omitted
-    formula <- update(formula, . ~ . - 1)
-    if (is.empty.model(formula)) {
+    formula <- stats::update(formula, . ~ . - 1)
+    if (stats::is.empty.model(formula)) {
         stop(
             "Macrocaic requires an explanatory variable to determine the ",
             "direction of species richness contrasts.\n",
@@ -149,15 +149,15 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
 
     # Get the model frame including missing data
     # and check the number of complete cases in the model frame
-    initMf <- model.frame(formula, data, na.action = "na.pass")
-    initMfComplete <- complete.cases(initMf)
+    initMf <- stats::model.frame(formula, data, na.action = "stats::na.pass")
+    initMfComplete <- stats::complete.cases(initMf)
     # TODO - think whether this check is always sufficient...
     if (sum(initMfComplete) < 2) {
         stop("Fewer than two taxa contain complete data for this analysis")
     }
 
     # macro analyses with missing data on species richness are a bad thing
-    macroMf <- as.matrix(model.response(initMf))
+    macroMf <- as.matrix(stats::model.response(initMf))
     colnames(macroMf) <- with(
         attributes(attr(initMf, "terms")), rownames(factors)[response]
     )
@@ -176,7 +176,7 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
 
     # get the model frame, matrix and response
     # these show the values at the tips for each term
-    mf <- model.frame(formula, data, na.action = na.pass)
+    mf <- stats::model.frame(formula, data, na.action = stats::na.pass)
 
     # macroCAIC is not intended to handle categorical data, but could be used
     #  to control for ordered factors where intervals are feasible equal
@@ -215,13 +215,13 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
     }
 
     # MODEL RESPONSE
-    mr <- model.response(mf)
+    mr <- stats::model.response(mf)
     # turn into a column matrix
     mr <- as.matrix(mr)
     colnames(mr) <- as.character(formula[2])
 
     # get the design matrix
-    md <- model.matrix(formula, mf)
+    md <- stats::model.matrix(formula, mf)
 
     # sort out the reference variable
     if (!is.null(ref.var)) {
@@ -283,7 +283,7 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
     # polytomies in macro analyses)
     validNodes <- with(
         ContrObj$contr,
-        complete.cases(explanatory) & complete.cases(response)
+        stats::complete.cases(explanatory) & stats::complete.cases(response)
     )
 
     # macrocaic can exclude species poor nodes (default is to exclude sister
@@ -316,7 +316,7 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
         attr(contrMD, "contrasts") <- attr(ContrObj, "contrasts")
     }
 
-    mod <- with(ContrObj$contr, lm.fit(contrMD, contrRS))
+    mod <- with(ContrObj$contr, stats::lm.fit(contrMD, contrRS))
     class(mod) <- "lm"
 
     # assemble the output
@@ -330,7 +330,7 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
         as.data.frame(cbind(response, explanatory))
     )
     contrData <- contrData[validNodes, , drop = FALSE]
-    RET$mod$call <- substitute(lm(FORM, data = contrData), list(FORM = formula))
+    RET$mod$call <- substitute(stats::lm(FORM, data = contrData), list(FORM = formula))
     RET$mod$terms <- attr(mf, "terms")
 
     # put the model.frame in to the lm object so that predict, etc. calls work
@@ -338,7 +338,7 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
     attr(RET$mod$model, "terms") <- attr(mf, "terms")
 
     ## Add studentized residuals: need to use matching in case of invalid nodes
-    stRes <- rstudent(mod)
+    stRes <- stats::rstudent(mod)
     SRallNodes <- rep(NA, length(RET$contrast.data$validNodes))
     names(SRallNodes) <- names(RET$contrast.data$contrVar)
     SRallNodes[match(names(stRes), names(SRallNodes))] <- stRes

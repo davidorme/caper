@@ -273,13 +273,13 @@ print.comparative.data <- function(x, ...) {
     )
 
     # this is a bit of a hack - can't get str for a vector to take an indent
-    str(x$phy$tip.label)
+    utils::str(x$phy$tip.label)
     if (!is.null(x$vcv)) {
         cat("VCV matrix present:\n  ")
-        str(x$vcv, give.attr = FALSE)
+        utils::str(x$vcv, give.attr = FALSE)
     }
     cat("Data:", x$data.name, "\n")
-    str(as.list(x$data), no.list = TRUE, indent = "   ")
+    utils::str(as.list(x$data), no.list = TRUE, indent = "   ")
 
     # report on mismatch on merge
     dropCount <- sapply(x$dropped, length)
@@ -308,10 +308,10 @@ na.omit.comparative.data <- function(object, scope = NULL, ...) {
         if (any(is.na(match(vars, names(object$data))))) {
             stop("Variables in scope not in data.")
         }
-        to.drop <- which(!complete.cases(object$data[, vars]))
+        to.drop <- which(!stats::complete.cases(object$data[, vars]))
         attr(object, "na.omit.scope") <- scope
     } else {
-        to.drop <- which(!complete.cases(object$data))
+        to.drop <- which(!stats::complete.cases(object$data))
     }
     # test for completely empty dataset
     if (length(to.drop) == nrow(object$data)) {
@@ -514,7 +514,7 @@ reorder.comparative.data <- function(x, order = "cladewise", ...) {
     }
 
     # get the new order - testing for ape version for change in code
-    if (packageVersion("ape") >= "3.0.5") {
+    if (utils::packageVersion("ape") >= "3.0.5") {
         neworder <- reorder(x$phy, order = order, index.only = TRUE)
     } else {
         stop("ape versions < 3.0.4 no longer supported.")

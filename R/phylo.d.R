@@ -194,7 +194,7 @@ phylo.d <- function(data, phy, names.col, binvar,
 
     ## - find the threshold in each variable.
     ## - quantile interpolates between values
-    ds.phy.thresh <- apply(ds.phy, 2, quantile, propState1)
+    ds.phy.thresh <- apply(ds.phy, 2, stats::quantile, propState1)
 
     ## sweep out the thresholds
     ds.phy <- sweep(ds.phy, 2, ds.phy.thresh, "<")
@@ -326,15 +326,15 @@ plot.phylo.d <- function(x, bw = 0.02, ...) {
 
     xlim <- range(obs, brownian, random)
 
-    bdens <- as.data.frame(density(brownian, bw = bw)[c("y", "x")])
-    rdens <- as.data.frame(density(random, bw = bw)[c("y", "x")])
+    bdens <- as.data.frame(stats::density(brownian, bw = bw)[c("y", "x")])
+    rdens <- as.data.frame(stats::density(random, bw = bw)[c("y", "x")])
 
     ylim <- range(bdens$y, rdens$y)
     plot(y ~ x,
         data = bdens, xlim = xlim, ylim = ylim, type = "l", col = "blue",
         xlab = "D value", ylab = "Density", ...
     )
-    lines(y ~ x, data = rdens, col = "red", ...)
+    graphics::lines(y ~ x, data = rdens, col = "red", ...)
 
-    abline(v = c(0, 1, obs), col = c("blue", "red", "black"))
+    graphics::abline(v = c(0, 1, obs), col = c("blue", "red", "black"))
 }

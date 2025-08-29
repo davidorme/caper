@@ -107,6 +107,7 @@ pgls.profile <- function(pgls, which = c("lambda", "kappa", "delta"),
 }
 
 #' @describeIn pgls.profile Plot a pgls model profile object
+#' @export
 plot.pgls.profile <- function(x, ...) {
     xlab <- as.expression(x$which)
     xsub <- sprintf(
@@ -116,16 +117,17 @@ plot.pgls.profile <- function(x, ...) {
     )
 
     with(x, plot(logLik ~ x, type = "l", xlab = xlab, ...))
-    title(sub = xsub, cex.sub = 0.7, line = par("mgp")[1] + 1.5)
+    graphics::title(sub = xsub, cex.sub = 0.7, line = graphics::par("mgp")[1] + 1.5)
 
 
     if (!is.null(x$ci)) {
-        abline(v = x$ci$opt, col = "red", ...)
-        abline(v = x$ci$ci.val, lty = 2, col = "red", ...)
+        graphics::abline(v = x$ci$opt, col = "red", ...)
+        graphics::abline(v = x$ci$ci.val, lty = 2, col = "red", ...)
     }
 }
 
 #' @describeIn pgls.profile Confidence intervals on pgls branch transformations
+#' @export
 pgls.confint <- function(pgls, which = c("lambda", "kappa", "delta"),
                          param.CI = 0.95) {
     # Are we dealing with a same confidence interval
@@ -160,7 +162,7 @@ pgls.confint <- function(pgls, which = c("lambda", "kappa", "delta"),
     # the offset needed to get the root of the ML surface
     # at zero is  - (observed ML) + a chisq component
 
-    MLdelta <- (qchisq(param.CI, 1) / 2)
+    MLdelta <- (stats::qchisq(param.CI, 1) / 2)
     offset <- (-ML) + MLdelta
 
     ## get the model components
@@ -184,8 +186,8 @@ pgls.confint <- function(pgls, which = c("lambda", "kappa", "delta"),
 
     lrt0 <- 2 * (ML - lowerBound.ll)
     lrt1 <- 2 * (ML - upperBound.ll)
-    lowerBound.p <- 1 - pchisq(lrt0, 1)
-    upperBound.p <- 1 - pchisq(lrt1, 1)
+    lowerBound.p <- 1 - stats::pchisq(lrt0, 1)
+    upperBound.p <- 1 - stats::pchisq(lrt1, 1)
 
     # A problem with uniroot is that the identity of the variables gets stripped
     #   which is why pgls.likelihood now has an optim.names option used here.
@@ -199,12 +201,12 @@ pgls.confint <- function(pgls, which = c("lambda", "kappa", "delta"),
     }
 
     lowerCI <- if (lowerBound.ll < (ML - MLdelta)) {
-        uniroot(ll.fun, interval = belowML)$root
+        stats::uniroot(ll.fun, interval = belowML)$root
     } else {
         NA
     }
     upperCI <- if (upperBound.ll < (ML - MLdelta)) {
-        uniroot(ll.fun, interval = aboveML)$root
+        stats::uniroot(ll.fun, interval = aboveML)$root
     } else {
         NA
     }

@@ -311,7 +311,7 @@ plot.pgls <- function(x, ...) {
 #' allows the use of AIC model comparisons. Note that the generic AIC methods
 #' do no checking to ensure that sensible models are being compared.
 #'
-#' @aliases anova.pgls anova.pglslist logLik.pgls
+#' @aliases anova.pgls anova.pglslist
 #' @param object A 'pgls' model object.
 #' @param \dots Additional 'pgls' models.
 #' @param scale A character string specifying the test statistic to be used.
@@ -326,6 +326,7 @@ plot.pgls <- function(x, ...) {
 #' @author Rob Freckleton, David Orme
 #' @seealso \code{\link{pgls}}
 #' @keywords utils stats
+#' @export
 #' @examples
 #'
 #' data(shorebird)
@@ -369,7 +370,7 @@ anova.pgls <- function(object, ...) {
 
         # fit the sequential models
         for (i in seq_along(tlabels)) {
-            fmla <- as.formula(
+            fmla <- stats::as.formula(
                 paste(object$namey, " ~ ", paste(tlabels[1:i], collapse = "+"))
             )
             plm <- pgls(fmla, data, lambda = lm, delta = dl, kappa = kp)
@@ -439,7 +440,7 @@ anova.pglslist <- function(object, ..., scale = 0, test = "F") {
 
     nmodels <- length(objects)
     if (nmodels == 1) {
-        return(anova(object))
+        return(stats::anova(object))
     }
     resdf <- as.numeric(lapply(objects, function(X) X$n - X$k))
     resdev <- as.numeric(lapply(objects, "[[", "RSSQ"))
@@ -471,7 +472,7 @@ anova.pglslist <- function(object, ..., scale = 0, test = "F") {
         } else {
             resdev[bigmodel] / resdf[bigmodel]
         }
-        table <- stat.anova(
+        table <- stats::stat.anova(
             table = table, test = test, scale = scale,
             df.scale = resdf[bigmodel], n = length(objects[bigmodel$residuals])
         )

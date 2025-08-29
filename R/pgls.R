@@ -26,6 +26,7 @@
 #' general method to calculate the likelihood of a model, given the covariance
 #' matrix, response, design matrix and branch length parameters.
 #'
+#' @name pgls
 #' @aliases pgls pgls.likelihood pgls.blenTransform
 #' @param formula A model formula
 #' @param data A 'comparative.data' object containing the covariance matrix and
@@ -50,34 +51,58 @@
 #' function 'uniroot' strips names from vectors.
 #' @return The 'pgls' function returns an object of class \code{pgls}
 #' containing the following:
+#' \describe{
+#' \item{call}{The original call to the 'pgls' function}
+#' \item{model }{A summary of the fitted model containing:}
+#' \item{formula}{The model formula supplied.}
+#' \item{data}{The comparative data object provided.}
+#' \item{dname}{The name of the comparative data object.}
+#' \item{logLikY}{The log likelihood of the response variable given the model.}
+#' \item{RMS}{The residual mean square variance in the model.}
+#' \item{RSSQ}{The residual sum of squares from the model.}
+#' \item{NMS}{The null mean square variance for the model.}
+#' \item{NSSQ}{The null sum of squares for the response.}
+#' \item{aic}{The AIC score of the model}
+#' \item{aicc}{
+#'      The AICc score of the model, correcting for the number of cases and
+#'      parameters estimated
+#' }
+#' \item{n}{The number of rows of data used in fitting the model}
+#' \item{k}{The number of parameter estimates}
+#' \item{sterr}{The standard errors of the parameter estimates}
+#' \item{Vt}{
+#'      The phylogenetic covariance matrix used in the model, with branch length
+#'      transformations applied.
+#' }
+#' \item{fitted}{The predicted values}
+#' \item{residuals}{The non-phylogenetic residuals}
+#' \item{phyres}{The phylogenetic residuals}
+#' \item{x}{The design matrix of the model }
+#' \item{varNames}{The variables include in the model.}
+#' \item{y}{The response of the model.}
+#' \item{namey}{The name of the response variable.}
+#' \item{param}{
+#'      A named numeric vector of length three giving the branch length
+#'      transformations used in the model.
+#' }
+#' \item{mlVals}{
+#'      A named logical vector of length three indicating which branch length
+#'      values in 'param' are maximum  likelihood estimates.
+#' }
+#' \item{bounds}{
+#'      The bounds on branch length parameter estimates used in the model.
+#' }
+#' \item{param.CI}{
+#'      A named list of length three giving confidence intervals and the p
+#'      values at the parameter bounds for optimised branch length
+#'      transformations. Fixed parameters will have a NULL entry in this list.
+#' }
+#' \item{na.action}{
+#'      A named vector identifying any rows of missing data excluded from the
+#'      model.
+#' }
+#' }
 #'
-#' "na.action" "param.CI" \item{call}{The original call to the 'pgls' function}
-#' \item{model }{A summary of the fitted model containing:} \item{formula}{The
-#' model formula supplied.} \item{data}{The comparative data object provided.}
-#' \item{dname}{The name of the comparative data object.} \item{logLikY}{The
-#' log likelihood of the response variable given the model.} \item{RMS}{The
-#' residual mean square variance in the model.} \item{RSSQ}{The residual sum of
-#' squares from the model.} \item{NMS}{The null mean square variance for the
-#' model.} \item{NSSQ}{The null sum of squares for the response.}
-#' \item{aic}{The AIC score of the model} \item{aicc}{The AICc score of the
-#' model, correcting for the number of cases and parameters estimated}
-#' \item{n}{The number of rows of data used in fitting the model} \item{k}{The
-#' number of parameter estimates} \item{sterr}{The standard errors of the
-#' parameter estimates} \item{Vt}{The phylogenetic covariance matrix used in
-#' the model, with branch length transformations applied.} \item{fitted}{The
-#' predicted values} \item{residuals}{The non-phylogenetic residuals}
-#' \item{phyres}{The phylogenetic residuals} \item{x}{The design matrix of the
-#' model } \item{varNames}{The variables include in the model.} \item{y}{The
-#' response of the model.} \item{namey}{The name of the response variable.}
-#' \item{param}{A named numeric vector of length three giving the branch length
-#' transformations used in the model.} \item{mlVals}{A named logical vector of
-#' length three indicating which branch length values in 'param' are maximum
-#' likelihood estimates.} \item{bounds}{The bounds on branch length parameter
-#' estimates used in the model.} \item{param.CI}{A named list of length three
-#' giving confidence intervals and the p values at the parameter bounds for
-#' optimised branch length transformations. Fixed parameters will have a NULL
-#' entry in this list.} \item{na.action}{A named vector identifying any rows of
-#' missing data excluded from the model.}
 #' @section Warning: The model is fitted using a data frame reduced to complete
 #' row cases to eliminate missing values. In order to ensure that the models
 #' fitted using different subsets of the data are comparable, the whole data
@@ -96,9 +121,18 @@
 #' @examples
 #'
 #' data(shorebird)
-#' shorebird <- comparative.data(shorebird.tree, shorebird.data, Species, vcv = TRUE, vcv.dim = 3)
-#' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird, lambda = "ML")
-#' mod2 <- pgls(log(Egg.Mass) ~ log(M.Mass), data = shorebird, lambda = "ML", delta = "ML")
+#' shorebird <- comparative.data(
+#'     shorebird.tree, shorebird.data, Species,
+#'     vcv = TRUE, vcv.dim = 3
+#' )
+#' mod1 <- pgls(
+#'     log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird,
+#'     lambda = "ML"
+#' )
+#' mod2 <- pgls(
+#'     log(Egg.Mass) ~ log(M.Mass),
+#'     data = shorebird, lambda = "ML", delta = "ML"
+#' )
 #' @export
 pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
                  param.CI = 0.95, control = list(fnscale = -1),

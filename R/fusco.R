@@ -152,7 +152,7 @@ fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
 
     # get into pruningwise order
     # method dispatch works on either 'phylo' or 'comparative.data'
-    phy <- reorder(phy, "pruningwise")
+    phy <- ape::reorder(phy, "pruningwise")
     if (tipsAsSpecies) {
         rich <- rep(1, length(phy$phy$tip.label))
     } else {
@@ -255,11 +255,13 @@ fusco.test <- function(phy, data, names.col, rich, tipsAsSpecies = FALSE,
 }
 
 #' @describeIn fusco.test Print the nodal imbalance data for a Fusco test
+#' @export
 print.fusco <- function(x, ...) {
     print(x$observed)
 }
 
 #' @describeIn fusco.test Print a statistical summary of a Fusco test
+#' @export
 summary.fusco <- function(object, ...) {
     cat("Fusco test for phylogenetic imbalance\n\n")
 
@@ -306,6 +308,7 @@ summary.fusco <- function(object, ...) {
 }
 
 #' @describeIn fusco.test Plot an node imbalance histogram for a Fusco test
+#' @export
 plot.fusco <- function(x, correction = TRUE, nBins = 10, right = FALSE,
                        I.prime = TRUE, plot = TRUE, ...) {
     breaks <- seq(0, 1, length = nBins + 1)

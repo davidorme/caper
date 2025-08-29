@@ -223,6 +223,7 @@ print.phylo.d.subset <- function(x, ...) {
 ##############################################
 
 #' @describeIn phylo.d.subset Print a summary of phylo.d.subset object
+#' @export
 summary.phylo.d.subset <- function(object, ...) {
     cat(
         "\nCalculation of D statistic for the ",

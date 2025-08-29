@@ -36,3 +36,12 @@ if (getRversion() >= "2.15.1") {
         "edge.length" # contrCalc
     ))
 }
+
+# Need to import some S3 generics from stats to define S3 methods and use
+# methods dispatch (e.g. reorder, not explicit ape::reorder.phylo)
+#' @importFrom stats na.omit
+stats::na.omit
+#' @importFrom stats nobs
+stats::nobs
+#' @importFrom stats reorder
+stats::reorder

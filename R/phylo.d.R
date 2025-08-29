@@ -268,11 +268,13 @@ phylo.d <- function(data, phy, names.col, binvar,
 }
 
 #' @describeIn phylo.d Print a summary of a phylo.d object
+#' @export
 print.phylo.d <- function(x, ...) {
     summary(x)
 }
 
 #' @describeIn phylo.d Print a summary of a phylo.d object
+#' @export
 summary.phylo.d <- function(object, ...) {
     cat(
         "\nCalculation of D statistic for the phylogenetic ",
@@ -309,6 +311,7 @@ summary.phylo.d <- function(object, ...) {
 }
 
 #' @describeIn phylo.d Plot a phylo.d object
+#' @export
 plot.phylo.d <- function(x, bw = 0.02, ...) {
     brownian <- x$Permutations$brownian
     random <- x$Permutations$random

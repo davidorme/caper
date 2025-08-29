@@ -3,6 +3,9 @@
 .python-version
 .Rproj
 .vscode
+_pkgdown.yml
+^docs
+^pkgdown$
 benchmarks
 build_notes.md
 docs

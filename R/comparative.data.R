@@ -256,6 +256,7 @@ comparative.data <- function(phy, data, names.col, vcv = FALSE, vcv.dim = 2,
 }
 
 #' @describeIn comparative.data Print a comparative data object
+#' @export
 print.comparative.data <- function(x, ...) {
     # basic summary data
     cat("Comparative dataset of", nrow(x$data), "taxa:\n")
@@ -295,6 +296,7 @@ print.comparative.data <- function(x, ...) {
 }
 
 #' @describeIn comparative.data Drop NA data from a comparative data object
+#' @export
 na.omit.comparative.data <- function(object, scope = NULL, ...) {
     # strips data rows, tips and vcv row/columns for a comparative.data object
     if (!is.null(scope)) {
@@ -343,6 +345,7 @@ na.omit.comparative.data <- function(object, scope = NULL, ...) {
 }
 
 #' @describeIn comparative.data Subset a comparative data object
+#' @export
 subset.comparative.data <- function(x, subset, select, ...) {
     ## ripping out the innards of subset.data.frame
     if (missing(subset)) {
@@ -393,6 +396,7 @@ subset.comparative.data <- function(x, subset, select, ...) {
 }
 
 #' @describeIn comparative.data Extract parts of a comparative data object
+#' @export
 "[.comparative.data" <- function(x, i, j) {
     # how many args?
     # 2 and missing(i) = x[] --> return x untouched
@@ -491,6 +495,7 @@ subset.comparative.data <- function(x, subset, select, ...) {
 }
 
 #' @describeIn comparative.data Phylogenetic reordering of comparative data objects
+#' @export
 reorder.comparative.data <- function(x, order = "cladewise", ...) {
     # Uses ape reorder code
     order <- match.arg(order, c("cladewise", "pruningwise"))
@@ -580,6 +585,7 @@ caicStyleArgs <- function(phy, data, names.col, warn.dropped = FALSE) {
 }
 
 #' @describeIn comparative.data Convert objects to comparative data objects
+#' @export
 as.comparative.data <- function(x, ...) {
     if (inherits(x, "comparative.data")) {
         return(x)

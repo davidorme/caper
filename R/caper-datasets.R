@@ -7,20 +7,160 @@
 #'
 #'
 #' @name caper-benchmarks
-#' @aliases caper-benchmarks benchBayesTraitsOutputs benchBrunchOutputs
-#' benchCrunchOutputs benchFuscoOutputs benchMacroCAICOutputs benchMesaOutputs
-#' benchTestInputs BayesTraitsMods benchData benchTreeDicho benchTreePoly
-#' CAIC.BrDi1057 CAIC.BrDi1157 CAIC.BrDi813 CAIC.BrDi913 CAIC.BrPl1057
-#' CAIC.BrPl1157 CAIC.BrPl813 CAIC.BrPl913 CAIC.CrDi213 CAIC.CrDi657
-#' CAIC.CrPl213 CAIC.CrPl413 CAIC.CrPl657 FuscoDiSpp FuscoDiTax FuscoPolySpp
-#' FuscoPolyTax MacroCAIC.DiSpp23 MacroCAIC.DiSpp67 MacroCAIC.DiTax23
-#' MacroCAIC.DiTax67 MacroCAIC.PolySpp23 MacroCAIC.PolySpp67
-#' MacroCAIC.PolyTax23 MacroCAIC.PolyTax67 MeSA.I testData testTree nul fix kld
-#' Kld kLd klD KLd kLD KlD KLD
 #' @docType data
 #' @seealso vignette()
 #' @keywords datasets
 NULL
+
+# #' @rdname caper-benchmarks
+# "benchBayesTraitsOutputs"
+
+# #' @rdname caper-benchmarks
+# "benchBrunchOutputs"
+
+# #' @rdname caper-benchmarks
+# "benchCrunchOutputs"
+
+# #' @rdname caper-benchmarks
+# "benchFuscoOutputs"
+
+# #' @rdname caper-benchmarks
+# "benchMacroCAICOutputs"
+
+# #' @rdname caper-benchmarks
+# "benchMesaOutputs"
+
+# #' @rdname caper-benchmarks
+# "benchTestInputs"
+
+# #' @rdname caper-benchmarks
+# "BayesTraitsMods"
+
+# #' @rdname caper-benchmarks
+# "benchData"
+
+# #' @rdname caper-benchmarks
+# "benchTreeDicho"
+
+# #' @rdname caper-benchmarks
+# "benchTreePoly"
+
+# #' @rdname caper-benchmarks
+# "CAIC.BrDi1057"
+
+# #' @rdname caper-benchmarks
+# "CAIC.BrDi1157"
+
+# #' @rdname caper-benchmarks
+# "CAIC.BrDi813"
+
+# #' @rdname caper-benchmarks
+# "CAIC.BrDi913"
+
+# #' @rdname caper-benchmarks
+# "CAIC.BrPl1057"
+
+# #' @rdname caper-benchmarks
+# "CAIC.BrPl1157"
+
+# #' @rdname caper-benchmarks
+# "CAIC.BrPl813"
+
+# #' @rdname caper-benchmarks
+# "CAIC.BrPl913"
+
+# #' @rdname caper-benchmarks
+# "CAIC.CrDi213"
+
+# #' @rdname caper-benchmarks
+# "CAIC.CrDi657"
+
+# #' @rdname caper-benchmarks
+# "CAIC.CrPl213"
+
+# #' @rdname caper-benchmarks
+# "CAIC.CrPl413"
+
+# #' @rdname caper-benchmarks
+# "CAIC.CrPl657"
+
+# #' @rdname caper-benchmarks
+# "FuscoDiSpp"
+
+# #' @rdname caper-benchmarks
+# "FuscoDiTax"
+
+# #' @rdname caper-benchmarks
+# "FuscoPolySpp"
+
+# #' @rdname caper-benchmarks
+# "FuscoPolyTax"
+
+# #' @rdname caper-benchmarks
+# "MacroCAIC.DiSpp23"
+
+# #' @rdname caper-benchmarks
+# "MacroCAIC.DiSpp67"
+
+# #' @rdname caper-benchmarks
+# "MacroCAIC.DiTax23"
+
+# #' @rdname caper-benchmarks
+# "MacroCAIC.DiTax67"
+
+# #' @rdname caper-benchmarks
+# "MacroCAIC.PolySpp23"
+
+# #' @rdname caper-benchmarks
+# "MacroCAIC.PolySpp67"
+
+# #' @rdname caper-benchmarks
+# "MacroCAIC.PolyTax23"
+
+# #' @rdname caper-benchmarks
+# "MacroCAIC.PolyTax67"
+
+# #' @rdname caper-benchmarks
+# "MeSA.I"
+
+# #' @rdname caper-benchmarks
+# "testData"
+
+# #' @rdname caper-benchmarks
+# "testTree"
+
+# #' @rdname caper-benchmarks
+# "nul"
+
+# #' @rdname caper-benchmarks
+# "fix"
+
+# #' @rdname caper-benchmarks
+# "kld"
+
+# #' @rdname caper-benchmarks
+# "Kld"
+
+# #' @rdname caper-benchmarks
+# "kLd"
+
+# #' @rdname caper-benchmarks
+# "klD"
+
+# #' @rdname caper-benchmarks
+# "KLd"
+
+# #' @rdname caper-benchmarks
+# "kLD"
+
+# #' @rdname caper-benchmarks
+# "KlD"
+
+# #' @rdname caper-benchmarks
+# "KLD"
+
+
+
 
 
 #' Conservation status of British birds (Thomas 2008)

@@ -4,19 +4,19 @@
 #' object containing an independent contrast model. The structure of the object
 #' and the available methods are described here.
 #'
-#' @name caic
+#' @name caic-class
 #' @format A 'caic' object is a list containing the following:
 #' \describe{
 #'   \item{contrast.data}{ A list of the following:
 #'     \describe{
 #'       \item{contr}{
 #'          A list containing matrices of the contrasts in the response variable
-#'          (contr\$response) and explanatory variables (contr\$explanatory).
+#'          (contr$response) and explanatory variables (contr$explanatory).
 #'       }
 #'       \item{nodalVals}{
 #'          A list containing matrices of the nodal values in the response
-#'          variable (contr\$response) and explanatory variables
-#'          (contr\$explanatory).
+#'          variable (contr$response) and explanatory variables
+#'          (contr$explanatory).
 #'       }
 #'       \item{contrVar}{
 #'          A numeric vector of the expected variance for each contrast.
@@ -59,7 +59,6 @@
 #'   }
 #' }
 #' @keywords class
-#' @export
 NULL
 
 
@@ -92,6 +91,7 @@ summary.caic <- function(object, ...) {
 }
 
 #' @describeIn summary.caic Print CAIC model details
+#' @export
 print.caic <- function(x, ...) {
     cat("Phylogenetic Independent Contrasts analysis using:",
         attr(x, "contr.method"), ".\n",
@@ -161,6 +161,7 @@ print.caic <- function(x, ...) {
 #' @seealso \code{\link{crunch}},
 #' \code{\link{brunch}},\code{\link{macrocaic}},\code{\link{caic.diagnostics}}
 #' @keywords utils stats
+#' @export
 #' @examples
 #'
 #' data(shorebird)
@@ -183,7 +184,7 @@ anova.caic <- function(object, ...) {
     if (length(list(object, ...)) == 1L) {
         # no other objects, no other args (scale and test only
         # make sense for multiple models)
-        anova(object$mod)
+        stats::anova(object$mod)
     } else {
         # pass on - having a second function allows the easy interception
         # of test and scale arguments out of the list of objects
@@ -192,6 +193,7 @@ anova.caic <- function(object, ...) {
 }
 
 #' @describeIn anova.caic Calculate an ANOVA table for a list of CAIC models
+#' @export
 anova.caiclist <- function(object, ..., scale = 0, test = "F") {
     ## ANOVA cares about model types - need to check crunch
     # need to check that the contrast methods are the same
@@ -220,6 +222,7 @@ anova.caiclist <- function(object, ..., scale = 0, test = "F") {
 }
 
 #' @describeIn anova.caic Extract model predictions from a CAIC model
+#' @export
 predict.caic <- function(object, ...) {
     # need to force the model to get predictions using the contrast table
     # rather than the original data table...
@@ -236,21 +239,25 @@ predict.caic <- function(object, ...) {
 }
 
 #' @describeIn anova.caic Extract the log likelihood from a CAIC model
+#' @export
 logLik.caic <- function(object, ...) {
     logLik(object$mod, ...)
 }
 
 #' @describeIn anova.caic Plot a CAIC model
+#' @export
 plot.caic <- function(x, ...) {
     plot(x$mod, ...)
 }
 
 #' @describeIn anova.caic Extract residuals from a CAIC model
+#' @export
 residuals.caic <- function(object, ...) {
     residuals(object$mod, ...)
 }
 
 #' @describeIn anova.caic Extract model coefficients from a CAIC model
+#' @export
 coef.caic <- function(object, ...) {
     coef(object$mod, ...)
 }

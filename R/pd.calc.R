@@ -197,7 +197,8 @@ pd.calc <- function(cm, tip.subset = NULL, method = "TBL", root.edge = FALSE) {
     return(RET)
 }
 
-
+#' @describeIn pd.calc Phylogenetic diversity of random subclades
+#' @export
 pd.bootstrap <- function(cm, ntips, reps = 1000, method = "TBL",
                          tip.weights = NULL) {
     # check we have a valid method
@@ -259,6 +260,8 @@ pd.bootstrap <- function(cm, ntips, reps = 1000, method = "TBL",
     return(structure(.Data = pd.store, pd.method = method))
 }
 
+#' @describeIn pd.calc Calculation of evolutionary distinctiveness scores
+#' @export
 ed.calc <- function(cm, polytomy.cf = c("isaac", "mooers", "none")) {
     # Nick Isaac, March 2009 + David Orme 2011 takes the phylogeny and returns a
     # list containing ED scores of a) species and b) branches the polytomy.cf

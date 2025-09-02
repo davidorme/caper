@@ -31,7 +31,10 @@
 #'
 #' data(perissodactyla)
 #' # use comparative.data to add node labels
-#' perisso <- comparative.data(perissodactyla.tree, perissodactyla.data, Binomial, na.omit = FALSE)
+#' perisso <- comparative.data(
+#'     perissodactyla.tree, perissodactyla.data, Binomial,
+#'     na.omit = FALSE
+#' )
 #' plot(perisso$phy, show.node.label = TRUE)
 #' clade.members(22, perisso$phy, tip.labels = TRUE)
 #' clade.members.list(perisso$phy, tip.labels = FALSE)
@@ -79,6 +82,8 @@ clade.members <- function(x, phy, tip.labels = FALSE,
     return(RET)
 }
 
+#' @describeIn clade.members Return clade members of all nodes in a phylogeny
+#' @export
 clade.members.list <- function(phy, tips = FALSE, tip.labels = FALSE,
                                include.nodes = FALSE) {
     # OLD2NEW CONVERTED

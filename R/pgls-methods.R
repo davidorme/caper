@@ -25,6 +25,8 @@
 #' @param x An object of class 'pgls'.
 #' @param phylo Return phylogenetically corrected residuals or ordinary
 #' residuals (see details).
+#' @param REML Return the REML estimate of log likelihood - this is not
+#' implemented for PGLS models.
 #' @param newdata Alternative data for predicting from 'pgls' models.
 #' @param digits Number of digits to show in summary methods.
 #' @param ... Further arguments to methods.
@@ -202,7 +204,7 @@ coef.pgls <- function(object, ...) {
     return(cf)
 }
 
-#' @describeIn pgls Extract residuals from a pgls model
+#' @describeIn pgls-methods Extract residuals from a pgls model
 #' @export
 residuals.pgls <- function(object, phylo = FALSE, ...) {
     ret <- NULL
@@ -244,6 +246,9 @@ predict.pgls <- function(object, newdata = NULL, ...) {
 #' @describeIn pgls-methods Extract the log likelihood from a pgls model
 #' @export
 logLik.pgls <- function(object, REML = FALSE, ...) {
+    if (isTRUE(REML)) {
+        stop("Calculation of REML estimates of logLik not supported for pgls")
+    }
     val <- object$model$log.lik
 
     attr(val, "nall") <- object$n
@@ -283,7 +288,7 @@ nobs.pgls <- function(object, ...) length(stats::resid(object))
 #' mod1 <- pgls(log(Egg.Mass) ~ log(M.Mass) * log(F.Mass), shorebird)
 #' graphics::par(mfrow = c(2, 2))
 #' plot(mod1)
-#'
+#' @export
 plot.pgls <- function(x, ...) {
     res <- stats::residuals(x, phylo = TRUE)
     res <- res / sqrt(stats::var(res))[1]

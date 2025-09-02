@@ -67,7 +67,7 @@
 #' mod.l <- pgls.profile(mod, "lambda")
 #' plot(mod.l)
 #' pgls.confint(mod, "lambda")
-#'
+#' @export
 pgls.profile <- function(pgls, which = c("lambda", "kappa", "delta"),
                          N = 50, param.CI = NULL) {
     ## takes a pgls model and profiles one of the branch length transformations

@@ -149,7 +149,7 @@ macrocaic <- function(formula, data, phy, names.col, macroMethod = "RRD",
 
     # Get the model frame including missing data
     # and check the number of complete cases in the model frame
-    initMf <- stats::model.frame(formula, data, na.action = "stats::na.pass")
+    initMf <- stats::model.frame(formula, data, na.action = stats::na.pass)
     initMfComplete <- stats::complete.cases(initMf)
     # TODO - think whether this check is always sufficient...
     if (sum(initMfComplete) < 2) {

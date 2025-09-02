@@ -47,11 +47,11 @@
 #' @param permut Number of permutations to be used in the randomisation test.
 #' @param rnd.bias An optional name of a variable in \code{data} holding
 #' probability weights to bias the generation of the random distribution. See
-#' 'destails'
+#' 'details'
 #' @param x An object of class 'phylo.d'
 #' @param object An object of class 'phylo.d'
 #' @param bw The bandwidth to be used for the density plots
-#' @param list() Further arguments to print and summary methods
+#' @param ... Further arguments to print and summary methods
 #' @return Returns an object of class 'phylo.d', which is a list of the
 #' following:
 #'

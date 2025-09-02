@@ -111,6 +111,7 @@
 #' should be reduced to only those variables used in the maximal model in order
 #' to avoid prevent redundant variables causing rows to be dropped
 #' unnecessarily.
+#'
 #' @author Rob Freckleton; David Orme
 #' @seealso \code{\link{pgls.profile}}, \code{\link{anova.pgls}},
 #' \code{\link{summary.pgls}}
@@ -416,7 +417,7 @@ pgls <- function(formula, data, lambda = 1.0, kappa = 1.0, delta = 1.0,
 }
 
 
-
+#' @describeIn pgls Calcualate the log likelihood of a pgls model
 pgls.likelihood <- function(optimPar, fixedPar, y, x, V,
                             optim.output = TRUE, names.optim = NULL) {
     # Full ML estimation for given x and V: modified to also act as an engine
@@ -474,6 +475,7 @@ pgls.likelihood <- function(optimPar, fixedPar, y, x, V,
     }
 }
 
+#' @describeIn pgls Apply branch length transformations to a VCV matrix
 pgls.blenTransform <- function(V, fixedPar) {
     ## applies the three branch length transformations to a VCV matrix
 

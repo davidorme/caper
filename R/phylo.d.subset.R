@@ -37,9 +37,8 @@
 #' @param max.nodes The maximum number of nodes a clade should have for it to
 #' have a D value calculated. Defaults to the number of nodes in the whole
 #' phylogeny (i.e. no limit).
-#' @param x An object of class 'phylo.d.subset'
 #' @param object An object of class 'phylo.d.subset'
-#' @param list() Further arguments to print and summary methods
+#' @param ... Further arguments to print and summary methods
 #' @return Returns an object of class 'phylo.d.subset', which is a list of the
 #' following:
 #'
